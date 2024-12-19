@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css" >
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/profile.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <title>Profile</title>
+</head>
+<body>
+    <header>
+        <div class="main">
+          <a href="./index.html"><h1>McLily</h1></a>
+            <input type="search" placeholder="Search for products, brands and categories">
+            <button>Search</button>
+             <span class="shuu"><span class="boo"><i class="fa-regular fa-user guest"></i><i class="ri-user-follow-line"></i><p>Account</p><i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span>
+                <div class="acc-dropdown">
+                    <div>
+                    <button>SIGN IN</button>
+                    </div>
+                    <div class="balabulu">
+                    <span><i class="fa-regular fa-user"></i><p>My Account</p></span>
+                    <span><i class="ri-luggage-cart-line"></i><p>orders</p></span>
+                    <span><i class="ri-heart-line"></i><p>Saved Items</p></span>
+                    </div>
+                </div>
+                <div class="login-dropdown">
+                    <div>
+                        <span class="bala"><i class="fa-regular fa-user"></i><p>My Account</p></span>
+                        <span><i class="ri-luggage-cart-line"></i><p>orders</p></span>
+                        <span><i class="ri-heart-line"></i><p>Saved Items</p></span>
+                        <span><i class="ri-mail-line"></i><p>Inbox</p></span>
+                        </div>
+                        <div>
+                            <button id="signoutbtn">Sign Out</button>
+                        </div>
+                </div>
+            </span>
+             <span class="help"><i class="fa-regular fa-circle-question"></i>Help<i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span>
+             <span class="cart"><i class="fa-solid fa-cart-shopping"></i>Cart</span>
+        </div>
+        <div class="categories">
+            <nav>
+                <a href="#"><i class="fa-solid fa-bars"></i>All Categories</a>
+                <a href="#">Computing</a>
+                <a href="#">Phones and Tablets</a>
+                <a href="#">Electronics</a>
+                <a href="#">Gaming</a>
+                <a href="#">Fashion</a>
+                <a href="#">Home & Office</a>
+                <a href="#">Supermarket</a>
+                <a href="#">Health & Beauty</a>
+                <a href="#">Baby Products</a>
+                <a href="#">Sporting Goods</a>
+                <a href="#">Appliances</a>
+                <a href="#">Other categories</a>
+            </nav>
+        </div>
+        <div class="mobile-header">
+            <div class="top">
+                <span><i class="ri-menu-line"></i><i class='bx bx-x' id="times"></i><h1>McLily</h1></span>
+                <span><i class="ri-shopping-cart-2-line"></i></span>
+            </div>
+            <div class="under search-bar">
+                <input type="search" placeholder="Search for products, brands and categories">
+            </div>
+        </div>
+        <div class="mobile-dropdown">
+            <div class="profile">
+                <div class="buttons">
+                    <button id="mlogin">Login</button>
+                    <button id="msignUp">Sign Up</button>
+                </div>
+                <div class="logged-user">
+                    <img src="https://th.bing.com/th/id/OIP.xo-BCC1ZKFpLL65D93eHcgHaGe?pid=ImgDet&rs=1" alt="image">
+                    <section>
+                        <p class="uname">mcpaul okoye</p>
+                        <p class="uemail">okoyemcpaukl@gmail.com</p>
+                        <a href="./profile.html">Account Setitngs</a>
+                    </section>
+                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <article>
+                                <h4><i class="ri-map-pin-line"></i>Track Orders</h4>
+                                <a href="#">View order status</a>
+                            </article>
+                        </td>
+                        <td>
+                            <article><h4><i class="ri-star-line"></i>Pending Items</h4></article>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <article>
+                                <h4><i class="ri-price-tag-3-line"></i>Sell on McLily</h4>
+                                <a href="#">Join other merchants</a>
+                            </article>
+                        </td>
+                        <td>
+                            <article>
+                                <h4><i class="ri-store-3-line"></i>Physical Stores</h4>
+                                <a href="#">Stores around you</a>
+                            </article>
+                        </td>
+                    </tr>
+                    <tr class="logged-info">
+                        <td>
+                            <article>
+                                <h4><i class="ri-mail-line"></i>Inbox</h4>
+                                <a href="#">Lastest novelities</a>
+                            </article>
+                        </td>
+                        <td>
+                            <article class="logged-address">
+                                <h4><i class="ri-home-3-line"></i>My Addresses</h4>
+                                <a href="#">View saved addresses</a>
+                            </article>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="nav-categories">
+                <h4>Categories</h4>
+                <span><a href="#">Computing</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Phones and Tablets</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Electronics</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Gaming</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Fashion</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Home & Office</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Supermarket</a><i class="ri-arrow-right-s-line"></i></span>
+            </div>
+            <div class="account">
+                <span><i class="ri-phone-line"></i><p>Contact Us</p></span>
+                <span class="logged-shit">
+                    <span><i class="ri-user-unfollow-line"></i><p>Delete Account</p></span>
+                    <span class="logged-logOut"><i class="ri-logout-box-line"></i><p>Logout</p></span>
+                </span>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="account" id="header">
+            <h2>Account Information</h2>
+        </div>
+        <div class="profile">
+           <div class="list" id="list">
+            <section>
+                <span><i class="ri-user-fill"></i></span>
+                <article>
+                    <h4>My Profile</h4>
+                    <a href="#" id="account-view" class="active">Account Information</a>
+                    <a href="#" id="address-view">Delivery Address</a>
+                </article>
+            </section>
+            <section>
+                <span><i class="ri-luggage-cart-fill"></i></span>
+                <article>
+                    <h4>My Orders</h4>
+                    <a href="#">Order History</a>
+                    <a href="#">Pending Ratings</a>
+                </article>
+            </section>
+            <section>
+                <span><i class="ri-wallet-fill"></i></span>
+                <article>
+                    <h4>My Wallet</h4>
+                    <a href="#">Wallet</a>
+                </article>
+            </section>
+            <section>
+                <span><i class="ri-user-unfollow-fill"></i></span>
+                <article>
+                    <h4>Delete Account</h4>
+                    <a href="#">Delete Account</a>
+                </article>
+            </section>
+           </div>
+           <div class="info">
+            <div class="info-header" id="info-header"><h3>Account Information</h3></div>
+            <form id="account"> 
+                <div class="input-container">
+                <label for="afname">First Name</label>
+                <input type="text" id="afname">
+                </div>
+                <div class="input-container">
+                    <label for="alname">Last Name</label>
+                    <input type="text" id="alname">
+                </div>
+                <div class="input-container">
+                    <label for="aemail">Email Address</label>
+                    <input type="email" id="aemail">
+                </div>
+                <div class="input-container">
+                    <label for="anpassword">New Password</label>
+                    <input type="password" id="anpassword">
+                </div>
+                <div class="input-container">
+                    <label for="aconpassowrd">Confirm Password</label>
+                    <input type="password" id="aconpassowrd">
+                </div>
+                <button id="asave">Save Changes</button>
+            </form>
+            <div class="address" id="address">
+               <span><p>Default Delivery Address</p><a href="#" id="edit">Edit</a></span>
+               <span><i class="ri-user-3-line"></i>Lorem, ipsum.</span>
+               <span><i class="ri-map-pin-line"></i>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Accusamus, asperiores!</span>
+               <span><i class="ri-phone-line"></i>123456789011</span>
+            </div>
+            <div class="edit" >
+                <form id="edit-info">
+                <div class="major">
+                <div class="input-container">
+                    <label for="dfname">First Name</label>
+                    <input type="text" id="dfname">
+                </div>
+                <div class="input-container">
+                    <label for="dlname">Last Name</label>
+                    <input type="text" id="dlname">
+                </div>
+            </div>
+            <div class="input-container">
+                <label for="dnumber">Phone Number</label>
+                <input type="tel" inputmode="tel" id="dnumber">
+            </div>
+            <div class="input-container">
+                <label for="dstreet">Street Address</label>
+                <input type="text" id="dstreet">
+            </div>
+            <div class="input-container">
+                <label for="ddirections">Directions (Optional)</label>
+                <input type="text" id="ddirections">
+            </div>
+            <div class="input-container">
+                <label for="dcity">City</label>
+                <input type="text" id="dcity">
+            </div>
+            <div class="input-container">
+                <label for="dstate">State</label>
+                <select id="dstate">
+                    <!-- <option selected disabled>Select an Option</option> -->
+                    <option value="abia">Abia</option>
+                    <option value="adamawa">Adamawa</option>
+                    <option value="akwaibom">Akwa Ibom</option>
+                    <option value="anambra">Anambra</option>
+                    <option value="bauchi">Bauchi</option>
+                    <option value="bayelsa">Bayelsa</option>
+                    <option value="benue">Benue</option>
+                    <option value="borno">Borno</option>
+                    <option value="crossriver">Cross River</option>
+                    <option value="delta">Delta</option>
+                    <option value="ebonyi">Ebonyi</option>
+                    <option value="edo">Edo</option>
+                    <option value="ekiti">Ekiti</option>
+                    <option value="enugu">Enugu</option>
+                    <option value="abuja">Federal Capital Territory (FCT)</option>
+                   <option value="gombe">Gombe</option>
+                   <option value="imo">Imo</option>
+                   <option value="jigawa">Jigawa</option>
+                   <option value="kaduna">Kaduna</option>
+                   <option value="kano">Kano</option>
+                   <option value="kastina">Kastina</option>
+                   <option value="kebbi">Kebbi</option>
+                   <option value="kogi">Kogi</option>
+                   <option value="kwara">Kwara</option>
+                   <option value="lagos" selected>Lagos</option>
+                   <option value="nasarawa">Nasarawa</option>
+                   <option value="niger">Niger</option>
+                   <option value="ogun">Ogun</option>
+                   <option value="ondo">Ondo</option>
+                   <option value="osun">Osun</option>
+                   <option value="oyo">Oyo</option>
+                   <option value="plateau">Plateau</option>
+                   <option value="rivers">Rivers</option>
+                   <option value="sokoto">Sokoto</option>
+                   <option value="yobe">Yobe</option>
+                   <option value="zamfara">Zamfara</option>
+                </select>
+            </div>
+            <div class="input-container">
+                <label for="dlga">LGA (Local Govt. Area)</label>
+                <select id="dlga">
+                    <option selected disabled>Select an Option</option>
+                </select>
+            </div>
+            <button id="dsave">Save Changes</button>
+            </form>
+           </div>
+        </div>
+        </div>
+    </main>
+    <div class="space-div"></div>
+    <footer>
+        <div class="main">
+            <div class="sub">
+                <h3>About McLily</h3>
+                <nav>
+                    <a href="#">Contact Us</a>
+                    <a href="#">About Us</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Our Blog</a>
+                    <a href="#">Forum</a>
+                    <a href="#">Terms & Conditions</a>
+                </nav>
+            </div>
+            <div class="sub">
+                <h3>Payment</h3>
+                <nav>
+                    <a href="#">Wallet</a>
+                    <a href="#">Verve</a>
+                    <a href="#">Mastercard</a>
+                    <a href="#">Visa</a>
+                </nav>
+            </div>
+            <div class="sub">
+                <h3>Buying On McLily</h3>
+                <nav>
+                    <a href="#">Buyer Safety Centre</a>
+                    <a href="#">FAQs</a>
+                    <a href="#">Delivery</a>
+                    <a href="#">McLily REturn Policy</a>
+                    <a href="#">Digital Services</a>
+                    <a href="#">Bulk Purchase</a>
+                </nav>
+            </div>
+            <div class="sub">
+                <h3>More Info</h3>
+                <nav>
+                    <a href="#">Site Map</a>
+                    <a href="#">Track My Order</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Authentic Items Policy</a>
+                </nav>
+            </div>
+            <div class="sub">
+                <h3>Make Money On McLily</h3>
+                <nav>
+                    <a href="#">Become a McLily Affliate</a>
+                </nav>
+            </div>
+            <div class="sub">
+                <h3>Connect With Us</h3>
+                <nav>
+                    <a href="#">
+                        <span><i class="fa-brands fa-facebook-f"></i></span>
+                    </a>
+                    <a href="#">
+                        <span><i class="fa-brands fa-whatsapp"></i></span>
+                    </a>
+                    <a href="#">
+                        <span><i class="fa-brands fa-instagram"></i></span> 
+                    </a>
+                    <a href="#">
+                        <span><i class="fa-brands fa-twitter"></i></span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>Copyright © 2023 McLily.com. All rights reserved</p>
+        </div>
+        <div class="mobile-footer">
+            <span><i class="ri-home-3-line"></i><p>Home</p></span>
+            <span><i class="ri-list-check"></i><p>Catergories</p></span>
+            <span><i class="ri-shopping-cart-2-line"></i><p>Cart</p></span>
+            <span><i class="ri-account-circle-line"></i><p>Account</p></span>
+        </div>
+    </footer>
+    <script src="../scripts/header.js"></script>
+    <script src="../scripts/profile.js" type="module"></script>
+    <script src="../scripts/footer.js"></script>
+</body>
+</html>

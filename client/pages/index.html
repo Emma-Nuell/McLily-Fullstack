@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css" >
+    <link rel="stylesheet" href="../styles/homepage.css">
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <title>McLily Stores</title>
+</head>
+<body>
+    <header>
+        <div class="main">
+           <a href="index.html"><h1>McLily</h1></a>
+            <input type="search" placeholder="Search for products, brands and categories">
+            <button>Search</button>
+             <span class="shuu"><span class="boo"><i class="fa-regular fa-user guest"></i><i class="ri-user-follow-line"></i><p>Account</p><i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span>
+                <div class="acc-dropdown">
+                    <div>
+                    <button>SIGN IN</button>
+                    </div>
+                    <div class="balabulu">
+                    <span><i class="fa-regular fa-user"></i><p>My Account</p></span>
+                    <span><i class="ri-luggage-cart-line"></i><p>orders</p></span>
+                    <span><i class="ri-heart-line"></i><p>Saved Items</p></span>
+                    </div>
+                </div>
+                <div class="login-dropdown">
+                    <div>
+                        <span class="bala"><i class="fa-regular fa-user"></i><p>My Account</p></span>
+                        <span><i class="ri-luggage-cart-line"></i><p>orders</p></span>
+                        <span><i class="ri-heart-line"></i><p>Saved Items</p></span>
+                        <span><i class="ri-mail-line"></i><p>Inbox</p></span>
+                        </div>
+                        <div>
+                            <button id="signoutbtn">Sign Out</button>
+                        </div>
+                </div>
+            </span>
+             <span class="help"><i class="fa-regular fa-circle-question"></i>Help<i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span>
+             <span class="cart"><i class="fa-solid fa-cart-shopping"></i>Cart</span>
+        </div>
+        <div class="categories">
+            <nav>
+                <a href="#"><i class="fa-solid fa-bars"></i>All Categories</a>
+                <a href="#">Computing</a>
+                <a href="#">Phones and Tablets</a>
+                <a href="#">Electronics</a>
+                <a href="#">Gaming</a>
+                <a href="#">Fashion</a>
+                <a href="#">Home & Office</a>
+                <a href="#">Supermarket</a>
+                <a href="#">Health & Beauty</a>
+                <a href="#">Baby Products</a>
+                <a href="#">Sporting Goods</a>
+                <a href="#">Appliances</a>
+                <a href="#">Other categories</a>
+            </nav>
+        </div>
+        <div class="mobile-header">
+            <div class="top">
+                <span><i class="ri-menu-line"></i><i class='bx bx-x' id="times"></i><h1>McLily</h1></span>
+                <span><i class="ri-shopping-cart-2-line"></i></span>
+            </div>
+            <div class="under search-bar">
+                <input type="search" placeholder="Search for products, brands and categories">
+            </div>
+        </div>
+        <div class="mobile-dropdown">
+            <div class="profile">
+                <div class="buttons">
+                    <button id="mlogin">Login</button>
+                    <button id="msignUp">Sign Up</button>
+                </div>
+                <div class="logged-user">
+                    <img src="https://th.bing.com/th/id/OIP.xo-BCC1ZKFpLL65D93eHcgHaGe?pid=ImgDet&rs=1" alt="image">
+                    <section>
+                        <p class="uname">mcpaul okoye</p>
+                        <p class="uemail">okoyemcpaukl@gmail.com</p>
+                        <a href="./profile.html">Account Setitngs</a>
+                    </section>
+                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <article>
+                                <h4><i class="ri-map-pin-line"></i>Track Orders</h4>
+                                <a href="#">View order status</a>
+                            </article>
+                        </td>
+                        <td>
+                            <article><h4><i class="ri-star-line"></i>Pending Items</h4></article>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <article>
+                                <h4><i class="ri-price-tag-3-line"></i>Sell on McLily</h4>
+                                <a href="#">Join other merchants</a>
+                            </article>
+                        </td>
+                        <td>
+                            <article>
+                                <h4><i class="ri-store-3-line"></i>Physical Stores</h4>
+                                <a href="#">Stores around you</a>
+                            </article>
+                        </td>
+                    </tr>
+                    <tr class="logged-info">
+                        <td>
+                            <article>
+                                <h4><i class="ri-mail-line"></i>Inbox</h4>
+                                <a href="#">Lastest novelities</a>
+                            </article>
+                        </td>
+                        <td>
+                            <article class="logged-address">
+                                <h4><i class="ri-home-3-line"></i>My Addresses</h4>
+                                <a href="#">View saved addresses</a>
+                            </article>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="nav-categories">
+                <h4>Categories</h4>
+                <span><a href="#">Computing</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Phones and Tablets</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Electronics</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Gaming</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Fashion</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Home & Office</a><i class="ri-arrow-right-s-line"></i></span>
+                <span><a href="#">Supermarket</a><i class="ri-arrow-right-s-line"></i></span>
+            </div>
+            <div class="account">
+                <span><i class="ri-phone-line"></i><p>Contact Us</p></span>
+                <span class="logged-shit">
+                    <span><i class="ri-user-unfollow-line"></i><p>Delete Account</p></span>
+                    <span class="logged-logOut"><i class="ri-logout-box-line"></i><p>Logout</p></span>
+                </span>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="slide">
+            <div class="slideshow fade">
+           <img src="https://ng.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/39/7741722/1.jpg?2511" alt="image">
+           </div>
+           <div class="slideshow fade">
+           <img src="https://ng.jumia.is/cms/0-1-weekly-cps/0-2023/Week_40_PowerUp/Week_40_HomeMakeover/Desktop_Homepage_Slider__712x384.jpg" alt="image">
+           </div>
+           <div class="slideshow fade">
+            <img src="https://ng.jumia.is/cms/0-1-initiatives/jbps/updated-jbp-2022/Defacto/defac/defacto-slider.jpg" alt="image">
+           </div>
+           <div class="slideshow fade">
+            <img src="https://ng.jumia.is/cms/0-1-initiatives/flashsale/2023/revamp/Desktop-Homepage-Slider_712x384-1.jpg" alt="image">
+           </div>
+           <div class="slideshow fade">
+            <img src="https://ng.jumia.is/cms/0-1-weekly-cps/0-2023/Week_40_PowerUp/Power_Up713X382.jpg" alt="image">
+           </div>
+           <div class="slideshow fade">
+            <img src="https://ng.jumia.is/cms/0-1-initiatives/5k-store/2023/Desktop_Homepage_Slider__712x384.jpg" alt="image">
+           </div>
+           <div class="slideshow fade">
+            <img src="https://www-konga-com-res.cloudinary.com/image/upload/w_auto,f_auto,fl_lossy,dpr_auto,q_auto/v1695132571/contentservice/sams.jpg_ryzjiXDka.jpg" alt="image">
+           </div>
+           <div class="radios">
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+           </div>
+        </div>
+        <div class="collections">
+            <span><img src="https://ng.jumia.is/cms/0-1-homepage/0-0-freelinks-gray/300x240/official-stores_300x240.gif" alt="image">Authenticity Guaranteed</span>
+            <span><img src="https://ng.jumia.is/cms/0-1-homepage/0-0-freelinks-gray/300x240/phones-tablets_300x240.png" alt="image">Phones & Tablets</span>
+            <span><img src="https://ng.jumia.is/cms/0-1-homepage/0-0-freelinks-gray/300x240/groceries_300x240v2.png" alt="image">Groceries</span>
+            <span><img src="https://ng.jumia.is/cms/0-1-homepage/0-0-freelinks-gray/300x240/generic_300x240.jpg" alt="image">Computing Deals</span>
+            <span><img src="https://ng.jumia.is/cms/0-1-initiatives/5k-store/2023/5k-store_300x240.png" alt="image">₦5,000 Store</span>
+            <span><img src="https://ng.jumia.is/cms/0-1-homepage/0-0-freelinks-gray/300x240/televisions_300x240.png" alt="image">Televisions</span>
+            <span><img src="https://ng.jumia.is/cms/0-1-homepage/0-0-freelinks-gray/300x240/refrigerators_300x240.png" alt="image">Refrigerators</span>
+            <span><img src="https://ng.jumia.is/cms/0-1-homepage/0-0-freelinks-gray/300x240/earphones_300x240.png" alt="image">Mobile Accessories</span>
+            <span><img src="https://ng.jumia.is/cms/0-1-homepage/0-0-freelinks-gray/300x240/generator.gif" alt="image">Generators</span>
+            <span><img src="https://ng.jumia.is/cms/0-1-homepage/0-0-freelinks-gray/300x240/fashion_300x240.png" alt="image">Men's Sneakers</span>
+            <span><img src="https://ng.jumia.is/cms/0-1-homepage/0-0-freelinks-gray/300x240/watches_300x240.png" alt="image">Watches</span>
+            <span><img src="https://ng.jumia.is/cms/0-1-initiatives/clearance-sale/2023/Clearance.gif" alt="image">Clearance Sales </span>
+        </div>
+        <div class="top-selling category">
+            <h2>Top Sellers</h2>
+            <div class="main">
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/72/332204/1.jpg?2782" alt="image">
+                <p>Six Pieces-in-1 Quality Ankle Socks</p>
+                <p>₦1,100</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/64/1857931/1.jpg?5331" alt="image">
+                <p>Men's Casual Board Running Sneakers - White</p>
+                <p>₦2,980</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/13/467018/1.jpg?0769" alt="image">
+                <p>Fanta Drink - 35cl Pet x 12</p>
+                <p>₦1,760</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/64/986649/1.jpg?6655" alt="image">
+                <p>T-Shirts +Shorts 100% Cotton Men's Short Sleeve Set-White</p>
+                <p>₦5,950</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/45/2466311/1.jpg?1296" alt="image">
+                <p>Men's Classic Fashion Casual Sneakers - Black</p>
+                <p>₦2,500</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/60/614128/1.jpg?3693" alt="image">
+                <p>2022 Men's Casual Running Sneakers - Khaki</p>
+                <p>₦4,999</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/75/2873221/1.jpg?9887" alt="image">
+                <p>2 Pieces Of Couple Luminous Led Wrist Watch</p>
+                <p>₦3,690</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/62/560034/1.jpg?6620" alt="image">
+                <p>Beard Oil Instant Facial Rapid Beard Growth - 30ml</p>
+                <p>₦1,899</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/13/566938/1.jpg?4316" alt="image">
+                <p>Edifier X2 TWS Earbuds - Black</p>
+                <p>₦7,591</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/31/0885501/1.jpg?2308" alt="image">
+                <p>Trendy Men's Casual Shoes Glossy Leather Running Sneakers - Black</p>
+                <p>₦7,390</p>
+            </span>
+            </div>
+        </div>
+        <div class="phones category">
+            <h2>Phones & Tablets</h2>
+            <div class="main">
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/65/5826752/1.jpg?4963" alt="image">
+                <p>Infinix Note 30 Pro Gift Box With Davido's Signature 6.67" 8GB RAM/256GB ROM Android 13 - Gold</p>
+                <p>₦196,365</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/23/6027932/1.jpg?6519" alt="image">
+                <p>Samsung Galaxy A24 6.5" 6GB RAM/128GB ROM Android 13  - Black</p>
+                <p>₦184,250</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/49/2442032/1.jpg?3547" alt="image">
+                <p>XIAOMI Redmi Note 12 6.67" 4GB RAM/128GB ROM Android 13 - Onyx Gray</p>
+                <p>₦136,230</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/12/2888552/1.jpg?2165" alt="image">
+                <p>itel S23 6.6" 8GB RAM/256GB ROM Android 12 -Black + Free Star 200</p>
+                <p>₦98,000</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/80/159788/1.jpg?4367" alt="image">
+                <p>Apple IPhone 13  6.1" 4GB RAM/128GB ROM IOS 15 - Blue</p>
+                <p>₦620,999</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/60/7290622/1.jpg?9692" alt="image">
+                <p>Tecno POP 7 6.6" 2GB RAM/ 64GB ROM Android 12 - Black</p>
+                <p>₦68,998</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/82/8440622/1.jpg?2300" alt="image">
+                <p>Samsung Galaxy A14 6.6" 4GB RAM/64GB ROM Android 13 - Black</p>
+                <p>₦121,520</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/47/2780922/1.jpg?5096" alt="image">
+                <p>Infinix Smart 7 Plus 6.6" 3GB RAM/64GB ROM Android 12 - Black</p>
+                <p>₦78,800</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/36/7440622/1.jpg?9388" alt="image">
+                <p>Samsung Galaxy A14  6.6" 4GB RAM/128GB ROM Android 13  - Black</p>
+                <p>₦127,700</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/84/1626152/1.jpg?9145" alt="image">
+                <p>XIAOMI Redmi 12 6.79" 4GB RAM/128GB ROM Android 13 - Midnight Black</p>
+                <p>₦119,900</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/90/7542032/1.jpg?2082" alt="image">
+                <p>XIAOMI Redmi Note 12 Pro+ 5G 6.67" 8GB RAM/256GB ROM Android 12 - Black</p>
+                <p>₦323,000</p>
+            </span>
+            <span class="product">
+                <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/11/3372132/1.jpg?9909" alt="image">
+                <p>Apple IPad Pro 11" M1 (2021 Model) With Wi-Fi Only -512GB - Silver</p>
+                <p>₦699,000</p>
+            </span>
+            </div>
+        </div>
+        <div class="gaming category">
+            <h2>Gaming</h2>
+            <div class="main">
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/12/216238/1.jpg?4989" alt="image">
+                    <p>Oculus Quest 2 — Advanced All-In-One Virtual Reality Headset — 128 GB</p>
+                    <p>₦500,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/28/362417/1.jpg?8805" alt="image">
+                    <p>PS5 Controller Charger DualSense Charging Dock Station PS5 Dual USB Handle Fast 5V</p>
+                    <p>₦11,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/19/6335042/1.jpg?4445" alt="image">
+                    <p>Sony PS5 Standard Edition</p>
+                    <p>₦549,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/91/7410341/1.jpg?3972" alt="image">
+                    <p>Nintendo 3Ds Nintendo 3DS</p>
+                    <p>₦30,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/96/018636/1.jpg?0249" alt="image">
+                    <p>Bandai Ps4 - Naruto Shippuden: Ultimate Ninja Storm 4 Road To Boruto - PlayStation 4</p>
+                    <p>₦23,900</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/67/5823302/1.jpg?9395" alt="image">
+                    <p>Sony Computer Entertainment Playstation 4 Console 500gb</p>
+                    <p>₦150,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/59/4451311/1.jpg?0003" alt="image">
+                    <p>Nintendo Switch OLED NINTENDO SWITCH (WHITE)</p>
+                    <p>₦279,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/58/918287/1.jpg?5069" alt="image">
+                    <p>Sony PS5 Playstation 5 Console - Bundle</p>
+                    <p>₦599,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/19/1321052/1.jpg?2571" alt="image">
+                    <p>Microsoft Xbox Series S Console 512 GB SSD</p>
+                    <p>₦380,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/35/9952412/1.jpg?2465" alt="image">
+                    <p>G608 Headset PC Headset Gaming PS4 RGB Breathing Light</p>
+                    <p>₦11,980</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/92/6531052/1.jpg?3602" alt="image">
+                    <p>Microsoft Xbox Series X Console 1TB SSD</p>
+                    <p>₦580,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/26/9776901/1.jpg?2188" alt="image">
+                    <p>Nintendo Switch The Legend Of Zelda: Breath Of The Wild - Nintendo Switch</p>
+                    <p>₦43,000</p>
+                </span>
+            </div>
+        </div>
+        <div class="fashion category">
+            <h2>Fashion</h2>
+            <div class="main">
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/16/7744812/1.jpg?2261" alt="image">
+                    <p>Shark Men Luminous Sneakers Black</p>
+                    <p>₦8,499 - ₦9,499</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/21/8598312/1.jpg?3342" alt="image">
+                    <p>Defacto Woman Relax Fit Crew Neck Long Sleeve Homewear Knitted Tops - Ecru</p>
+                    <p>₦3,686</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/83/7570602/1.jpg?9948" alt="image">
+                    <p>Defacto Man - Slim Fit Blazer-Brown</p>
+                    <p>₦13,254</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/00/295531/1.jpg?1832" alt="image">
+                    <p>Monospec Sneakers - White</p>
+                    <p>₦8,490</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/55/382289/1.jpg?3598" alt="image">
+                    <p>Short Sleeve T-shirt + Shorts - White</p>
+                    <p>₦7,200</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/26/5735412/1.jpg?6056" alt="image">
+                    <p>Defacto Woman Paperbag Denim Trousers - Anthracite</p>
+                    <p>₦9,756</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/04/283997/1.jpg?7001" alt="image">
+                    <p>Men Black Pocket Casual Pants Cargo Pants Harem Joggers</p>
+                    <p>₦3,030</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/17/6814911/1.jpg?3090" alt="image">
+                    <p>Women Bead Chain Sequins Strip Multi Layer Necklace - Silver</p>
+                    <p>₦850</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/02/000128/1.jpg?5184" alt="image">
+                    <p>Portable Square Sungl Es Travel Re Tangle Small Vintage Retro Sungl Es-black Frame Black Gray Slices-144*145*40mm</p>
+                    <p>₦1,059</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/45/6168722/1.jpg?2289" alt="image">
+                    <p>DEYROS New Men's Calendar Luminous Quartz Watch</p>
+                    <p>₦5,800</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/60/5374491/1.jpg?5286" alt="image">
+                    <p>Defacto Man Slim Fit Stand- Up Collar Coat -Black</p>
+                    <p>₦17,240 - 19,156</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/32/9636042/1.jpg?7438" alt="image">
+                    <p>TL White Ladies Fashion Sneakers- White B</p>
+                    <p>₦10,950</p>
+                </span>
+            </div>
+        </div>
+        <div class="computing category">
+            <h2>Computing</h2>
+            <div class="main">
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/69/9103452/1.jpg?2976" alt="image">
+                    <p>Asus Notebook Intel Celeron 4GB RAM 128GB 14.0' Wins 10+ Free Mouse</p>
+                    <p>₦159,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/93/5168752/1.jpg?8218" alt="image">
+                    <p>Wireless Computer Keyboard Mouse Combos</p>
+                    <p>₦41,998</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/49/240036/1.jpg?1159" alt="image">
+                    <p>Hp EliteBook 840 G5 Intel Core I5-16GB RAM/1TB SSD/Backlit Keyboard/FP Reader Windows 11 Pro + BAG</p>
+                    <p>₦375,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/80/541137/1.jpg?5199" alt="image">
+                    <p>Ultra-thin Wireless Rechargeable Mouse 2.4G - Silver</p>
+                    <p>₦3,120</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/00/8161622/1.jpg?9994" alt="image">
+                    <p>Plastic Foldable Adjustable Stand Holder For Laptop White</p>
+                    <p>₦3,150</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/28/1839552/1.jpg?9948" alt="image">
+                    <p>Apple MacBook Air 15.3" - M2 Chip - 8GB RAM 256GB - 8-Core CPU / 10-Core GPU - Midnight - 2023</p>
+                    <p>₦1,300,999</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/08/7634811/1.jpg?8079" alt="image">
+                    <p>Hp 15 Intel Pentium Silver 8GB RAM 1TB HDD Windows 10, Fingerprint Enabled + Free Mouse</p>
+                    <p>₦245,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/10/813347/1.jpg?8783" alt="image">
+                    <p>HYSLGjt 128GB OTG 3 In 1 Usb Flash Drive Type C</p>
+                    <p>₦4,450</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/96/4526752/1.jpg?3167" alt="image">
+                    <p>Walram M.2 NVME SSD 128GB Hard Drive M2 Pcie Laptop Desktop</p>
+                    <p>₦11,472</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/45/2679312/1.jpg?7041" alt="image">
+                    <p>Apple 13.6" MacBook Air (M2, Midnight) 8GB /512GB</p>
+                    <p>₦1,450,000</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/96/2176752/1.jpg?1998" alt="image">
+                    <p>Walram 320GB Black Portable External Hard Disk USB 3.0 HDD</p>
+                    <p>₦10,499</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/40/423997/1.jpg?0353" alt="image">
+                    <p>Hp ProBook 11 X360- TOUCH- 512GB SSD/4GB RAM-Intel CELERON QUAD CORE WIN10 Pro +Mouse &USB Light</p>
+                    <p>₦144,000</p>
+                </span>
+            </div>
+        </div>
+        <div class="electronics category">
+            <h2>Electronics</h2>
+            <div class="main">
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/30/3721601/1.jpg?8899" alt="image">
+                    <p>Nexus 50" Inches UHD 4K VIDAA Smart Frameless TV NX-TV50 (U4K621B) + 1 Year Warranty</p>
+                    <p>₦224,700</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/59/7024142/1.jpg?9013" alt="image">
+                    <p>Amani 32”Smart UHD 4K TV+Netflix,Youtube,android Free Gift Inside</p>
+                    <p>₦77,980</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/98/9997581/1.jpg?2479" alt="image">
+                    <p>WEYON 817 3.1ch Blutooth Speaker Home Threater With Micro Function</p>
+                    <p>₦38,320</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/45/2980241/1.jpg?5392" alt="image">
+                    <p>Wireless Portable Mini Bluetooth Stereo Speaker Waterproof</p>
+                    <p>₦4,499</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/06/951058/1.jpg?2917" alt="image">
+                    <p>Maxi 32" Inches LED HD TV (D2010) - Black +1 Year Warranty</p>
+                    <p>₦63,720</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/96/303927/1.jpg?0670" alt="image">
+                    <p>Ringlight - Tripod Ring Light - Ringlight With BT Remote</p>
+                    <p>₦8,599</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/39/778228/1.jpg?3227" alt="image">
+                    <p>itel LCD 1080P HDMI FHD TV/Movie Projector (Q1)</p>
+                    <p>₦65,813</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/12/9890752/1.jpg?3268" alt="image">
+                    <p>DC 5v To 9v/ 12v Converter - Use With Power Bank To Power Internet Routers</p>
+                    <p>₦4,500</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/40/037857/1.jpg?8012" alt="image">
+                    <p>Hisense 32" Inches Satellite DLED TV (A5200) - Black  + 1 Year Warranty</p>
+                    <p>₦92,450</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/05/8552852/1.jpg?3209" alt="image">
+                    <p>Wireless Music EarPhone Bluetooth For Android And Iphone Earphones Earbuds Earpiece Hear Pods Headset 5.0 Airpòds Wireless Earpód Headphones</p>
+                    <p>₦6,999</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/37/294699/1.jpg?6116" alt="image">
+                    <p>Skyrun 43" Inches Smart LED UHD 4K TV + Free Wall Bracket - Gold + 1 Year Warranty</p>
+                    <p>₦159,990</p>
+                </span>
+                <span class="product">
+                    <img src="https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/30/0207191/1.jpg?5841" alt="image">
+                    <p>1080P Wireless 360° Auto Tracking Panoramic Camera Light Bulb Wifi PTZ IP Cam</p>
+                    <p>₦10,675</p>
+                </span>
+            </div>
+        </div>
+    </main>
+    <div class="space-div"></div>
+    <footer>
+        <div class="main">
+            <div class="sub">
+                <h3>About McLily</h3>
+                <nav>
+                    <a href="#">Contact Us</a>
+                    <a href="#">About Us</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Our Blog</a>
+                    <a href="#">Forum</a>
+                    <a href="#">Terms & Conditions</a>
+                </nav>
+            </div>
+            <div class="sub">
+                <h3>Payment</h3>
+                <nav>
+                    <a href="#">Wallet</a>
+                    <a href="#">Verve</a>
+                    <a href="#">Mastercard</a>
+                    <a href="#">Visa</a>
+                </nav>
+            </div>
+            <div class="sub">
+                <h3>Buying On McLily</h3>
+                <nav>
+                    <a href="#">Buyer Safety Centre</a>
+                    <a href="#">FAQs</a>
+                    <a href="#">Delivery</a>
+                    <a href="#">McLily REturn Policy</a>
+                    <a href="#">Digital Services</a>
+                    <a href="#">Bulk Purchase</a>
+                </nav>
+            </div>
+            <div class="sub">
+                <h3>More Info</h3>
+                <nav>
+                    <a href="#">Site Map</a>
+                    <a href="#">Track My Order</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Authentic Items Policy</a>
+                </nav>
+            </div>
+            <div class="sub">
+                <h3>Make Money On McLily</h3>
+                <nav>
+                    <a href="#">Become a McLily Affliate</a>
+                </nav>
+            </div>
+            <div class="sub">
+                <h3>Connect With Us</h3>
+                <nav>
+                    <a href="#" >
+                        <span><i class="fa-brands fa-facebook-f"></i></span>
+                    </a>
+                    <a href="#">
+                        <span><i class="fa-brands fa-whatsapp"></i></span>
+                    </a>
+                    <a href="#">
+                        <span><i class="fa-brands fa-instagram"></i></span> 
+                    </a>
+                    <a href="#">
+                        <span><i class="fa-brands fa-twitter"></i></span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>Copyright © 2023 McLily.com. All rights reserved</p>
+        </div>
+        <div class="mobile-footer">
+            <span><i class="ri-home-3-line"></i><p>Home</p></span>
+            <span><i class="ri-list-check"></i><p>Catergories</p></span>
+            <span><i class="ri-shopping-cart-2-line"></i><p>Cart</p></span>
+           <span><i class="ri-account-circle-line"></i><p>Account</p></span>
+        </div>
+    </footer>
+
+    <script src="../scripts/header.js"></script>
+    <script src="../scripts/index.js"></script>
+    <script src="../scripts/footer.js"></script>
+</body>
+</html>
