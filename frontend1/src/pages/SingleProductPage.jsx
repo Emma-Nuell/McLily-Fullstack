@@ -199,7 +199,7 @@ const SingleProductPage = () => {
 
 const Wrapper = styled.main`
   background: var(--white);
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
   .section {
     padding: 1rem 0;
   }

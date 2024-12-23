@@ -57,7 +57,7 @@ const Wrapper = styled.section`
     grid-template-columns: repeat(auto, minmax(300px, 1fr));
     
 .link {
-width: 88%
+width: 95%
 }
   .product {
     width: 100%;
@@ -121,12 +121,12 @@ width: 88%
     margin-bottom: 0;
     }
   .btn {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 5px;
-    padding: 0.3rem;
+    padding: 0.4rem;
   }
   }
 `;
