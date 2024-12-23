@@ -20,7 +20,7 @@ import {
   Preoder,
 } from "./pages";
 
-const App = () => {
+const AppContent = () => {
   const location = useLocation();
   const hiddenNavbarRoutes = ["/cart"];
   const hiddenFooterRoutes = ["/products/:id"];
@@ -28,7 +28,7 @@ const App = () => {
     matchPath(route, location.pathname)
   );
   return (
-    <Router>
+    <>
       {!hiddenNavbarRoutes.includes(location.pathname) && <Navbar />}
       <Sidebar />
       <Routes>
@@ -43,7 +43,15 @@ const App = () => {
         <Route path='*' element={<Error />} />
       </Routes>
       {!shouldHideFooter && <Footer />}
-    </Router>
+    </>
   );
 };
+
+const App = () => {
+  return (
+  <Router>
+    <AppContent />
+  </Router>
+  )
+}
 export default App;

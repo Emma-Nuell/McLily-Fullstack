@@ -1,8 +1,8 @@
-import { useNavigate, useParams, Link } from "react-router-dom"
+import {  useParams, Link } from "react-router-dom"
 import { useProductContext } from "../context/product-context"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
-import { PageHero, ProductImages, Stars, Stars1 } from "../components"
+import { PageHero, ProductImages, Stars1 } from "../components"
 import { formatPrice } from "../utils/helpers"
 import { BsStarFill, BsStar, BsStarHalf } from "react-icons/bs";
 import {

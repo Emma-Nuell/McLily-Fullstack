@@ -1,4 +1,4 @@
-import { act } from "react";
+
 import { SIDEBAR_OPEN, SIDEBAR_CLOSE, ACTIVE_SUBLINK, GET_PRODUCTS_SUCCESS, GET_SINGLE_PRODUCT_SUCCESS } from "../actions";
 
 const products_reducer = (state, action) => {

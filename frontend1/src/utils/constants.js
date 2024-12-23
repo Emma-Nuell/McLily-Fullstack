@@ -1,4 +1,4 @@
-import { FaTimes, FaHeart, FaUser, FaPhoneAlt } from "react-icons/fa";
+import {  FaHeart, FaUser, FaPhoneAlt } from "react-icons/fa";
 
 export const sidebarLinks = [
   {
@@ -3264,8 +3264,6 @@ export const products = [
   },
   {
     id: "HA013",
-    ujjn: "kndk",
-    name: "accessories",
     name: "Smart Home Thermostat",
     description:
       "Wi-Fi enabled smart thermostat to control your home’s temperature remotely via an app for maximum comfort and energy savings.",
