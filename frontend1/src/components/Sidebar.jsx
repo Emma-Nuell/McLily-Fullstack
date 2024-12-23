@@ -49,7 +49,7 @@ const Sidebar = () => {
                 <ul>
                   {subcategories?.map((item, index) => (
                     <li key={index} onClick={closeSidebar}>
-                      <Link to='/products'>{item}</Link>
+                      <Link to='/products' className="link">{item}</Link>
                     </li>
                   ))}
                 </ul>
@@ -116,6 +116,9 @@ const SidebarContainer = styled.div`
     background: transparent;
     display: none;
   }
+    .link {
+    width: 100%;
+    }
   .categories ul > li {
     padding: 0.7rem 0;
     font-weight: 500;

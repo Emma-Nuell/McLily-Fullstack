@@ -3,6 +3,7 @@ import { useProductContext } from "../context/product-context";
 import Loading from "./Loading";
 import { useSwipeable } from "react-swipeable";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const FeaturedProducts = () => {
   const { featuredProducts: featured } = useProductContext();
@@ -37,14 +38,22 @@ const FeaturedProducts = () => {
   return (
     <Wrapper>
       <div className='slideshow' {...handlers}>
-        <div className="img-container">  
-     <img src={featured[currentIndex].images[0]} alt={featured[currentIndex].name} />
-        </div>
+        <Link className='img-container' to={`/products/${featured[currentIndex].id}`}>
+          <img
+            src={featured[currentIndex].images[0]}
+            alt={featured[currentIndex].name}
+          />
+        </Link>
       </div>
       <div className='indicators'>
         {featured.map((_, index) => {
-          return <button key={index} className={`indicator ${index === currentIndex ? "active" : ""}`} onClick={(() => setCurrentIndex(index))}></button>;
-          
+          return (
+            <button
+              key={index}
+              className={`indicator ${index === currentIndex ? "active" : ""}`}
+              onClick={() => setCurrentIndex(index)}
+            ></button>
+          );
         })}
       </div>
     </Wrapper>
