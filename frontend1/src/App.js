@@ -1,20 +1,35 @@
-import { Navbar, Sidebar, Footer } from "./components"
-import { BrowserRouter as Router, Routes, Route, useLocation, matchPath } from "react-router-dom"
-import { AuthWrapper, Cart, Checkout, Error, Favourite, Home, PrivateRoute, Products, Profile, SingleProduct, Preoder } from "./pages"
-
+import { Navbar, Sidebar, Footer } from "./components";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+  matchPath,
+} from "react-router-dom";
+import {
+  AuthWrapper,
+  Cart,
+  Checkout,
+  Error,
+  Favourite,
+  Home,
+  PrivateRoute,
+  Products,
+  Profile,
+  SingleProduct,
+  Preoder,
+} from "./pages";
 
 const App = () => {
-  const location = useLocation()
-  const hidenNavbarRoutes = ["/cart"]
-  const hidenFooterRoutes = ["/products/:id"]
-  const shouldHideFooter = () => {
-    const { pathname } = useLocation()
-    return hidenFooterRoutes.some((route) => matchPath(route, pathname))
-
-  }
+  const location = useLocation();
+  const hiddenNavbarRoutes = ["/cart"];
+  const hiddenFooterRoutes = ["/products/:id"];
+  const shouldHideFooter = hiddenFooterRoutes.some((route) =>
+    matchPath(route, location.pathname)
+  );
   return (
     <Router>
-      {!hidenNavbarRoutes.includes(location.pathname) && <Navbar />}
+      {!hiddenNavbarRoutes.includes(location.pathname) && <Navbar />}
       <Sidebar />
       <Routes>
         <Route exact path='/' element={<Home />} />
@@ -30,5 +45,5 @@ const App = () => {
       {!shouldHideFooter && <Footer />}
     </Router>
   );
-}
-export default App
+};
+export default App;
