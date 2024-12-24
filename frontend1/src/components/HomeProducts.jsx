@@ -19,19 +19,22 @@ const HomeProducts = () => {
               {products.slice(0, 16).map((product) => {
                   const ratings = product.ratings  
                   return (
-                      <Link to={`/products/${product.id}`} key={product.id}>
-                      <article className="product" >
-                          <div className="img-container">
-                              <img src={product.images[0]} alt={product.name} />
-                          </div>
-                          <div className="details">
-                              <h5>{product.name}</h5>
-                              <Stars stars= {ratings.average} reviews = {ratings.reviews} />
-                              <p className="price">{formatPrice(product.price)}</p>
-                          </div>
+                    <Link to={`/products/${product.id}`} key={product.id}>
+                      <article className='product'>
+                        <div className='img-container'>
+                          <img src={product.images[0]} alt={product.name} />
+                        </div>
+                        <div className='details'>
+                          <h5>{product.name}</h5>
+                          <Stars
+                            stars={ratings.average}
+                            reviews={ratings.reviews}
+                          />
+                          <p className='price'>{formatPrice(product.price)}</p>
+                        </div>
                       </article>
-                      </Link>
-                  )
+                    </Link>
+                  );
               })}
           </div>
           <div className="btn-container"> 

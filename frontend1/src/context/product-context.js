@@ -24,7 +24,7 @@ export const ProductsProvider = ({ children }) => {
         dispatch({type: SIDEBAR_CLOSE})
     }
     const changeLink = (name) => {
-        dispatch({ type: ACTIVE_SUBLINK, payload: initialState.activeLink === name ? null : name })
+        dispatch({ type: ACTIVE_SUBLINK, payload: state.activeLink === name ? null : name })
     }
     const fetchProducts = () => {
         dispatch({ type: GET_PRODUCTS_SUCCESS, payload: products })

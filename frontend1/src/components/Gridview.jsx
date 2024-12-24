@@ -3,28 +3,41 @@ import { formatPrice } from "../utils/helpers";
 import Stars from "./Stars";
 import { FaCartPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useCartContext } from "../context/cart-context";
+import { useState } from "react";
 
 const Gridview = ({ products }) => {
+  const { addToCart } = useCartContext();
+  const [amount, setAmount] = useState(1);
+  const [size, setSize] = useState(null);
+
   return (
     <Wrapper>
       <div className='products-container'>
         {products.map((product) => {
           const { name, id, price, ratings, images } = product;
           return (
-            <Link to={`/products/${id}`} key={id} className="link">
+            <Link to={`/products/${id}`} key={id} className='link'>
               <article className='product'>
                 <div className='img-container'>
                   <img src={images[0]} alt={name} />
                 </div>
                 <div className='details'>
-                  <h4>{name}</h4>
+                  <h5>{name}</h5>
                   <Stars stars={ratings.average} reviews={ratings.reviews} />
                   <p className='price'>{formatPrice(price)}</p>
-                  <div className="btn-container">
-
-                  <button className='btn' type='button'>
-                    <FaCartPlus /> Add To Cart
-                  </button>
+                  <div className='btn-container'>
+                    <button
+                      className='btn'
+                      type='button'
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation();
+                        addToCart(id, size, amount, product);
+                      }}
+                    >
+                      <FaCartPlus /> Add To Cart
+                    </button>
                   </div>
                 </div>
               </article>
@@ -83,7 +96,7 @@ const Wrapper = styled.section`
     margin-bottom: 0.5rem;
   }
 
-  .details h4 {
+  .details h5 {
     margin-bottom: 0.5rem;
     overflow: hidden;
     white-space: nowrap;

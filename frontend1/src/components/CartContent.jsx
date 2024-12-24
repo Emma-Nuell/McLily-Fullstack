@@ -9,14 +9,20 @@ const CartContent = () => {
 
   return (
     <Wrapper>
-        <CartNavbar />
+      <CartNavbar />
+      <section className="sec">
         <CartTotal />
           <CartColumn />
           <Checkoutslide />
+      </section>
     </Wrapper>
 
   )
 }
 
-const Wrapper = styled.section``
+const Wrapper = styled.section`
+.sec {
+padding: 0 1rem;
+}
+`
 export default CartContent

@@ -12,6 +12,7 @@ import {
   FaHeart,
   FaCartPlus,
 } from "react-icons/fa";
+import { useCartContext } from "../context/cart-context"
 
 
 const SingleProductPage = () => {
@@ -19,6 +20,28 @@ const SingleProductPage = () => {
   // const navigate = useNavigate()
   const { fetchSingleProduct, single_product: product } = useProductContext()
   const [size, setSize] = useState(null)
+  const { addToCart } = useCartContext()
+  const [amount, setAmount] = useState(1)
+
+    const increase = () => {
+      setAmount((oldAmount) => {
+        let tempAmount = oldAmount + 1;
+        if (tempAmount > stock) {
+          tempAmount = stock;
+        }
+        return tempAmount;
+      });
+    };
+
+    const decrease = () => {
+      setAmount((oldAmount) => {
+        let tempAmount = oldAmount - 1;
+        if (tempAmount < 1) {
+          tempAmount = 1;
+        }
+        return tempAmount;
+      });
+    };
 
   useEffect(() => {
   fetchSingleProduct(id)
@@ -186,7 +209,7 @@ const SingleProductPage = () => {
             <button className='btn fave'>
               <FaRegHeart />
             </button>
-            <button className='btn cart-add'>
+            <button className='btn cart-add' onClick={() => addToCart(id, size, amount, product)}>
               <FaCartPlus /> Add To Cart
             </button>
             </div>

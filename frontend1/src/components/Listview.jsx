@@ -5,8 +5,13 @@ import { BsStarFill, BsStar, BsStarHalf } from "react-icons/bs";
 import {
   FaCartPlus,
 } from "react-icons/fa";
+import { useCartContext } from "../context/cart-context";
+import { useState } from "react";
 
 const Listview = ({products}) => {
+    const { addToCart } = useCartContext()
+  const [amount, setAmount] = useState(1)
+  const [size, setSize] = useState(null);
   return (
       <Wrapper>
           {products.map((product) => {
@@ -26,18 +31,26 @@ const Listview = ({products}) => {
                 );
               });
               return (
-                <Link to={`/products/${id}`} key={id} className="link">
-                  <article className="product">
-                    <div className="img-container">
-                    <img src={images[0]} alt={name} />
+                <Link to={`/products/${id}`} key={id} className='link'>
+                  <article className='product'>
+                    <div className='img-container'>
+                      <img src={images[0]} alt={name} />
                     </div>
-                    <div className="details">
-                      <h4>{name}</h4>
+                    <div className='details'>
+                      <h5>{name}</h5>
                       <h5 className='price'>{formatPrice(price)}</h5>
                       <p>{description.substring(0, 60)}...</p>
-                      <div className="shop">
+                      <div className='shop'>
                         <p>{tempStars}</p>
-                        <button type='button' className='btn'>
+                        <button
+                          type='button'
+                          className='btn'
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            addToCart(id, size, amount, product);
+                          }}
+                        >
                           <FaCartPlus /> Add To Cart
                         </button>
                       </div>
@@ -53,8 +66,8 @@ const Listview = ({products}) => {
 const Wrapper = styled.section`
     display: grid;
     row-gap: 1.5rem;
-    aliggn-items: center;
-    grid-template-columns: repeat(auto, minmax(300px, 1fr));
+    // aliggn-items: center;
+    // grid-template-columns: repeat(auto, minmax(300px, 1fr));
     
 .link {
 width: 95%
@@ -93,7 +106,7 @@ width: 95%
   }
 
 
-  h4 {
+  h5 {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

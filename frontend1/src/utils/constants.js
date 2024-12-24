@@ -1,4 +1,4 @@
-import {  FaHeart, FaUser, FaPhoneAlt } from "react-icons/fa";
+import {  FaHeart, FaUser, FaPhoneAlt, FaRegStar, FaHome, FaRegListAlt } from "react-icons/fa";
 
 export const sidebarLinks = [
   {
@@ -75,7 +75,7 @@ export const sidebarCat = [
   },
   {
     name: "Pre-orders",
-    icon: <FaUser />,
+    icon: <FaRegStar />,
     url: "/preorder"
   },
   {
@@ -84,6 +84,24 @@ export const sidebarCat = [
     url: "/preorder"
   },
 ]
+export const list = [
+  {
+    name: "Home",
+    icon: <FaHome />,
+    url: "/"
+  },
+  {
+    name: "Products",
+    icon: <FaRegListAlt />,
+    url: "/products",
+  },
+  {
+    name: "Account",
+    icon: <FaUser />,
+    url: "/profile"
+  }
+]
+
 export const categories = [
   {
     id: 1,
@@ -1048,7 +1066,7 @@ export const products = [
     featured: true, // Featured as a main product of the day
   },
   {
-    id: "KS002",
+    id: "KS00245",
     name: "Children's Sports Sneakers",
     description: "Durable sneakers designed for active kids.",
     category: "Kids and Baby Shoes",
@@ -1161,7 +1179,7 @@ export const products = [
     ],
   },
   {
-    id: "MS003",
+    id: "MS00389",
     name: "Casual Loafers",
     description: "Comfortable and stylish loafers for daily wear.",
     category: "Men Shoes",
@@ -1997,7 +2015,7 @@ export const products = [
     ],
   },
   {
-    id: "HA001",
+    id: "HA00111",
     name: "LED Night Lamp",
     description:
       "Compact LED night lamp with adjustable brightness, perfect for any room.",
@@ -2085,7 +2103,7 @@ export const products = [
     ],
   },
   {
-    id: "HA002",
+    id: "HA0010",
     name: "Portable Fan",
     description:
       "Rechargeable mini portable fan, perfect for on-the-go cooling during hot weather.",
@@ -2807,7 +2825,7 @@ export const products = [
     ],
   },
   {
-    id: "MS003",
+    id: "MS00333",
     name: "Leather Oxford Shoes",
     description:
       "Premium leather Oxford shoes with a classic design. Perfect for formal occasions and professional settings.",

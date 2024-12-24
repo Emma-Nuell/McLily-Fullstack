@@ -7,20 +7,22 @@ const CartPage = () => {
   const { cart } = useCartContext()
   if(cart.length < 1) {
     return (
-      <Wrapper className="page-100">
-        <div className="empty">
-          <h2>
-            Your cart is empty
-          </h2>
-          <Link to ="/products" className="btn">Fill it</Link>
-    </div>
+      <Wrapper
+        className='page-100'
+        style={{ height: "100vh", background: "#fcfcfc" }}
+      >
+        <div className='empty'>
+          <h2>Your cart is empty</h2>
+          <Link to='/products' className='btn'>
+            Fill it
+          </Link>
+        </div>
       </Wrapper>
-    )
+    );
   }
   return (
-    <main>
-      <PageHero title="cart" />
-      <Wrapper className="page">
+    <main style={{minHeight: "100vh", background: "#fcfcfc"}}>
+      <Wrapper>
         <CartContent />
       </Wrapper>
     </main>
@@ -28,7 +30,7 @@ const CartPage = () => {
 }
 
 const Wrapper = styled.main`
-.empty{
+  .empty{
 text-align: center;
 h2 {
 margin-bottom: 1rem;

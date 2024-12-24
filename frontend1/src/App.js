@@ -23,7 +23,7 @@ import {
 const AppContent = () => {
   const location = useLocation();
   const hiddenNavbarRoutes = ["/cart"];
-  const hiddenFooterRoutes = ["/products/:id"];
+  const hiddenFooterRoutes = ["/products/:id", "/cart"];
   const shouldHideFooter = hiddenFooterRoutes.some((route) =>
     matchPath(route, location.pathname)
   );

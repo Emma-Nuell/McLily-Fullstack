@@ -16,9 +16,9 @@ const Navbar = () => {
   const { total_items } = useCartContext()
   const location = useLocation()
 
-  const isHomepage = location.pathname === "/"
+  // const isHomepage = location.pathname === "/"
   return (
-    <NavContainer isHomepage={isHomepage}>
+    <NavContainer>
       <div className='nav-center'>
         <div className='navtop'>
           <div className='left'>
