@@ -66,11 +66,11 @@ const Listview = ({products}) => {
 const Wrapper = styled.section`
     display: grid;
     row-gap: 1.5rem;
-    // aliggn-items: center;
-    // grid-template-columns: repeat(auto, minmax(300px, 1fr));
+    align-items: center;
+    grid-template-columns: repeat(auto, minmax(300px, 1fr));
     
 .link {
-width: 95%
+width: 100%
 }
   .product {
     width: 100%;
