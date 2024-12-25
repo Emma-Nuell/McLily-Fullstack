@@ -2,7 +2,7 @@ import {  useParams, Link } from "react-router-dom"
 import { useProductContext } from "../context/product-context"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
-import { PageHero, ProductImages, Stars1 } from "../components"
+import { AmountButtons, PageHero, ProductImages, Stars1 } from "../components"
 import { formatPrice } from "../utils/helpers"
 import { BsStarFill, BsStar, BsStarHalf } from "react-icons/bs";
 import {
@@ -20,28 +20,21 @@ const SingleProductPage = () => {
   // const navigate = useNavigate()
   const { fetchSingleProduct, single_product: product } = useProductContext()
   const [size, setSize] = useState(null)
-  const { addToCart } = useCartContext()
+  const { addToCart, cart, toggleAmount } = useCartContext()
   const [amount, setAmount] = useState(1)
 
-    const increase = () => {
-      setAmount((oldAmount) => {
-        let tempAmount = oldAmount + 1;
-        if (tempAmount > stock) {
-          tempAmount = stock;
-        }
-        return tempAmount;
-      });
-    };
+  const inCart = cart.find((item) => item.id === id + size);
 
-    const decrease = () => {
-      setAmount((oldAmount) => {
-        let tempAmount = oldAmount - 1;
-        if (tempAmount < 1) {
-          tempAmount = 1;
-        }
-        return tempAmount;
-      });
-    };
+  const increase = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleAmount(inCart.id, "inc");
+  };
+  const decrease = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleAmount(inCart.id, "dec");
+  };
 
   useEffect(() => {
   fetchSingleProduct(id)
@@ -183,14 +176,14 @@ const SingleProductPage = () => {
                 });
                 return (
                   <article key={index}>
-                    <div className="first">
+                    <div className='first'>
                       <p>{tempStars}</p>
                       <p>{review.date}</p>
                     </div>
                     <h5>{review.comment}</h5>
-                    <div className = "second">
-                      <p className = "user">By User {review.userId}</p>
-                      <p className = "purchase">
+                    <div className='second'>
+                      <p className='user'>By User {review.userId}</p>
+                      <p className='purchase'>
                         <FaRegCheckCircle /> Verified Purchase
                       </p>
                     </div>
@@ -198,20 +191,32 @@ const SingleProductPage = () => {
                 );
               })
             ) : (
-              <h5 className="no-rating">No Customer Rating</h5>
+              <h5 className='no-rating'>No Customer Rating</h5>
             )}
           </div>
           <div className='cart'>
-            <div className="button-cont">
-            <Link to='/' className='btn home'>
-              <FaHome />
-            </Link>
-            <button className='btn fave'>
-              <FaRegHeart />
-            </button>
-            <button className='btn cart-add' onClick={() => addToCart(id, size, amount, product)}>
-              <FaCartPlus /> Add To Cart
-            </button>
+            <div className='button-cont'>
+              <Link to='/' className='btn home'>
+                <FaHome />
+              </Link>
+              <button className='btn fave'>
+                <FaRegHeart />
+              </button>
+              {inCart ? (
+                <AmountButtons
+                  amount={inCart.amount}
+                  // amount={amount}
+                  increase={(e) => increase(e)}
+                  decrease={(e) => decrease(e)}
+                />
+              ) : (
+                <button
+                  className='btn cart-add'
+                  onClick={() => addToCart(id, size, amount, product)}
+                >
+                  <FaCartPlus /> Add To Cart
+                </button>
+              )}
             </div>
           </div>
         </div>

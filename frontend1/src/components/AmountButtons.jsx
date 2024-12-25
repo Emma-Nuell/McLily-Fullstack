@@ -24,5 +24,10 @@ const Wrapper = styled.div`
     margin-bottom: 0;
     font-weight: 600;
   }
+    .amount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
 `;
 export default AmountButtons

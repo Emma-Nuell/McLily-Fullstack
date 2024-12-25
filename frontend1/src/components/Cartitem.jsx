@@ -35,9 +35,11 @@ const Cartitem = ({ id, name, brand, size, price, stock, amount, image, old }) =
             <p>
               <span>Brand:</span> {brand}
             </p>
+            {size && 
             <p>
               <span>Size:</span> {size}
             </p>
+}
             <p className='price'>
               <span>Price:</span> {formatPrice(price)}
             </p>
