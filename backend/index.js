@@ -13,12 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 //Database connection with mongodb
-mongoose
-  .connect(
-    "mongodb+srv://emma:emma%40123@cluster0.rspy6.mongodb.net/mclily?retryWrites=true&w=majority"
-  )
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((error) => console.error("Error connecting to MongoDB:", error));
+
 
 //api creation
 app.get("/", (req, res) => {
