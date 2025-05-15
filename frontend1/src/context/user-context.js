@@ -12,24 +12,24 @@ const UserContext = React.createContext()
 export const UserProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const login = () => {
-        const { mergeCartOnLogin } = useCartContext()
+    // const login = () => {
+    //     const { mergeCartOnLogin } = useCartContext()
         
-        const handleLogin = async (email, password) => {
-            try {
-                const { data } = axios.post("/api/user/login", { email, password })
-                const token = data.token
+    //     const handleLogin = async (email, password) => {
+    //         try {
+    //             const { data } = axios.post("/api/user/login", { email, password })
+    //             const token = data.token
 
-                await mergeCartOnLogin(token)
+    //             await mergeCartOnLogin(token)
 
-                console.log("User logged in successfully");
+    //             console.log("User logged in successfully");
                 
-            } catch (error) {
-                console.error("Login error", error);
+    //         } catch (error) {
+    //             console.error("Login error", error);
                 
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
 
     return (
         <UserContext.Provider value={{...state}}>
