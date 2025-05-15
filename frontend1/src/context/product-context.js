@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer, } from "react";
 import reducer from "../reducers/product-reducer"
 import { SIDEBAR_CLOSE, SIDEBAR_OPEN, ACTIVE_SUBLINK, GET_PRODUCTS_SUCCESS, GET_SINGLE_PRODUCT_SUCCESS } from "../actions";
 import { products } from "../utils/constants"

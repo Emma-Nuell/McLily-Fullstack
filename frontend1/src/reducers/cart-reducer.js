@@ -1,4 +1,4 @@
-import { ADD_TO_CART, CLEAR_CART, COUNT_CART_TOTALS, REMOVE_CART_ITEM, TOGGLE_CART_ITEM_AMOUNT } from "../actions"
+import { ADD_TO_CART, CLEAR_CART, COUNT_CART_TOTALS, LOAD_CART, REMOVE_CART_ITEM, TOGGLE_CART_ITEM_AMOUNT } from "../actions"
 
 const cart_reducer = (state, action) => {
     if (action.type === ADD_TO_CART) {
@@ -32,6 +32,9 @@ const cart_reducer = (state, action) => {
             }
             return {...state, cart: [...state.cart, newItem]}
         }
+    }
+    if (action.type === LOAD_CART) {
+        return{...state, cart: action.payload}
     }
     if (action.type === REMOVE_CART_ITEM) {
         const tempCart = state.cart.filter((item) => item.id !== action.payload)
