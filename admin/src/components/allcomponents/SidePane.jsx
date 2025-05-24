@@ -4,21 +4,74 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import React, { useState } from "react";
 import { Pen, ShoppingCartIcon, Trash } from "lucide-react";
+import { useProductContext } from "../../context/index.js";
+import { useNavigate } from "react-router-dom";
+import { useModal, useToast } from "../../context/Modal/useModal&Toast.js";
 
 const SidePane = ({
   selectedProduct,
   isOpen,
-  setIsOpen, 
+  setIsOpen,
   closeSidePane,
+  setSelectedProduct,
 }) => {
+  const { editProduct, editOn, deleteProduct } = useProductContext();
+  const {showConfirmation, OPERATION_TYPES} = useModal()
+  const {showToast, TOAST_TYPES} = useToast()
+
+  const navigate = useNavigate();
+
   let images = selectedProduct?.images || [];
   const [mainImage, setMainImage] = useState(images[0]);
-    const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const characterLimit = 250;
   const text = selectedProduct.description || "No description available";
+
+  const isLong = text.length > characterLimit;
+  const visibleText = expanded ? text : text.slice(0, characterLimit);
+
+
+      const handleProductEdit = (product) => {
+        showConfirmation({
+          operationType: OPERATION_TYPES.EDIT,
+          itemType: "product",
+          itemName: `${product.name}`,
+          onConfirm: async () => {
+            try {
+              await editOn()
+              editProduct(product);
+              navigate("/add-product");
+            } catch (error) {
+              showToast(
+                `Failed to edit product: ${error.message}`,
+                TOAST_TYPES.ERROR
+              );
+            }
+          },
+        });
+  };
   
-    const isLong = text.length > characterLimit;
-    const visibleText = expanded ? text : text.slice(0, characterLimit);
+      const handleProductDelete = (product) => {
+        showConfirmation({
+          operationType: OPERATION_TYPES.DELETE,
+          itemType: "product",
+          itemName: `${product.name} product`,
+          onConfirm: async () => {
+            try {
+              await deleteProduct(product.id);
+              setSelectedProduct(null);
+              closeSidePane();
+              showToast("Product deleted successfully", TOAST_TYPES.SUCCESS);
+            } catch (error) {
+              showToast(
+                `Failed to delete Product: ${error.message}`,
+                TOAST_TYPES.ERROR
+              );
+            }
+          },
+        });
+      };
+  
 
   return (
     <div className='scrollbar-hidden pb-20'>
@@ -258,10 +311,20 @@ const SidePane = ({
                             {/* Footer Actions */}
                             <div className='border border-aquamine-5 dark:border-dark-border p-4 flex gap-6 mb-8 fixed bottom-4 right-12 z-10 backdrop-blur-md bg-white/30 dark:bg-white/50 rounded-lg shadow-md'>
                               <div className='flex space-x-3'>
-                                <button className='flex-1 text-blue-600 dark:text-blue-900 bg-blue-600/20 dark:bg-blue-600/40  py-3 px-4 rounded-md hover:bg-blue-400 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2'>
+                                <button
+                                  onClick={() =>
+                                    handleProductEdit(selectedProduct)
+                                  }
+                                  className='flex-1 text-blue-600 dark:text-blue-900 bg-blue-600/20 dark:bg-blue-600/40  py-3 px-4 rounded-md hover:bg-blue-400 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2'
+                                >
                                   <Pen size={22} />
                                 </button>
-                                <button className='flex-1 text-red-600  bg-red-600/20 dark:bg-red-600/40 dark:text-red-900  py-3 px-4 cursor-pointer  rounded-md hover:bg-red-400 focus:outline-none focus:ring-1 focus:ring-red-400 focus:ring-offset-2'>
+                                <button
+                                  onClick={() =>
+                                    handleProductDelete(selectedProduct)
+                                  }
+                                  className='flex-1 text-red-600  bg-red-600/20 dark:bg-red-600/40 dark:text-red-900  py-3 px-4 cursor-pointer  rounded-md hover:bg-red-400 focus:outline-none focus:ring-1 focus:ring-red-400 focus:ring-offset-2'
+                                >
                                   <Trash />
                                 </button>
                               </div>

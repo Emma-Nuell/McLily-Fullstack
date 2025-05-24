@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useState} from "react";
 import { useProductContext } from "../../context/index.js";
 import { lowStockTable } from "../../lib/constants.jsx";
+import { useModal, useToast } from "../../context/Modal/useModal&Toast.js";
+import { useNavigate } from "react-router-dom";
 import {
   Trash,
   Pen,
-  Coffee,
-  Plus,
-  Search,
   Eye,
   ChevronLeft,
   ChevronRight,
@@ -14,7 +13,10 @@ import {
 } from "lucide-react";
 
 const LowStock = () => {
-  const { lowStock } = useProductContext();
+  const { lowStock, editProduct, editOn, deleteProduct } = useProductContext();
+const {showConfirmation, OPERATION_TYPES} = useModal()
+const {showToast, TOAST_TYPES} = useToast()
+
   const [currentPage, setCurrentPage] = useState(1);
   let entriesPerPage = 5;
 
@@ -34,7 +36,51 @@ const LowStock = () => {
     const visiblePageNumbers = [];
     for (let i = startPage; i <= endPage; i++) {
       visiblePageNumbers.push(i);
-    }
+  }
+
+  const handleProductDelete = (product) => {
+    showConfirmation({
+      operationType: OPERATION_TYPES.DELETE,
+      itemType: "product",
+      itemName: `${product.name} product`,
+      onConfirm: async () => {
+        try {
+          await deleteProduct(product.id);
+          showToast("Product deleted successfully", TOAST_TYPES.SUCCESS);
+        } catch (error) {
+          showToast(
+            `Failed to delete Product: ${error.message}`,
+            TOAST_TYPES.ERROR
+          );
+        }
+      },
+    });
+  };
+
+  const handleProductEdit = (product) => {
+    showConfirmation({
+      operationType: OPERATION_TYPES.EDIT,
+      itemType: "product",
+      itemName: `${product.name}`,
+      onConfirm: async () => {
+        try {
+          await editOn();
+          editProduct(product);
+          navigate("/add-product");
+        } catch (error) {
+          showToast(
+            `Failed to edit product: ${error.message}`,
+            TOAST_TYPES.ERROR
+          );
+        }
+      },
+    });
+  };
+  
+  const navigate = useNavigate();
+  const handleProductlick = (product) => {
+    navigate(`/products?productId=${product.id}&openPanel=true`);
+  };
 
 
   return (
@@ -74,7 +120,7 @@ const LowStock = () => {
                   index % 2 === 0
                     ? "bg-white dark:bg-slate-800"
                     : "bg-aquamine-7 dark:bg-slate-700"
-                } hover:bg-blue-50 dark:hover:bg-gray-700 cursor-pointer`}
+                } hover:bg-blue-50 dark:hover:bg-gray-700`}
               >
                 <td className='rounded-l-xl px-4 py-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   <div className='flex items-center'>
@@ -107,30 +153,30 @@ const LowStock = () => {
                   </td>
                 )}
                 <td className='rounded-r-xl px-6 py-4 whitespace-nowrap text-sm font-medium'>
-                  <div className='flex gap-6 items-center justify-start'>
+                  <div className='flex gap-4 items-center justify-start'>
                     <button
-                      className='text-indigo-600 dark:text-indigo-700 dark:hover:text-indigo-600 cursor-pointer hover:text-indigo-800'
+                      className='text-indigo-600 dark:text-indigo-700 dark:hover:text-indigo-600 cursor-pointer hover:text-indigo-800 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4'
                       onClick={(e) => {
                         e.stopPropagation();
-                        console.log("View", product.id);
+                        handleProductlick(product);
                       }}
                     >
                       <Eye size={20} />
                     </button>
                     <button
-                      className='text-green-500 dark:text-green-700 cursor-pointer hover:text-green-700 dark:hover:text-green-600'
+                      className='text-green-500 dark:text-green-700 cursor-pointer hover:text-green-700 dark:hover:text-green-600 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4'
                       onClick={(e) => {
                         e.stopPropagation();
-                        console.log("Edit", product.id);
+                        handleProductEdit(product);
                       }}
                     >
                       <Pen size={20} />
                     </button>
                     <button
-                      className='text-red-600 dark:text-red-700 cursor-pointer hover:text-red-900 dark:hover:text-red-600'
+                      className='text-red-600 dark:text-red-700 cursor-pointer hover:text-red-900 dark:hover:text-red-600 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4'
                       onClick={(e) => {
                         e.stopPropagation();
-                        console.log("Delete", product.id);
+                        handleProductDelete(product);
                       }}
                     >
                       <Trash size={20} />

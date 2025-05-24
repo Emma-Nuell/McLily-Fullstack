@@ -5,10 +5,20 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { Button } from "../../ui/button.jsx";
 import { Select } from "radix-ui";
 
-const SingleProduct = ({ setPrice, setStock, price, stock }) => {
+const SingleProduct = ({ setPrice, setStock, price, stock, isEditMode }) => {
   const [open, setOpen] = useState(false);
   const [productInfo, setProductInfo] = useState(null);
   const [missing, setMissing] = useState(false)
+
+  useEffect(() => { 
+    if (isEditMode) { 
+      const data = { price, stock };
+      setProductInfo(data);
+    } else {
+      setProductInfo(null);
+    }
+   
+  },[isEditMode, price, stock])
 
   const handleSave = (e) => {
     e.preventDefault()
@@ -92,11 +102,11 @@ const SingleProduct = ({ setPrice, setStock, price, stock }) => {
         </Dialog.Portal>
       </Dialog.Root>
       {productInfo && (
-        <div className='border-y mt-4 pt-4 border-aquamine-4 dark:border-slate-950 py-6'>
+        <div className='border-y mt-4 pt-4 border-aquamine-4 dark:border-slate-950 py-6 dark:text-dark-text'>
           <h2 className='text-lg font-semibold'>Details</h2>
           <div className='mt-4 rounded-md dark:text-white'>
-            <p>Price: {productInfo.price}</p>
-            <p>Stock: {productInfo.stock} </p>
+            <p>Price: { productInfo.price}</p>
+            <p>Stock: { productInfo.stock} </p>
           </div>
         </div>
       )}
@@ -104,7 +114,7 @@ const SingleProduct = ({ setPrice, setStock, price, stock }) => {
   );
 };
 
-const VariableProduct = ({ sizes, setSizes, setPrice, setStock }) => {
+const VariableProduct = ({ sizes, setSizes, setPrice, setStock, }) => {
   const [form, setForm] = useState("");
   const [value, setValue] = useState("");
   const [stocke, setStocke] = useState("");
@@ -356,8 +366,16 @@ const VariableProduct = ({ sizes, setSizes, setPrice, setStock }) => {
   );
 };
 
-const PriceStock = ({ price, stock, setStock, setPrice, sizes, setSizes, priceField }) => {
+const PriceStock = ({ price, stock, setStock, setPrice, sizes, setSizes, priceField, isEditMode }) => {
   const [hasVariations, setHasVariations] = useState(false);
+  useEffect(() => {
+    if (isEditMode && sizes.length > 0) {
+      setHasVariations(true)
+    }
+    else {
+      setHasVariations(false)
+    }
+  }, [isEditMode, sizes]);
   return (
     <div className='mt-6'>
       <div className='flex items-baseline justify-between'>
@@ -391,6 +409,7 @@ const PriceStock = ({ price, stock, setStock, setPrice, sizes, setSizes, priceFi
           setStock={setStock}
           sizes={sizes}
           setSizes={setSizes}
+          isEditMode={isEditMode}
         />
       ) : (
         <SingleProduct
@@ -398,6 +417,7 @@ const PriceStock = ({ price, stock, setStock, setPrice, sizes, setSizes, priceFi
           stock={stock}
           setPrice={setPrice}
             setStock={setStock}
+          isEditMode={isEditMode}
         />
       )}
     </div>

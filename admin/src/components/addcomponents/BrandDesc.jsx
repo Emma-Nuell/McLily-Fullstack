@@ -61,7 +61,7 @@ const BrandDesc = ({
             onChange={(e) => setProductDesc(e.target.value)}
             required
             className='box-border inline-flex w-full max-w-5xl appearance-none items-center justify-center rounded px-2.5 py-4 text-[15px] leading-none dark:text-white outline-none
-           selection:text-white font-poppins pl-6 resize-none border-aquamine-4 dark:border-slate-950 dark:focus:shadow-slate-950 border-1 focus:shadow-aquamine-3 '
+           selection:text-white font-poppins pl-6 resize-none border-aquamine-4 dark:border-slate-950 dark:focus:shadow-slate-950 border-1 focus:shadow-aquamine-3 scrollbar-hidden'
           />
         </Form.Control>
       </Form.Field>

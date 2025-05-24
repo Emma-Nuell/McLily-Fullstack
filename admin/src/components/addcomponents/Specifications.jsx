@@ -1,14 +1,31 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Dialog, Label, } from "radix-ui";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Plus } from "lucide-react";
 
+const transformToKeyValuePairs = (obj) => {
+  return Object.entries(obj).map(([key, value]) => ({ key, value }));
+};
 
 
-const Specifications = ({ onSave, specField }) => {
+const Specifications = ({ onSave, specField, isEditMode, specificationsMain }) => {
   
-  const [specifications, setSpecifications] = useState([{ key: "", value: "" }])
+  const [specifications, setSpecifications] = useState(
+    specificationsMain && isEditMode
+      ? transformToKeyValuePairs(specificationsMain)
+      : [{ key: "", value: "" }]
+  );
   const [specOpen, setSpecOpen] = useState(false);
+
+  useEffect(() => {
+    if (specificationsMain && isEditMode) {
+      setSpecifications(transformToKeyValuePairs(specificationsMain));
+    }
+    else {
+      setSpecifications([{ key: "", value: "" }]);
+    }
+  }, [specificationsMain, isEditMode]);
+  
   
   
   const handleChange = (index, field, value) => {

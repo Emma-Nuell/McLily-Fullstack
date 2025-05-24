@@ -1,11 +1,20 @@
-import { Trash, Pen, Coffee, Plus, Search, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { Trash, Pen, Coffee, Plus, Search, Eye, ChevronLeft, ChevronRight, X,  } from "lucide-react";
 import { Link } from "react-router-dom";
 import { tableDetails } from "../../lib/constants";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useProductContext } from "../../context/index.js";
+import { useModal, useToast } from "../../context/Modal/useModal&Toast.js";
 
 const Main = ({ products, setSelectedProduct, setIsOpen }) => {
+const {editProduct, editOn, deleteProduct, addFeatured, removeFeatured} = useProductContext()
+const {showConfirmation, OPERATION_TYPES} = useModal()
+const {showToast, TOAST_TYPES} = useToast()
+
   const [currentPage, setCurrentPage] = useState(1)
   const [entriesPerPage, setEntriesPerPage] = useState(20)
+  
+  const navigate = useNavigate()
 
   const indexOfLastProduct = currentPage * entriesPerPage
   const indexOfFirstProduct = indexOfLastProduct - entriesPerPage
@@ -22,10 +31,87 @@ const Main = ({ products, setSelectedProduct, setIsOpen }) => {
       visiblePageNumbers.push(i);
     }
 
+  
+    const handleProductDelete = (product) => {
+      showConfirmation({
+        operationType: OPERATION_TYPES.DELETE,
+        itemType: "product",
+        itemName: `${product.name} product`,
+        onConfirm: async () => {
+          try {
+            await deleteProduct(product.id);
+            showToast("Product deleted successfully", TOAST_TYPES.SUCCESS);
+          } catch (error) {
+            showToast(
+              `Failed to delete Product: ${error.message}`,
+              TOAST_TYPES.ERROR
+            );
+          }
+        },
+      });
+    };
+
+    const handleFeaturedAdd = (product) => {
+      showConfirmation({
+        operationType: OPERATION_TYPES.ADD,
+        itemType: "product",
+        itemName: `${product.name} among featured products`,
+        onConfirm: async () => {
+          try {
+            await addFeatured(product.id);
+            showToast("Product added successfully", TOAST_TYPES.SUCCESS);
+          } catch (error) {
+            showToast(
+              `Failed to delete product: ${error.message}`,
+              TOAST_TYPES.ERROR
+            );
+          }
+        },
+      });
+    };
+    const handleFeaturedRemove = (product) => {
+      showConfirmation({
+        operationType: OPERATION_TYPES.REMOVE,
+        itemType: "product",
+        itemName: `${product.name} from featured products`,
+        onConfirm: async () => {
+          try {
+            await removeFeatured(product.id);
+            showToast("Product removed successfully", TOAST_TYPES.SUCCESS);
+          } catch (error) {
+            showToast(
+              `Failed to delete product: ${error.message}`,
+              TOAST_TYPES.ERROR
+            );
+          }
+        },
+      });
+    };
+    const handleProductEdit = (product) => {
+      showConfirmation({
+        operationType: OPERATION_TYPES.EDIT,
+        itemType: "product",
+        itemName: `${product.name}`,
+        onConfirm: async () => {
+          try {
+            await editOn()
+            editProduct(product);
+            navigate("/add-product");
+          } catch (error) {
+            showToast(
+              `Failed to edit product: ${error.message}`,
+              TOAST_TYPES.ERROR
+            );
+          }
+        },
+      });
+    };
+  
   const handleProductClick = (product) => {
     setSelectedProduct(product);
     setIsOpen(true);
   };
+
   return (
     <div className='p-6'>
       <div className='flex items-center gap-4 mb-6'>
@@ -135,30 +221,42 @@ const Main = ({ products, setSelectedProduct, setIsOpen }) => {
                   {product.stock}
                 </td>
                 <td className='rounded-r-xl px-6 py-4 whitespace-nowrap text-sm font-medium min-w-[170px] max-sm:min-w-[130px]'>
-                  <div className='flex gap-6 items-center justify-start'>
+                  <div className='flex gap-4 items-center justify-start'>
+                    {product.featured ? (
+                      <button
+                        className='cursor-pointer text-red-600 dark:text-red-700 hover:text-red-800 dark:hover:text-red-400 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4 '
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFeaturedRemove(product);
+                        }}
+                      >
+                        <X size={20} />
+                      </button>
+                    ) : (
+                      <button
+                        className='cursor-pointer text-blue-600 dark:text-blue-700 hover:text-blue-800 dark:hover:text-blue-400 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4 '
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFeaturedAdd(product);
+                        }}
+                      >
+                        <Plus size={20} />
+                      </button>
+                    )}
                     <button
-                      className='text-indigo-600 dark:text-indigo-700 dark:hover:text-indigo-600 cursor-pointer hover:text-indigo-800'
+                      className='text-green-500 dark:text-green-700 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4 hover:text-green-800 dark:hover:text-green-400'
                       onClick={(e) => {
                         e.stopPropagation();
-                        console.log("View", product.id);
-                      }}
-                    >
-                      <Eye size={20} />
-                    </button>
-                    <button
-                      className='text-green-500 dark:text-green-700 cursor-pointer hover:text-green-700 dark:hover:text-green-600'
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log("Edit", product.id);
+                        handleProductEdit(product);
                       }}
                     >
                       <Pen size={20} />
                     </button>
                     <button
-                      className='text-red-600 dark:text-red-700 cursor-pointer hover:text-red-900 dark:hover:text-red-600'
+                      className='text-red-600 dark:text-red-700 cursor-pointer   hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4 hover:text-red-800 dark:hover:text-red-400'
                       onClick={(e) => {
                         e.stopPropagation();
-                        console.log("Delete", product.id);
+                        handleProductDelete(product);
                       }}
                     >
                       <Trash size={20} />

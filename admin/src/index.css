@@ -135,3 +135,51 @@ body {
 body::-webkit-scrollbar {
     display: none;
 }
+
+@keyframes overlayShow {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes contentShow {
+    from {opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+    }
+    to {opacity: 1;
+    transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes slideIn {
+    from {transform: translateX(calc(100% + 1rem));}
+    to {transform: translateX(0);}
+}
+
+@keyframes hide {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+
+@keyframes swipeOut {
+    from {transform: translateX(0);}
+    to {transform: translateX(calc(100% + 1rem));}
+}
+
+.animate-overlayShow {
+    animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-contentShow {
+    animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-slideIn {
+    animation: slideIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-hide {
+    animation: hide 100ms ease-in;
+}
+
+.animate-swipeOut {
+    animation: swipeOut 100ms ease-out;
+}

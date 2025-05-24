@@ -3,15 +3,8 @@ import { productOverviewTable } from "../../lib/constants.jsx";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  Trash,
-  Pen,
-  Coffee,
-  Plus,
-  Search,
-  Eye,
   ChevronLeft,
   ChevronRight,
-  CircleAlert,
 } from "lucide-react";
 
 const ProductsOverview = () => {

@@ -1,21 +1,21 @@
 import { useProductContext } from "../../context/index.js";
 import { featuredTable } from "../../lib/constants.jsx";
 import { useState } from "react";
+import { useModal, useToast } from "../../context/Modal/useModal&Toast.js";
+import { useNavigate } from "react-router-dom";
 import {
-  Trash,
   Pen,
-  Coffee,
-  Plus,
-  Search,
   Eye,
   ChevronLeft,
   ChevronRight,
-  CircleAlert,
   X
 } from "lucide-react";
 
 const FeaturedProducts = () => {
-  const { featuredProducts } = useProductContext()
+  const { featuredProducts, editProduct, editOn, removeFeatured } = useProductContext();
+  const { showConfirmation, OPERATION_TYPES } = useModal();
+  const { showToast, TOAST_TYPES } = useToast();
+
    const [currentPage, setCurrentPage] = useState(1);
    let entriesPerPage = 5;
 
@@ -30,7 +30,51 @@ const FeaturedProducts = () => {
    const pageNumbers = [];
    for (let i = 1; i <= totalPages; i++) {
      pageNumbers.push(i);
-   }
+  }
+
+  const handleFeaturedRemove = (product) => {
+    showConfirmation({
+      operationType: OPERATION_TYPES.REMOVE,
+      itemType: "product",
+      itemName: `${product.name} from featured products`,
+      onConfirm: async () => {
+        try {
+          await removeFeatured(product.id);
+          showToast("Product removed successfully", TOAST_TYPES.SUCCESS);
+        } catch (error) {
+          showToast(
+            `Failed to delete product: ${error.message}`,
+            TOAST_TYPES.ERROR
+          );
+        }
+      },
+    });
+  };
+
+  const handleProductEdit = (product) => {
+    showConfirmation({
+      operationType: OPERATION_TYPES.EDIT,
+      itemType: "product",
+      itemName: `${product.name}`,
+      onConfirm: async () => {
+        try {
+          await editOn();
+          editProduct(product);
+          navigate("/add-product");
+        } catch (error) {
+          showToast(
+            `Failed to edit product: ${error.message}`,
+            TOAST_TYPES.ERROR
+          );
+        }
+      },
+    });
+  };
+  
+  const navigate = useNavigate();
+  const handleProductlick = (product) => {
+    navigate(`/products?productId=${product.id}&openPanel=true`);
+  };
 
  return (
    <div className='bg-white dark:bg-slate-800 p-6 rounded-md'>
@@ -94,30 +138,30 @@ const FeaturedProducts = () => {
                  {product.visit || 20}
                </td>
                <td className='rounded-r-xl px-6 py-4 whitespace-nowrap text-sm font-medium'>
-                 <div className='flex gap-6 items-center justify-start'>
+                 <div className='flex gap-4 items-center justify-start'>
                    <button
-                     className='text-indigo-600 dark:text-indigo-700 dark:hover:text-indigo-600 cursor-pointer hover:text-indigo-800'
+                     className='text-indigo-600 dark:text-indigo-700 dark:hover:text-indigo-600 cursor-pointer hover:text-indigo-800 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4'
                      onClick={(e) => {
                        e.stopPropagation();
-                       console.log("View", product.id);
+                       handleProductlick(product);
                      }}
                    >
                      <Eye size={17} />
                    </button>
                    <button
-                     className='text-green-500 dark:text-green-700 cursor-pointer hover:text-green-700 dark:hover:text-green-600'
+                     className='text-green-500 dark:text-green-700 cursor-pointer hover:text-green-700 dark:hover:text-green-600 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4'
                      onClick={(e) => {
                        e.stopPropagation();
-                       console.log("Edit", product.id);
+                       handleProductEdit(product);
                      }}
                    >
                      <Pen size={17} />
                    </button>
                    <button
-                     className='text-red-600 dark:text-red-700 cursor-pointer hover:text-red-900 dark:hover:text-red-600'
+                     className='text-red-600 dark:text-red-700 cursor-pointer hover:text-red-900 dark:hover:text-red-600 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4'
                      onClick={(e) => {
                        e.stopPropagation();
-                       console.log("Delete", product.id);
+                      handleFeaturedRemove(product);
                      }}
                    >
                      <X size={17} />

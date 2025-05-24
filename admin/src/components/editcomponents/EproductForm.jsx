@@ -144,6 +144,7 @@ const NotificationsPage = () => {
       notifications.filter((notification) => !notification.isRead)
     );
   };
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   // Get notification icon based on type
   const getNotificationIcon = (type, priority) => {
@@ -188,7 +189,6 @@ const NotificationsPage = () => {
   };
 
   // Get unread count
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
     <div
@@ -212,7 +212,7 @@ const NotificationsPage = () => {
                   darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
                 }`}
               >
-                <AdjustmentsHorizontalIcon className='h-6 w-6' />
+                <AdjustmentsHorizontalIcon className='h-16 w-16' />
               </button>
 
               {isFilterMenuOpen && (

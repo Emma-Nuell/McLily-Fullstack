@@ -4,16 +4,27 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { Background } from "./components";
-import { ProductsProvider, ThemeProvider } from "./context/index.js";
+import {
+  ProductsProvider,
+  ThemeProvider,
+  NotificationProvider,
+  ModalToast,
+  OrdersProvider,
+} from "./context/index.js";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
     <ProductsProvider>
-    <ThemeProvider>
-      <Background>
-        <App />
-      </Background>
-    </ThemeProvider>
+      <OrdersProvider>
+        <ThemeProvider>
+          <NotificationProvider>
+            <ModalToast>
+              <Background>
+                <App />
+              </Background>
+            </ModalToast>
+          </NotificationProvider>
+        </ThemeProvider>
+      </OrdersProvider>
     </ProductsProvider>
-  </StrictMode>
+  
 );

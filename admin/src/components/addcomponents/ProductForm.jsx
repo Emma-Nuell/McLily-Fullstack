@@ -12,36 +12,27 @@ import {
 } from "./index.js";
 import { Form } from "radix-ui";
 
-const ProductForm = ({ handleAddProduct, productData }) => {
-  const { isEditMode } = useProductContext();
-  
+const ProductForm = ({ handleAddProduct }) => {
+  const { isEditMode, editProductData, editOff } = useProductContext();
 
-  const [productName, setProductName] = useState(
-    isEditMode ? productData.name : ""
+  const [productName, setProductName] = useState("");
+  const [category, setCategory] = useState(
+    isEditMode ? editProductData.category : ""
   );
-  const [category, setCategory] = useState(isEditMode ? productData.category : "");
   const [subCategory, setSubCategory] = useState(
-    isEditMode ? productData.subCategory : ""
+    isEditMode ? editProductData.subCategory : ""
   );
   const [images, setImages] = useState([]);
-  const [uploadedImages, setUploadedImages] = useState(
-    isEditMode ? productData.images : []
-  );
+  const [uploadedImages, setUploadedImages] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [brandName, setBrandName] = useState(isEditMode ? productData.brand : "");
-  const [productDesc, setProductDesc] = useState(
-    isEditMode ? productData.description : ""
-  );
-  const [specifications, setSpecifications] = useState(
-    isEditMode ? productData.specifications : {}
-  );
-  const [tags, setTags] = useState(isEditMode ? productData.tags : []);
-  const [stock, setStock] = useState(isEditMode ? productData.stock : "");
-  const [price, setPrice] = useState(isEditMode ? productData.price : "");
-  const [sizes, setSizes] = useState(isEditMode ? productData.sizes : []);
-  const [featured, setFeatured] = useState(
-    isEditMode ? productData.featured : false
-  );
+  const [brandName, setBrandName] = useState("");
+  const [productDesc, setProductDesc] = useState("");
+  const [specifications, setSpecifications] = useState({});
+  const [tags, setTags] = useState([]);
+  const [stock, setStock] = useState("");
+  const [price, setPrice] = useState("");
+  const [sizes, setSizes] = useState([]);
+  const [featured, setFeatured] = useState(false);
   const [nameField, setNameField] = useState(false);
   const [categoryField, setCategoryField] = useState(false);
   const [imageField1, setImageField1] = useState(false);
@@ -50,6 +41,34 @@ const ProductForm = ({ handleAddProduct, productData }) => {
   const [descField, setDescField] = useState(false);
   const [specField, setSpecField] = useState(false);
   const [tagsField, setTagsField] = useState(false);
+
+  useEffect(() => {
+    if (isEditMode) {
+      setProductName(editProductData.name || "");
+      setUploadedImages(editProductData.images || []);
+      setBrandName(editProductData.brand || "");
+      setProductDesc(editProductData.description || "");
+      setSpecifications(editProductData.specifications || {});
+      setTags(editProductData.tags || []);
+      setStock(editProductData.stock || "");
+      setPrice(editProductData.price || "");
+      setSizes(editProductData.sizes || []);
+      setFeatured(editProductData.featured || false);
+    } else {
+      setProductName("");
+      setCategory("");
+      setSubCategory("");
+      setUploadedImages([]);
+      setBrandName("");
+      setProductDesc("");
+      setSpecifications({});
+      setTags([]);
+      setStock("");
+      setPrice("");
+      setSizes([]);
+      setFeatured(false);
+    }
+  }, [isEditMode, editProductData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -123,17 +142,30 @@ const ProductForm = ({ handleAddProduct, productData }) => {
   };
 
   useEffect(() => {
-    setSubCategory("");
-  }, [category]);
+    if (!isEditMode ) {
+      setSubCategory("");
+    }
+  }, [category, isEditMode]);
+
+ const  handleCancelEdit = () => {
+    editOff()
+  }
 
   return (
     <Form.Root
       onSubmit={handleSubmit}
       className='bg-white dark:bg-slate-800 w-full p-6 rounded-lg shadow-md max-w-6xl mx-auto font-dm border-aquamine-4 border-2 dark:border-slate-500'
     >
-      <h2 className='text-2xl font-semibold mb-4 dark:text-white'>
-        {isEditMode ? "Edit Product" : "Add Product"}
-      </h2>
+      <div className="flex justify-between items-center">
+        <h2 className='text-2xl font-semibold mb-4 dark:text-white'>
+          {isEditMode ? "Edit Product" : "Add Product"}
+        </h2>
+        {isEditMode && (
+          <button onClick={handleCancelEdit} className='button dark:bg-slate-600  font-medium leading-none dark:text-white outline-none outline-offset-1 hover:bg-aquamine-3 dark:hover:bg-slate-500 focus-visible:outline-2 select-none'>
+            Cancel Edit
+          </button>
+        )}
+      </div>
       <ProductName
         productName={productName}
         setProductName={setProductName}
@@ -161,6 +193,7 @@ const ProductForm = ({ handleAddProduct, productData }) => {
         stock={stock}
         price={price}
         sizes={sizes}
+        isEditMode={isEditMode}
         setSizes={setSizes}
         priceField={priceField}
       />
@@ -173,10 +206,11 @@ const ProductForm = ({ handleAddProduct, productData }) => {
         descField={descField}
       />
       <Specifications
-        specifications={specifications}
+        specificationsMain={specifications}
         setSpecifications={setSpecifications}
         onSave={(data) => setSpecifications(data)}
         specField={specField}
+        isEditMode={isEditMode}
       />
       <TagsInput setTags={setTags} tags={tags} tagsField={tagsField} />
       <Featured setFeatured={setFeatured} featured={featured} />
@@ -189,7 +223,7 @@ const ProductForm = ({ handleAddProduct, productData }) => {
               // disabled={uploadedImages.length !== images.length || isUploading}
               className='button dark:bg-slate-600  font-medium leading-none dark:text-white outline-none outline-offset-1 hover:bg-aquamine-3 dark:hover:bg-slate-500 focus-visible:outline-2 select-none'
             >
-              Add Product
+              {isEditMode ? "Update Product" : "Add Product"}
             </button>
           </div>
         </Form.Submit>

@@ -1,38 +1,47 @@
-import { useProductContext } from "../../context/index.js";
+import { useOrderContext } from "../../context/index.js";
 import { useState } from "react";
 import { ordersDetails } from "../../lib/constants.jsx";
+import { useModal, useToast } from "../../context/Modal/useModal&Toast.js";
 import {
   Trash,
-  Pen,
-  Coffee,
-  Plus,
-  Search,
-  Eye,
   ChevronLeft,
   ChevronRight,
-  CircleAlert,
+  ScrollText,
+  Coffee,
+  Search,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const AllOrders = () => {
-    const { orders } = useProductContext();
+  const { orders, deleteOrder } = useOrderContext();
+  const {showConfirmation, OPERATION_TYPES} = useModal()
+const {showToast, TOAST_TYPES} = useToast()
+  
     
  
     const navigate = useNavigate();
 
     const handleClick = (id) => {
-        navigate(`/orders/${id}`);
-    }
+      navigate(`/orders/${id}`, {
+        state: { from: { pathname: "/orders", page: currentPage } },
+      });
+  };
+  
+  const handleStatusClick = (id) => {
+    navigate(`/orders/${id}`, {
+       state: {from: { pathname: "/orders", isOpen: true}}
+     })
+  };
 
 
-    const [currentPage, setCurrentPage] = useState(1);
-    let entriesPerPage = 20;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
 
-    const indexOfLastProduct = currentPage * entriesPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - entriesPerPage;
-    const currentProducts = orders.slice(
-      indexOfFirstProduct,
-      indexOfLastProduct
+    const indexOfLastOrder = currentPage * entriesPerPage;
+    const indexOfFirstOrder = indexOfLastOrder - entriesPerPage;
+    const currentOrders = orders.slice(
+      indexOfFirstOrder,
+      indexOfLastOrder
     );
     const totalPages = Math.ceil(orders.length / entriesPerPage);
 
@@ -45,13 +54,95 @@ const AllOrders = () => {
     for (let i = startPage; i <= endPage; i++) {
       visiblePageNumbers.push(i);
     }
+
+    const handleOrderDelete = (order) => {
+      showConfirmation({
+        operationType: OPERATION_TYPES.DELETE,
+        itemType: "order",
+        itemName: `order ${order.orderId}`,
+        onConfirm: async () => {
+          try {
+            await deleteOrder(order.orderId);
+            showToast("Order deleted successfully", TOAST_TYPES.SUCCESS);
+          } catch (error) {
+            showToast(
+              `Failed to delete Order: ${error.message}`,
+              TOAST_TYPES.ERROR
+            );
+          }
+        },
+      });
+    };
+
+
+    function getStatusColor(status) {
+      switch (status) {
+        case "Pending":
+          return "text-yellow-600";
+        case "Processing":
+          return "text-blue-600";
+        case "Shipped":
+          return "text-purple-600";
+        case "Out_for_delivery":
+          return "text-indigo-600";
+        case "Delivered":
+          return "text-green-600";
+        case "Cancelled":
+          return "text-red-600";
+        case "Returned":
+          return "text-orange-600";
+        case "Refunded":
+          return "text-pink-600";
+        default:
+          return "text-gray-600";
+      }
+    }
     return (
       <div className='bg-white dark:bg-slate-800 p-6 rounded-md mt-12'>
-        <div>
+        <div className="mb-10 py-4">
           <h2 className='dark:text-dark-text font-bold text-2xl max-sm:text-xl'>
             All Orders
           </h2>
         </div>
+              <div className='flex items-center gap-4 mb-6 dark:text-dark-text'>
+                <div>
+                  <Coffee size={24} />
+                </div>
+                <p className='text-light-text-secondary dark:text-dark-text-secondary font-light font-poppins'>
+                  Tip search by Product ID: Each product is provided with a unique ID,
+                  which you can rely on to find the exact product you need.
+                </p>
+              </div>
+              <div className='flex justify-between items-center flex-wrap gap-8'>
+                <div className='flex-grow flex items-center gap-6'>
+                  <div className='flex items-center gap-4 dark:text-dark-text'>
+                    <p className='font-light text-sm'>showing</p>
+                    <select
+                      name='entries'
+                      id='entries'
+                      value={entriesPerPage}
+                      onChange={(e) => {
+                        setEntriesPerPage(Number(e.target.value));
+                        setCurrentPage(1);
+                      }}
+                      className='p-2 rounded-md outline-none dark:text-white dark:bg-dark-button border-1 border-light-border dark:border-dark-border'
+                    >
+                      <option value={10}>10</option>
+                      <option value={20}>20</option>
+                      <option value={30}>30</option>
+                    </select>
+                    <p className='font-light text-sm'>entries</p>
+                  </div>
+                  <div className='flex items-center border-1 border-light-border dark:border-dark-border p-4 shadow-lg rounded-md w-1/2'>
+                    <Search className='text-black dark:text-white mr-2' />
+                    <input
+                      type='text'
+                      placeholder='Search...'
+                      className='border-none dark:text-white focus:outline-none ml-2 w-full'
+                    />
+                  </div>
+                </div>
+              </div>
         <div className='bg-white dark:bg-slate-800 rounded-lg pb-18 overflow-x-auto scrollbar-hidden'>
           <table className='min-w-full mt-10 border-separate border-spacing-y-6'>
             <thead className='bg-aquamine-7 dark:bg-slate-700'>
@@ -75,10 +166,10 @@ const AllOrders = () => {
               </tr>
             </thead>
             <tbody className='bg-white dark:bg-slate-800 mt-10 dark:text-dark-text'>
-              {currentProducts.map((product, index) => (
+              {currentOrders.map((order, index) => (
                 <tr
-                      key={product.orderId}
-                      onClick={() => handleClick(product.orderId)}
+                  key={order.orderId}
+                  onClick={() => handleClick(order.orderId)}
                   className={`${
                     index % 2 === 0
                       ? "bg-white dark:bg-slate-800"
@@ -88,73 +179,54 @@ const AllOrders = () => {
                   <td className='rounded-l-xl pr-16 px-4 py-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[280px] max-sm:min-w-[190px]'>
                     <div className='flex items-center'>
                       <div className='h-23 w-23 max-sm:h-20 max-sm:w-20 flex-shrink-0 flex items-center'>
-                        <img src={product.image} alt={product.name} />
+                        <img src={order.image} alt={order.name} />
                       </div>
                       <div className='ml-6'>
                         <div className='font-medium text-black dark:text-dark-text text-[14px] max-sm:text-xs max-w-[300px] max-sm:max-w-[220px] text-nowrap overflow-hidden overflow-ellipsis'>
-                          {product.productName}
+                          {order.productName}
                         </div>
                       </div>
                     </div>
                   </td>
 
                   <td className='px-4 py-6 whitespace-nowrap min-w-[180px] max-sm:min-w-[140px] text-[14px] max-sm:text-xs'>
-                    {product.customerName}
+                    {order.customerName}
                   </td>
                   <td className='px-4 py-6 whitespace-nowrap min-w-[180px] max-sm:min-w-[140px] text-[14px] max-sm:text-xs'>
-                    #{product.orderId}
+                    #{order.orderId}
                   </td>
                   <td className='px-4 py-6 whitespace-nowrap min-w-[180px] max-sm:min-w-[140px] text-[14px] max-sm:text-xs'>
-                    ₦{Number(product.subtotal).toLocaleString()}
+                    ₦{Number(order.subtotal).toLocaleString()}
                   </td>
                   <td className='px-4 py-6 whitespace-nowrap min-w-[160px] max-sm:min-w-[120px] text-[14px] max-sm:text-xs'>
-                    x{product.quantity}
+                    x{order.quantity}
                   </td>
                   <td className='px-4 py-6 whitespace-nowrap min-w-[200px] max-sm:min-w-[150px] text-[14px] max-sm:text-xs'>
-                    {product.paymentMethod}
+                    {order.paymentMethod}
                   </td>
-                  {product.status == "Delivered" ? (
-                    <td className='px-4 py-6 rounded-r-xl whitespace-nowrap text-green-700 dark:text-green-700 font-medium text-[15px] max-sm:text-xs min-w-[180px] max-sm:min-w-[140px]'>
-                      {product.status}
-                    </td>
-                  ) : product.status == "Shipped" ? (
-                    <td className='px-4 py-6 rounded-r-xl whitespace-nowrap  font-medium text-[15px] max-sm:text-xs text-green-600 dark:text-green-500 min-w-[180px] max-sm:min-w-[140px]'>
-                      {product.status}
-                    </td>
-                  ) : product.status == "Processing" ? (
-                    <td className='px-4 py-6 rounded-r-xl whitespace-nowrap  font-medium text-[15px] max-sm:text-xs  text-amber-600 dark:text-amber-600 min-w-[180px] max-sm:min-w-[140px]'>
-                      {product.status}
-                    </td>
-                  ) : (
-                    <td className='px-4 py-6 rounded-r-xl whitespace-nowrap  font-medium text-[15px] max-sm:text-xs  text-red-600 dark:text-red-600 min-w-[180px] max-sm:min-w-[140px]'>
-                      {product.status}
-                    </td>
-                  )}
-                  <td className='rounded-r-xl px-6 py-4 whitespace-nowrap text-sm font-medium min-w-[170px] max-sm:min-w-[120px]'>
-                    <div className='flex gap-6 items-center justify-start'>
+                  <td
+                    className={`font-medium text-[15px] max-sm:text-xs min-w-[160px] max-sm:min-w-[110px] whitespace-nowrap px-4 py-6 ${getStatusColor(
+                      order.status
+                    )}`}
+                  >
+                    {order.status}
+                  </td>
+                  <td className='rounded-r-xl px-6 py-4 whitespace-nowrap text-sm font-medium min-w-[130px] max-sm:min-w-[90px]'>
+                    <div className='flex gap-4 items-center justify-start'>
                       <button
-                        className='text-indigo-600 dark:text-indigo-700 dark:hover:text-indigo-600 cursor-pointer hover:text-indigo-800'
+                        className='text-blue-500 dark:text-blue-700 cursor-pointer hover:text-blue-700 dark:hover:text-blue-600 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4'
                         onClick={(e) => {
                           e.stopPropagation();
-                          console.log("View", product.id);
+                          handleStatusClick(order.orderId)
                         }}
                       >
-                        <Eye size={20} />
+                        <ScrollText size={20} />
                       </button>
                       <button
-                        className='text-green-500 dark:text-green-700 cursor-pointer hover:text-green-700 dark:hover:text-green-600'
+                        className='text-red-600 dark:text-red-700 cursor-pointer hover:text-red-900 dark:hover:text-red-600 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full p-4'
                         onClick={(e) => {
                           e.stopPropagation();
-                          console.log("Edit", product.id);
-                        }}
-                      >
-                        <Pen size={20} />
-                      </button>
-                      <button
-                        className='text-red-600 dark:text-red-700 cursor-pointer hover:text-red-900 dark:hover:text-red-600'
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log("Delete", product.id);
+                          handleOrderDelete(order)
                         }}
                       >
                         <Trash size={20} />
@@ -169,9 +241,9 @@ const AllOrders = () => {
         <div className='w-full h-1 bg-aquamine-5 dark:bg-dark-border my-10'></div>
         <div className='flex items-center justify-between mt-10 py-4 px-1 gap-6'>
           <div className='text-light-text-secondary dark:text-dark-text-secondary text-sm max-sm:text-xs'>
-            Showing {indexOfFirstProduct + 1} to{" "}
-            {Math.min(indexOfLastProduct, orders.length)} of{" "}
-            {orders.length} entries
+            Showing {indexOfFirstOrder + 1} to{" "}
+            {Math.min(indexOfLastOrder, orders.length)} of {orders.length}{" "}
+            entries
           </div>
           <div className='flex space-x-1 gap-6 max-sm:gap-3'>
             <button
