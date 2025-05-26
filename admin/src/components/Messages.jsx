@@ -108,7 +108,10 @@ const Messages = () => {
   };
 
   return (
-    <div className='relative flex justify-end items-center mr-2'>
+    <div
+      ref={dropdownRef}
+      className='relative flex justify-end items-center mr-2'
+    >
       <button
         onClick={() => setIsOpen(!isOpen)}
         className='cursor-pointer outline-none focus:outline-none dark:text-white'
@@ -121,10 +124,7 @@ const Messages = () => {
         )}
       </button>
       {isOpen && (
-        <div
-          ref={dropdownRef}
-          className='absolute right-0 max-sm:-right-35 top-17 mt-2 p-6 w-auto min-w-[280px] rounded-lg shadow-lg z-10 bg-white dark:bg-slate-800 dark:text-dark-text'
-        >
+        <div className='absolute right-0 max-sm:-right-35 top-17 mt-2 p-6 w-auto min-w-[280px] rounded-lg shadow-lg z-10 bg-white dark:bg-slate-800 dark:text-dark-text'>
           <div className='border-b-1 py-4 pt-1 border-light-border dark:border-dark-border'>
             <h3 className='font-extrabold text-xl'>Notifications</h3>
           </div>
