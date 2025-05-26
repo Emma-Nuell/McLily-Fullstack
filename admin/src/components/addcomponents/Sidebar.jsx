@@ -4,8 +4,11 @@ import { Link, useLocation } from "react-router-dom";
 import { sidebarLinks } from "../../lib/constants.jsx";
 import { ArrowLeftCircleIcon } from "lucide-react";
 import Logo from "../../assets/logo.svg";
+import { useOrderContext, useNotificationContext } from "../../context/index.js";
 
 const Sidebar = () => {
+  const { pendingOrders } = useOrderContext()
+  const {unreadCount} = useNotificationContext()
   const [isOpen, setIsOpen] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
   const location = useLocation();
@@ -55,11 +58,17 @@ const Sidebar = () => {
                   </span>
                   {isOpen && (
                     <span
-                      className={`origin-left duration-300 hover:block ${
+                      className={`origin-left duration-300  flex justify-between w-full items-center ${
                         !isOpen && "hidden"
                       }`}
                     >
                       {link.title}
+                      {link.title === "Orders" ? (
+                        <span className="bg-light-button dark:bg-dark-button rounded-full py-2 px-3 text-sm text-center">{pendingOrders.length}</span>
+                      ) : null}
+                      {link.title === "Notifications" ? (
+                        <span className="bg-light-button dark:bg-dark-button rounded-full py-1 px-4 text-sm text-center">{unreadCount}</span>
+                      ) : null}
                     </span>
                   )}
                 </li>

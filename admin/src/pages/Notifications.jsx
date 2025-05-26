@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNotificationContext, useThemeContext } from "../context/index.js";
 import { useModal, useToast } from "../context/Modal/useModal&Toast.js";
 
-import { SlidersHorizontal, Trash, Check, Bell, X, Eye } from "lucide-react";
+import { SlidersHorizontal, Trash, Check, Bell, X, Eye, User, MonitorCog, Banknote, Package, Warehouse, ChartNoAxesCombined } from "lucide-react";
 
 const Notifications = () => {
 const {showConfirmation, OPERATION_TYPES} = useModal()
@@ -41,6 +41,25 @@ const {showToast, TOAST_TYPES} = useToast()
     getFilteredNotifications(filter);
   }, [filter, getFilteredNotifications]);
 
+  const getNotificationTypeIcon = (type) => {
+    switch (type) {
+      case "user":
+        return <User className='size-10 max-sm:size-8' />;
+      case "system":
+        return <MonitorCog className='size-10 max-sm:size-8' />;
+      case "payment":
+        return <Banknote className='size-10 max-sm:size-8' />;
+      case "order":
+        return <Package className='size-10 max-sm:size-8' />;
+      case "inventory":
+        return <Warehouse className='size-10 max-sm:size-8' />;
+      case "report":
+        return <ChartNoAxesCombined className='size-10 max-sm:size-8' />;
+      default:
+        return <Bell className='size-10 max-sm:size-8' />;
+    }
+  }
+
 
   const getNotificationIcon = (type, priority) => {
     let bgColor = "";
@@ -49,16 +68,16 @@ const {showToast, TOAST_TYPES} = useToast()
     if (theme === "dark") {
       switch (priority) {
         case "high":
-          bgColor = "bg-red-600";
+          bgColor = "bg-red-600 text-red-200";
           break;
         case "medium":
-          bgColor = "bg-yellow-500";
+          bgColor = "bg-yellow-600 text-yellow-200";
           break;
         case "low":
-          bgColor = "bg-green-600";
+          bgColor = "bg-green-600 text-green-200";
           break;
         default:
-          bgColor = "bg-blue-600";
+          bgColor = "bg-blue-600 text-blue-200";
       }
     } else {
       switch (priority) {
@@ -80,7 +99,7 @@ const {showToast, TOAST_TYPES} = useToast()
       <div
         className={`p-4 max-sm:p-2.5 rounded-full ${bgColor} flex items-center justify-center`}
       >
-        <Bell className='size-10 max-sm:size-8' />
+        {getNotificationTypeIcon(type)}
       </div>
     );
   };

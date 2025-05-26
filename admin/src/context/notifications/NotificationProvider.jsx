@@ -48,11 +48,15 @@ const NotificationProvider = ({ children }) => {
       default:
         return state.notifications;
     }
-    };
-    
+  };
+  
+
+  useEffect(() => {
+    setNotification()
+  }, []);
       useEffect(() => {
-        setNotification()
-      }, []);
+        unreadCount()
+      }, [state.notifications]);
 
   return (
     <NotificationContext.Provider
@@ -64,7 +68,6 @@ const NotificationProvider = ({ children }) => {
         deleteNotification,
         clearReadNotifications,
         getFilteredNotifications,
-        unreadCount,
       }}
     >
       {children}

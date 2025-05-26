@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Hamburger } from "./index.js";
 import { Link, useLocation } from "react-router-dom";
 import { sidebarLinks } from "../../lib/constants.jsx";
+import Messages from "../Messages.jsx";
+
 
 const Navbar = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -51,9 +53,10 @@ const Navbar = () => {
             />
           </div>
           <div className='flex justify-end pr-4 gap-4 items-center cursor-pointer'>
-            <span>
+            <Messages />
+            {/* <span>
               <MessageSquare className='text-xl dark:text-white' />
-            </span>
+            </span> */}
             <ThemeToggle />
             <User className='text-xl dark:text-white' />
           </div>

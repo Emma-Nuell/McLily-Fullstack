@@ -109,7 +109,7 @@ const {showToast, TOAST_TYPES} = useToast()
                   <Coffee size={24} />
                 </div>
                 <p className='text-light-text-secondary dark:text-dark-text-secondary font-light font-poppins'>
-                  Tip search by Product ID: Each product is provided with a unique ID,
+                  Tip search by Order ID: Each order is provided with a unique ID,
                   which you can rely on to find the exact product you need.
                 </p>
               </div>
