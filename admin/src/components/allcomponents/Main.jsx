@@ -1,18 +1,21 @@
 import { Trash, Pen, Coffee, Plus, Search, Eye, ChevronLeft, ChevronRight, X,  } from "lucide-react";
 import { Link } from "react-router-dom";
 import { tableDetails } from "../../lib/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProductContext } from "../../context/index.js";
 import { useModal, useToast } from "../../context/Modal/useModal&Toast.js";
 
-const Main = ({ products, setSelectedProduct, setIsOpen }) => {
-const {editProduct, editOn, deleteProduct, addFeatured, removeFeatured} = useProductContext()
+const Main = ({ products, setSelectedProduct, setIsOpen, searchInput, setSearchInput }) => {
+const {editProduct, editOn, deleteProduct, addFeatured, removeFeatured, productSearch, clearSearch} = useProductContext()
 const {showConfirmation, OPERATION_TYPES} = useModal()
 const {showToast, TOAST_TYPES} = useToast()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [entriesPerPage, setEntriesPerPage] = useState(20)
+  // const [searchInput, setSearchInput] = useState(searchTerm || "")
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   
   const navigate = useNavigate()
 
@@ -112,6 +115,23 @@ const {showToast, TOAST_TYPES} = useToast()
     setIsOpen(true);
   };
 
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  useEffect(() => {
+    if (debouncedSearch.trim()) {
+     productSearch(debouncedSearch)
+    } else {
+     clearSearch()
+    }
+  }, [debouncedSearch, clearSearch, productSearch]);
+
   return (
     <div className='p-6'>
       <div className='flex items-center gap-4 mb-6'>
@@ -147,6 +167,8 @@ const {showToast, TOAST_TYPES} = useToast()
             <Search className='text-black dark:text-white mr-2' />
             <input
               type='text'
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               placeholder='Search...'
               className='border-none dark:text-white focus:outline-none ml-2 w-full'
             />

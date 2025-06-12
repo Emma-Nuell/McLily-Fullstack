@@ -10,6 +10,8 @@ import {
   REMOVE_FEATURED,
   ADD_FEATURED,
   GET_FEATURED_PRODUCTS,
+  SEARCH_PRODUCTS,
+  CLEAR_SEARCH_PRODUCTS,
 } from "../actions";
 
 const products_reducer = (state, action) => {
@@ -32,7 +34,7 @@ const products_reducer = (state, action) => {
     return { ...state, isEditMode: false, editProductData: {} };
   }
   if (action.type === GET_PRODUCTS_SUCCESS) {
-    return { ...state, products: action.payload };
+    return { ...state, products: action.payload, filteredProducts: action.payload };
   }
   if (action.type === LOW_STOCK) {
     const lowStock = action.payload.filter((p) => Number(p.stock) <= 10);
@@ -68,7 +70,16 @@ const products_reducer = (state, action) => {
     });
     return { ...state, products: updatedProducts };
   }
-
+  if (action.type === SEARCH_PRODUCTS) {
+    const searchTerm = action.payload.toLowerCase();
+    const filteredProducts = state.products.filter(product => product.name.toLowerCase().includes(searchTerm) || product.id.toString().includes(searchTerm) || product.category.includes(searchTerm) || product.subCategory.toLowerCase().includes(searchTerm));
+    return {
+      ...state, filteredProducts: filteredProducts, searchTerm: searchTerm
+    }
+  }
+  if (action.type === CLEAR_SEARCH_PRODUCTS) {
+    return {...state, filteredProducts: state.products, searchTerm: ""}
+  }
   throw new Error(`No Matching "${action.type}" - action type`);
 };
 

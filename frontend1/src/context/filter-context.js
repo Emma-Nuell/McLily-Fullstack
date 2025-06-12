@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer,  } from "react";
 import reducer from "../reducers/filter-reducer"
 import { useProductContext } from "./product-context";
-import { CLEAR_FILTERS, FILTER_PRODUCTS, LOAD_PRODUCTS, SET_GRIDVIEW, SET_LISTVIEW, SORT_PRODUCTS, UPDATE_SORT } from "../actions";
+import { CLEAR_FILTERS, LOAD_PRODUCTS, SET_GRIDVIEW, SET_LISTVIEW, SORT_PRODUCTS, UPDATE_SORT } from "../actions";
 
 const initialState = {
     filtered_products: [],

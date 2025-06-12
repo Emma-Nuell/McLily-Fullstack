@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Hamburger } from "./index.js";
+import { Hamburger } from "./addcomponents/index.js";
 import { Link, useLocation } from "react-router-dom";
-import { sidebarLinks } from "../../lib/constants.jsx";
+import { sidebarLinks } from "../lib/constants.jsx";
 import { ArrowLeftCircleIcon } from "lucide-react";
-import Logo from "../../assets/logo.svg";
-import { useOrderContext, useNotificationContext } from "../../context/index.js";
+import Logo from "../assets/logo.svg"
+import { useOrderContext, useNotificationContext } from "../context/index.js";
 
 const Sidebar = () => {
-  const { pendingOrders } = useOrderContext()
-  const {unreadCount} = useNotificationContext()
+  const { pendingOrders } = useOrderContext();
+  const { unreadCount } = useNotificationContext();
   const [isOpen, setIsOpen] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
   const location = useLocation();
@@ -64,10 +64,14 @@ const Sidebar = () => {
                     >
                       {link.title}
                       {link.title === "Orders" ? (
-                        <span className="bg-light-button dark:bg-dark-button rounded-full py-2 px-3 text-sm text-center">{pendingOrders.length}</span>
+                        <span className='bg-light-button dark:bg-dark-button rounded-full py-2 px-3 text-sm text-center'>
+                          {pendingOrders.length}
+                        </span>
                       ) : null}
                       {link.title === "Notifications" ? (
-                        <span className="bg-light-button dark:bg-dark-button rounded-full py-1 px-4 text-sm text-center">{unreadCount}</span>
+                        <span className='bg-light-button dark:bg-dark-button rounded-full py-1 px-4 text-sm text-center'>
+                          {unreadCount}
+                        </span>
                       ) : null}
                     </span>
                   )}

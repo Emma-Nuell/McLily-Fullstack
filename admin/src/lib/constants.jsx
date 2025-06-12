@@ -156,6 +156,13 @@ export const recentOrdersTable = [
   "price",
   "status",
 ];
+export const globalOrdersTable = [
+  "product",
+  "customer",
+  "order ID",
+  "status",
+  "action",
+];
 
 export const featuredTable = [
   "product",
@@ -184,6 +191,13 @@ export const productOverviewTable = [
   "stock",
   "sales",
   "visits"
+]
+export const globalProductsTable = [
+  "product",
+  "productID",
+  "price",
+  "stock",
+  "action",
 ]
 
 export const sampleNotifications = [

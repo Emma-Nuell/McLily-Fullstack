@@ -12,18 +12,23 @@ import {
   DELETE_PRODUCT,
   ADD_FEATURED,
   REMOVE_FEATURED,
-  GET_FEATURED_PRODUCTS
+  GET_FEATURED_PRODUCTS,
+  SEARCH_PRODUCTS,
+  CLEAR_SEARCH_PRODUCTS,
 } from "../../actions";
 import { productsDetails, } from "../../lib/constants.jsx";
 
 const initialState = {
   products: [],
+  filteredProducts: [],
   editProductData: {},
   isEditMode: false,
   lowStock: [],
   featuredProducts: [],
   bestSellers: [],
   topProducts: [],
+  loading: false,
+  searchTerm: "",
 };
 
 const ProductsProvider = ({ children }) => {
@@ -77,6 +82,14 @@ const bestSellers = useCallback(() => {
 const topProducts = useCallback(() => {
   dispatch({ type: TOP_PRODUCTS, payload: state.products });
 }, [state.products, dispatch]);
+  
+  const productSearch = (value) => {
+    dispatch({type: SEARCH_PRODUCTS, payload: value})
+  }
+
+     const clearSearch = useCallback(() => {
+       dispatch({ type: CLEAR_SEARCH_PRODUCTS });
+     }, []);
 
 
   useEffect(() => {
@@ -91,7 +104,7 @@ const topProducts = useCallback(() => {
   
 
   return (
-    <ProductsContext.Provider value={{ ...state, editProduct, editOff, editOn, deleteProduct, addFeatured, removeFeatured }}> 
+    <ProductsContext.Provider value={{ ...state, editProduct, editOff, editOn, deleteProduct, addFeatured, removeFeatured, productSearch, clearSearch }}> 
       {children}
     </ProductsContext.Provider>
   );

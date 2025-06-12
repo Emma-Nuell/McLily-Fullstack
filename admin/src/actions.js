@@ -1,3 +1,8 @@
+export const GLOBAL_SEARCH = "GLOBAL_SEARCH"
+export const CLEAR_GLOBAL_SEARCH = "CLEAR_GLOBAL_SEARCH"
+export const SET_SEARCH_LOADING = "SET_SEARCH_LOADING";
+export const SHOW_RESULTS = "SHOW_RESULTS";
+
 // product actions
 export const EDIT_PRODUCT = "EDIT_PRODUCT"
 export const EDIT_ON = "EDIT_ON"
@@ -12,6 +17,8 @@ export const TOP_PRODUCTS = "TOP_PRODUCTS";
 export const REMOVE_FEATURED = "REMOVE_FEATURED";
 export const ADD_FEATURED = "ADD_FEATURED";
 export const GET_FEATURED_PRODUCTS = "GET_FEATURED_PRODUCTS";
+export const SEARCH_PRODUCTS = "SEARCH_PRODUCTS";
+export const CLEAR_SEARCH_PRODUCTS = "CLEAR_SEARCH_PRODUCTS";
 
 
 //orders action
@@ -22,6 +29,8 @@ export const GET_ORDERS_SUCCESS = "GET_ORDERS_SUCCESS"
 export const COMPLETED_ORDERS = "COMPLETED_ORDERS"
 export const DELETE_ORDER = "DELETE_ORDER"
 export const CHANGE_STATUS = "CHANGE_STATUS"
+export const SEARCH_ORDERS = "SEARCH_ORDERS"
+export const CLEAR_SEARCH_ORDERS = "CLEAR_SEARCH_ORDERS"
 
 
 // notification action

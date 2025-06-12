@@ -10,11 +10,13 @@ import {
   NotificationProvider,
   ModalToast,
   OrdersProvider,
+  GlobalProvider
 } from "./context/index.js";
 
 createRoot(document.getElementById("root")).render(
-    <ProductsProvider>
+  <ProductsProvider>
       <OrdersProvider>
+      <GlobalProvider>
         <ThemeProvider>
           <NotificationProvider>
             <ModalToast>
@@ -24,6 +26,7 @@ createRoot(document.getElementById("root")).render(
             </ModalToast>
           </NotificationProvider>
         </ThemeProvider>
+  </GlobalProvider>
       </OrdersProvider>
     </ProductsProvider>
   

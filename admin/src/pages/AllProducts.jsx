@@ -9,14 +9,17 @@ import { useProductContext } from "../context/index.js";
 
 
 const AllProducts = () => {
-  const {products} = useProductContext()
+  const {filteredProducts: products, searchTerm} = useProductContext()
  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [isOpen, setIsOpen] = useState(false) 
+  const [isOpen, setIsOpen] = useState(false)
+  const [searchInput, setSearchInput] = useState(searchTerm || "");
+  
   
   useEffect(() => {
     const productId = searchParams.get("productId")
     const openPanel = searchParams.get("openPanel")
+    const searchTerm = searchParams.get("search")
 
     const productID = Number(productId)
     
@@ -33,6 +36,10 @@ const AllProducts = () => {
         console.warn(`Product with ID ${productId} not found`);
         setSearchParams({});
       }
+    }
+
+    if (searchTerm) {
+      setSearchInput(searchTerm)
     }
   }, [searchParams, setSearchParams]);
 
@@ -54,7 +61,10 @@ const AllProducts = () => {
         selectedProduct={selectedProduct}
         products={products}
         isOpen={isOpen}
-        setIsOpen = {setIsOpen}
+          setIsOpen={setIsOpen}
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          
       />
       {selectedProduct && (
         <SidePane

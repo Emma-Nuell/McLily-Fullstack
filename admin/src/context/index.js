@@ -10,4 +10,7 @@ export { default as useNotificationContext } from "./notifications/useNotificati
 export { default as OrdersProvider } from "./order/OrderProvider.jsx";
 export { default as useOrderContext } from "./order/useOrderContext.js";
 
+export { default as GlobalProvider } from "./global/GlobalProvider.jsx"
+export {default as useGlobalContext} from "./global/useGlobalContext.js"
+
 export { default as ModalToast } from "./Modal/Modal&Toast.jsx";

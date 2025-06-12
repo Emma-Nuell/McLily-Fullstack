@@ -221,7 +221,7 @@ const {showToast, TOAST_TYPES} = useToast()
                   <div className='flex-1 min-w-0 '>
                     <div className='flex items-start justify-between mb-1 pr-6 max-sm:pr-3'>
                       <h3
-                        className={`text-lg font-medium  ${
+                        className={` ${
                           notification.isRead
                             ? "text-light-text-secondary dark:text-dark-text-secondary font-medium text-lg max-sm:text-sm"
                             : "text-light-text dark:text-dark-text font-bold text-xl max-sm:text-lg"
@@ -238,7 +238,7 @@ const {showToast, TOAST_TYPES} = useToast()
                     <p
                       className={`text-nowrap text-ellipsis overflow-clip ${
                         notification.isRead
-                          ? "text-light-text-secondary dark:text-dark-text-secondary font-medium text-sm"
+                          ? "text-light-text-secondary dark:text-dark-text-secondary font-light text-sm"
                           : "text-light-text dark:text-dark-text font-medium text-lg max-sm:text-sm"
                       }`}
                     >

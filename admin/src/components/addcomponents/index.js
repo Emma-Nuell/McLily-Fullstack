@@ -1,5 +1,4 @@
-import Navbar from "./Navbar";
-import Sidebar from "./Sidebar";
+
 import DashboardLayout from "./test";
 import Hamburger from "./Hamburger";
 import ProductForm from "./ProductForm";
@@ -13,8 +12,6 @@ import Featured from "./Featured";
 import TagsInput from "./TagsInput";
 
 export {
-  Navbar,
-  Sidebar,
   DashboardLayout,
   Hamburger,
   ProductForm,
