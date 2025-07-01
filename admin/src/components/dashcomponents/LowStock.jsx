@@ -1,7 +1,7 @@
 import { useState} from "react";
 import { useProductContext } from "../../context/index.js";
 import { lowStockTable } from "../../lib/constants.jsx";
-import { useModal, useToast } from "../../context/Modal/useModal&Toast.js";
+import { useModal } from "../../context/Modal/useModal&Toast.js";
 import { useNavigate } from "react-router-dom";
 import {
   Trash,
@@ -15,7 +15,11 @@ import {
 const LowStock = () => {
   const { lowStock, editProduct, editOn, deleteProduct } = useProductContext();
 const {showConfirmation, OPERATION_TYPES} = useModal()
-const {showToast, TOAST_TYPES} = useToast()
+  // eslint-disable-next-line no-unused-vars
+  const [error, setError] = useState(null)
+  
+ 
+  
 
   const [currentPage, setCurrentPage] = useState(1);
   let entriesPerPage = 5;
@@ -45,13 +49,9 @@ const {showToast, TOAST_TYPES} = useToast()
       itemName: `${product.name} product`,
       onConfirm: async () => {
         try {
-          await deleteProduct(product.id);
-          showToast("Product deleted successfully", TOAST_TYPES.SUCCESS);
+          await deleteProduct(product.productId);
         } catch (error) {
-          showToast(
-            `Failed to delete Product: ${error.message}`,
-            TOAST_TYPES.ERROR
-          );
+          setError(error);
         }
       },
     });
@@ -68,10 +68,7 @@ const {showToast, TOAST_TYPES} = useToast()
           editProduct(product);
           navigate("/add-product");
         } catch (error) {
-          showToast(
-            `Failed to edit product: ${error.message}`,
-            TOAST_TYPES.ERROR
-          );
+          setError(error);
         }
       },
     });
@@ -79,7 +76,7 @@ const {showToast, TOAST_TYPES} = useToast()
   
   const navigate = useNavigate();
   const handleProductlick = (product) => {
-    navigate(`/products?productId=${product.id}&openPanel=true`);
+    navigate(`/products?productId=${product.productId}&openPanel=true`);
   };
 
 
@@ -115,7 +112,7 @@ const {showToast, TOAST_TYPES} = useToast()
           <tbody className='bg-white dark:bg-slate-800 mt-10 dark:text-dark-text'>
             {currentProducts.map((product, index) => (
               <tr
-                key={product.id}
+                key={product.productId}
                 className={`${
                   index % 2 === 0
                     ? "bg-white dark:bg-slate-800"
@@ -136,7 +133,7 @@ const {showToast, TOAST_TYPES} = useToast()
                 </td>
 
                 <td className='px-4 py-6 whitespace-nowrap text-[15px] max-sm:text-xs'>
-                  #{product.id}
+                  #{product.productId}
                 </td>
                 <td className='px-4 py-6 whitespace-nowrap text-[15px] max-sm:text-xs'>
                   {product.category}

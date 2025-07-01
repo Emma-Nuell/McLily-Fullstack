@@ -10,24 +10,26 @@ import {
   NotificationProvider,
   ModalToast,
   OrdersProvider,
-  GlobalProvider
+  GlobalProvider,
+  AuthProvider,
 } from "./context/index.js";
 
 createRoot(document.getElementById("root")).render(
-  <ProductsProvider>
-      <OrdersProvider>
-      <GlobalProvider>
-        <ThemeProvider>
-          <NotificationProvider>
-            <ModalToast>
-              <Background>
-                <App />
-              </Background>
-            </ModalToast>
-          </NotificationProvider>
-        </ThemeProvider>
-  </GlobalProvider>
-      </OrdersProvider>
-    </ProductsProvider>
-  
+  <ThemeProvider>
+    <AuthProvider>
+              <ModalToast>
+      <ProductsProvider>
+        <OrdersProvider>
+          <GlobalProvider>
+            <NotificationProvider>
+                <Background>
+                  <App />
+                </Background>
+            </NotificationProvider>
+          </GlobalProvider>
+        </OrdersProvider>
+      </ProductsProvider>
+              </ModalToast>
+    </AuthProvider>
+  </ThemeProvider>
 );

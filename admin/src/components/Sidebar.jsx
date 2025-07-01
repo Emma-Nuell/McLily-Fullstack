@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { sidebarLinks } from "../lib/constants.jsx";
 import { ArrowLeftCircleIcon } from "lucide-react";
 import Logo from "../assets/logo.svg"
+import Logo1 from "../assets/file.svg"
 import { useOrderContext, useNotificationContext } from "../context/index.js";
 
 const Sidebar = () => {
@@ -24,14 +25,14 @@ const Sidebar = () => {
           size={36}
           className={`${
             !isOpen && "rotate-180"
-          } absolute text-3xl bg-white text-aquamine-3 rounded-full cursor-pointer top-9 -right-9 dark:text-slate-400 dark:bg-slate-800`}
+          } absolute text-3xl bg-white text-aquamine-3 rounded-full cursor-pointer top-24 -right-9 dark:text-slate-400 dark:bg-slate-800`}
           onClick={() => setIsOpen(!isOpen)}
         />
         <Link to='/'>
           <div className={`flex items-center ${isOpen && "gap-x-4"}`}>
-            <img src={Logo} alt='mclily-logo' className='pl-2 mr-4' />
+            <img src={Logo1} alt='mclily-logo' className='pl-2 mr-1 w-36' />
             {isOpen && (
-              <h1 className='font-comorant text-3xl text-bold whitespace-nowrap dark:text-white'>
+              <h1 className='font-comorant text-3xl text-bold whitespace-nowrap dark:text-white text-aquamine-3'>
                 McLily
               </h1>
             )}

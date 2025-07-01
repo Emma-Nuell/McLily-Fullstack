@@ -1,7 +1,7 @@
 import {  useOrderContext } from "../../context/index.js";
 import { useState } from "react";
 import { ordersDetails } from "../../lib/constants.jsx";
-import { useModal, useToast } from "../../context/Modal/useModal&Toast.js";
+import { useModal } from "../../context/Modal/useModal&Toast.js";
 import {
   Trash,
   Pen,
@@ -12,9 +12,13 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const CompletedOrders = () => {
-  const { completedOrders, deleteOrder } = useOrderContext();
+  const { completedOrders, deleteOrder, getStatusColor } = useOrderContext();
   const { showConfirmation, OPERATION_TYPES } = useModal();
-  const { showToast, TOAST_TYPES } = useToast();
+  // eslint-disable-next-line no-unused-vars
+  const [error, setError] = useState(null)
+
+  
+  
 
 
     const navigate = useNavigate();
@@ -54,39 +58,13 @@ const CompletedOrders = () => {
       onConfirm: async () => {
         try {
           await deleteOrder(order.orderId);
-          showToast("Order deleted successfully", TOAST_TYPES.SUCCESS);
         } catch (error) {
-          showToast(
-            `Failed to delete Order: ${error.message}`,
-            TOAST_TYPES.ERROR
-          );
+          setError(error);
         }
       },
     });
   };
   
-  function getStatusColor(status) {
-    switch (status) {
-      case "Pending":
-        return "text-yellow-600";
-      case "Processing":
-        return "text-blue-600";
-      case "Shipped":
-        return "text-purple-600";
-      case "Out_for_delivery":
-        return "text-indigo-600";
-      case "Delivered":
-        return "text-green-600";
-      case "Cancelled":
-        return "text-red-600";
-      case "Returned":
-        return "text-orange-600";
-      case "Refunded":
-        return "text-pink-600";
-      default:
-        return "text-gray-600";
-    }
-  }
 
     return (
       <div className='bg-white dark:bg-slate-800 p-6 rounded-md mt-12'>
@@ -132,18 +110,21 @@ const CompletedOrders = () => {
                   <td className='rounded-l-xl pr-16 px-4 py-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[280px] max-sm:min-w-[190px]'>
                     <div className='flex items-center'>
                       <div className='h-23 w-23 max-sm:h-20 max-sm:w-20 flex-shrink-0 flex items-center'>
-                        <img src={order.image} alt={order.name} />
+                        <img
+                          src={order.orderItems[0].image}
+                          alt={order.orderItems[0].productName}
+                        />
                       </div>
                       <div className='ml-6'>
                         <div className='font-medium text-black dark:text-dark-text text-[14px] max-sm:text-xs max-w-[300px] max-sm:max-w-[220px] text-nowrap overflow-hidden overflow-ellipsis'>
-                          {order.productName}
+                          {order.orderItems[0].productName}
                         </div>
                       </div>
                     </div>
                   </td>
 
                   <td className='px-4 py-6 whitespace-nowrap min-w-[180px] max-sm:min-w-[140px] text-[14px] max-sm:text-xs'>
-                    {order.customerName}
+                    {order.customerDetails.name}
                   </td>
                   <td className='px-4 py-6 whitespace-nowrap min-w-[180px] max-sm:min-w-[140px] text-[14px] max-sm:text-xs'>
                     #{order.orderId}
@@ -152,17 +133,17 @@ const CompletedOrders = () => {
                     ₦{Number(order.subtotal).toLocaleString()}
                   </td>
                   <td className='px-4 py-6 whitespace-nowrap min-w-[160px] max-sm:min-w-[120px] text-[14px] max-sm:text-xs'>
-                    x{order.quantity}
+                    x{order.orderItems.length}
                   </td>
-                  <td className='px-4 py-6 whitespace-nowrap min-w-[200px] max-sm:min-w-[150px] text-[14px] max-sm:text-xs'>
+                  <td className='px-4 py-6 whitespace-nowrap min-w-[200px] max-sm:min-w-[150px] text-[14px] max-sm:text-xs uppercase'>
                     {order.paymentMethod}
                   </td>
                   <td
                     className={`font-medium text-[15px] max-sm:text-xs min-w-[160px] max-sm:min-w-[140px] whitespace-nowrap px-4 py-6 ${getStatusColor(
-                      order.status
+                      order.orderStatus
                     )}`}
                   >
-                    {order.status}
+                    {order.orderStatus}
                   </td>
                   <td className='rounded-r-xl px-6 py-4 whitespace-nowrap text-sm font-medium min-w-[100px] max-sm:min-w-[60px]'>
                     <div className='flex gap-4 items-center justify-start'>

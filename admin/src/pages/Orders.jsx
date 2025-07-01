@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { AllOrders, PendingOrders, RecentOrders, CompletedOrders } from "../components/ordercomponents";
-import { useGlobalContext } from "../context/index.js";
+import { useOrderContext } from "../context/index.js";
 import { useSearchParams } from "react-router-dom";
+import {ErrorAlert} from "../components/index.js"
 
 
 const Orders = () => {
-  const { searchTerm } = useGlobalContext();
+  const { searchTerm, error, clearError } = useOrderContext();
   const [searchInput, setSearchInput] = useState(searchTerm || "");
   const [searchParams, setSearchParams] = useSearchParams()
   
@@ -18,6 +19,10 @@ const view = searchParams.get("view")
       setSearchInput(search);
     }
   }, [searchParams, setSearchParams]);
+
+   if (error) {
+      return <ErrorAlert message={error} clearError = {clearError} />;
+    }
 
   return (
     <div className='p-6'>

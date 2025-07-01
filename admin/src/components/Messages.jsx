@@ -13,13 +13,14 @@ import {
 } from "lucide-react";
 
 const Messages = () => {
-  const { getFilteredNotifications, unreadCount } = useNotificationContext();
+        const {  unreadCount, getNotificationsByFilter } =
+          useNotificationContext();
     const { theme } = useThemeContext();
     const dropdownRef = useRef(null);
 
   const [isOpen, setIsOpen] = useState(false);
 
-    const recentMessages = getFilteredNotifications("unread").slice(0, 5);
+    const recentMessages = getNotificationsByFilter("unread").slice(0, 5);
     
     useEffect(() => {
       const handleClickOutside = (event) => {
@@ -131,7 +132,7 @@ const Messages = () => {
           <div className='py-4'>
             {recentMessages.map((message) => (
               <div
-                key={message.id}
+                key={message._id}
                 className='flex gap-6 items-center justify-start py-5'
               >
                 <div>{getNotificationIcon(message.type, message.priority)}</div>

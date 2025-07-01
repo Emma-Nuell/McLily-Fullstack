@@ -12,8 +12,9 @@ import {
 } from "./index.js";
 import { Form } from "radix-ui";
 
-const ProductForm = ({ handleAddProduct }) => {
-  const { isEditMode, editProductData, editOff } = useProductContext();
+const ProductForm = () => {
+  const { isEditMode, editProductData, editOff, createProduct, updateProduct } =
+    useProductContext();
 
   const [productName, setProductName] = useState("");
   const [category, setCategory] = useState(
@@ -70,7 +71,22 @@ const ProductForm = ({ handleAddProduct }) => {
     }
   }, [isEditMode, editProductData]);
 
-  const handleSubmit = (e) => {
+  const clearField = () => {
+    setProductName("");
+    setCategory("");
+    setSubCategory("");
+    setUploadedImages([]);
+    setPrice("");
+    setStock("");
+    setBrandName("");
+    setProductDesc("");
+    setSpecifications({});
+    setTags([]);
+    setSizes([]);
+    setFeatured(false);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setNameField(false);
@@ -103,65 +119,67 @@ const ProductForm = ({ handleAddProduct }) => {
     if (errors.specifications) return setSpecField(true);
     if (errors.tags) return setTagsField(true);
 
-    handleAddProduct(productName, category);
+    const product = {
+      name: productName,
+      images: uploadedImages,
+      category,
+      subCategory,
+      price,
+      description: productDesc,
+      tags,
+      brand: brandName,
+      stock,
+      sizes: sizes.length > 0 ? sizes : null,
+      specifications:
+        specifications && Object.keys(specifications).length > 0
+          ? specifications
+          : null,
+      featured: featured ? true : false,
+    };
 
-    const product = [
-      {
-        name: productName,
-        images: uploadedImages,
-        category,
-        subCategory,
-        price,
-        description: productDesc,
-        tags,
-        brand: brandName,
-        stock,
-        sizes: sizes.length > 0 ? sizes : null,
-        specifications:
-          specifications && Object.keys(specifications).length > 0
-            ? specifications
-            : null,
-        featured: featured ? true : null,
-      },
-    ];
+    try {
 
-    console.log(product);
+      if (editProductData?.productId) {
+        await updateProduct({
+          ...product,
+          productId: editProductData.productId,
+        });
+      } else {
+         await createProduct(product);
+      }
+      clearField();
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || error.message || "Operation failed";
+      console.error("Error:", errorMessage);
+    }
 
-    setProductName("");
-    setCategory("");
-    setSubCategory("");
-    setUploadedImages([]);
-    setPrice("");
-    setStock("");
-    setBrandName("");
-    setProductDesc("");
-    setSpecifications({});
-    setTags([]);
-    setSizes([]);
-    setFeatured(false);
   };
 
   useEffect(() => {
-    if (!isEditMode ) {
+    if (!isEditMode) {
       setSubCategory("");
     }
   }, [category, isEditMode]);
 
- const  handleCancelEdit = () => {
-    editOff()
-  }
+  const handleCancelEdit = () => {
+    editOff();
+  };
 
   return (
     <Form.Root
       onSubmit={handleSubmit}
       className='bg-white dark:bg-slate-800 w-full p-6 rounded-lg shadow-md max-w-6xl mx-auto font-dm border-aquamine-4 border-2 dark:border-slate-500'
     >
-      <div className="flex justify-between items-center">
+      <div className='flex justify-between items-center'>
         <h2 className='text-2xl font-semibold mb-4 dark:text-white'>
           {isEditMode ? "Edit Product" : "Add Product"}
         </h2>
         {isEditMode && (
-          <button onClick={handleCancelEdit} className='button dark:bg-slate-600  font-medium leading-none dark:text-white outline-none outline-offset-1 hover:bg-aquamine-3 dark:hover:bg-slate-500 focus-visible:outline-2 select-none'>
+          <button
+            onClick={handleCancelEdit}
+            className='button dark:bg-slate-600  font-medium leading-none dark:text-white outline-none outline-offset-1 hover:bg-aquamine-3 dark:hover:bg-slate-500 focus-visible:outline-2 select-none'
+          >
             Cancel Edit
           </button>
         )}

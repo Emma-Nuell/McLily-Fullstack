@@ -1,7 +1,7 @@
 import { useOrderContext } from "../../context/index.js";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ordersDetails } from "../../lib/constants.jsx";
-import { useModal, useToast } from "../../context/Modal/useModal&Toast.js";
+import { useModal } from "../../context/Modal/useModal&Toast.js";
 import {
   Trash,
   ChevronLeft,
@@ -14,14 +14,22 @@ import { useNavigate } from "react-router-dom";
 
 const AllOrders = ({searchInput, setSearchInput, scrollIntoView}) => {
   const {
-    filteredOrders: orders,
+    orders: main,
     deleteOrder,
     clearSearch,
     orderSearch,
     getStatusColor,
+    filterOrders,
+    searchTerm,
   } = useOrderContext();
   const { showConfirmation, OPERATION_TYPES } = useModal();
-  const { showToast, TOAST_TYPES } = useToast();
+  // eslint-disable-next-line no-unused-vars
+  const [error, setError] = useState(null)
+  
+
+  const orders= useMemo(() => {
+    return filterOrders(main, searchTerm);
+  }, [main, searchTerm, filterOrders]);
 
   const navigate = useNavigate();
 
@@ -73,12 +81,9 @@ const AllOrders = ({searchInput, setSearchInput, scrollIntoView}) => {
       onConfirm: async () => {
         try {
           await deleteOrder(order.orderId);
-          showToast("Order deleted successfully", TOAST_TYPES.SUCCESS);
+          
         } catch (error) {
-          showToast(
-            `Failed to delete Order: ${error.message}`,
-            TOAST_TYPES.ERROR
-          );
+          setError(error);
         }
       },
     });
@@ -99,7 +104,8 @@ const AllOrders = ({searchInput, setSearchInput, scrollIntoView}) => {
     } else {
       clearSearch();
     }
-  }, [debouncedSearch, orderSearch, clearSearch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, orderSearch]);
 
   return (
     <div
@@ -189,18 +195,21 @@ const AllOrders = ({searchInput, setSearchInput, scrollIntoView}) => {
                 <td className='rounded-l-xl pr-16 px-4 py-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[280px] max-sm:min-w-[190px]'>
                   <div className='flex items-center'>
                     <div className='h-23 w-23 max-sm:h-20 max-sm:w-20 flex-shrink-0 flex items-center'>
-                      <img src={order.image} alt={order.name} />
+                      <img
+                        src={order.orderItems[0].image}
+                        alt={order.orderItems[0].productName}
+                      />
                     </div>
                     <div className='ml-6'>
                       <div className='font-medium text-black dark:text-dark-text text-[14px] max-sm:text-xs max-w-[300px] max-sm:max-w-[220px] text-nowrap overflow-hidden overflow-ellipsis'>
-                        {order.productName}
+                        {order.orderItems[0].productName}
                       </div>
                     </div>
                   </div>
                 </td>
 
                 <td className='px-4 py-6 whitespace-nowrap min-w-[180px] max-sm:min-w-[140px] text-[14px] max-sm:text-xs'>
-                  {order.customerName}
+                  {order.customerDetails.name}
                 </td>
                 <td className='px-4 py-6 whitespace-nowrap min-w-[180px] max-sm:min-w-[140px] text-[14px] max-sm:text-xs'>
                   #{order.orderId}
@@ -209,17 +218,17 @@ const AllOrders = ({searchInput, setSearchInput, scrollIntoView}) => {
                   ₦{Number(order.subtotal).toLocaleString()}
                 </td>
                 <td className='px-4 py-6 whitespace-nowrap min-w-[160px] max-sm:min-w-[120px] text-[14px] max-sm:text-xs'>
-                  x{order.quantity}
+                  x{order.orderItems.length}
                 </td>
-                <td className='px-4 py-6 whitespace-nowrap min-w-[200px] max-sm:min-w-[150px] text-[14px] max-sm:text-xs'>
+                <td className='px-4 py-6 whitespace-nowrap min-w-[200px] max-sm:min-w-[150px] text-[14px] max-sm:text-xs uppercase'>
                   {order.paymentMethod}
                 </td>
                 <td
                   className={`font-medium text-[15px] max-sm:text-xs min-w-[160px] max-sm:min-w-[110px] whitespace-nowrap px-4 py-6 ${getStatusColor(
-                    order.status
+                    order.orderStatus
                   )}`}
                 >
-                  {order.status}
+                  {order.orderStatus}
                 </td>
                 <td className='rounded-r-xl px-6 py-4 whitespace-nowrap text-sm font-medium min-w-[130px] max-sm:min-w-[90px]'>
                   <div className='flex gap-4 items-center justify-start'>

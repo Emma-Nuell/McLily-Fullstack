@@ -46,7 +46,7 @@ const ModalToast = ({ children }) => {
     setModalOpen(true);
   };
 
-  const showToast = (message, type = TOAST_TYPES.SUCCESS, duration = 5000) => {
+  const showToast = (message, type = TOAST_TYPES.SUCCESS, duration = 2000) => {
     const id = Date.now();
     const newToast = { id, message, type, duration };
 

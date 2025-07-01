@@ -8,23 +8,24 @@ const transformToKeyValuePairs = (obj) => {
 };
 
 
-const Specifications = ({ onSave, specField, isEditMode, specificationsMain }) => {
+const Specifications = ({ onSave, specField, specificationsMain }) => {
   
-  const [specifications, setSpecifications] = useState(
-    specificationsMain && isEditMode
+  const [specifications, setSpecifications] = useState(() => {
+    return specificationsMain
       ? transformToKeyValuePairs(specificationsMain)
-      : [{ key: "", value: "" }]
-  );
+      : [{ key: "", value: "" }];
+  });
   const [specOpen, setSpecOpen] = useState(false);
 
   useEffect(() => {
-    if (specificationsMain && isEditMode) {
-      setSpecifications(transformToKeyValuePairs(specificationsMain));
+    if (specOpen) {
+      setSpecifications(
+        specificationsMain
+          ? transformToKeyValuePairs(specificationsMain)
+          : [{ key: "", value: "" }]
+      );
     }
-    else {
-      setSpecifications([{ key: "", value: "" }]);
-    }
-  }, [specificationsMain, isEditMode]);
+  }, [specOpen, specificationsMain]);
   
   
   
@@ -51,6 +52,7 @@ const Specifications = ({ onSave, specField, isEditMode, specificationsMain }) =
       return acc
     }, {})
     onSave(formattedSpecs)
+    
     setSpecOpen(false)
   }
   return (
@@ -150,18 +152,18 @@ const Specifications = ({ onSave, specField, isEditMode, specificationsMain }) =
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-      {specifications.length > 0 && (
-        <div className='mt-4 p-4 rounded border-y pt-4 border-aquamine-4 dark:border-slate-950'>
-          <h3 className='text-lg font-dm font-semibold dark:text-white'>
-            Specifications
-          </h3>
-          {specifications.map((spec, index) => (
-            <p key={index} className=''>
-              <strong>{spec.key}: </strong> {spec.value}
-            </p>
-          ))}
-        </div>
-      )}
+      {specificationsMain && Object.entries(specificationsMain).length > 0 ? (
+  <div className='mt-4 p-4 rounded border-y pt-4 border-aquamine-4 dark:border-slate-950'>
+    <h3 className='text-lg font-dm font-semibold dark:text-white'>
+      Specifications
+    </h3>
+    {Object.entries(specificationsMain).map(([key, value]) => (
+      <p key={key} className=''>
+        <strong>{key}: </strong> {value}
+      </p>
+    ))}
+  </div>
+) : null}
     </div>
   );
 }

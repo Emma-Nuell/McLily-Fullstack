@@ -5,6 +5,9 @@ import Messages from "./Messages";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import GlobalSearchResults from "./GlobalSearchResults";
+import ProtectedRoute from "./ProtectedRoute";
+import User from "./User";
+import ErrorAlert from "./ErrorAlert";
 
 export {
   ThemeToggle,
@@ -13,5 +16,8 @@ export {
   Messages,
   Navbar,
   Sidebar,
-  GlobalSearchResults
+  GlobalSearchResults,
+  ProtectedRoute,
+  User,
+ErrorAlert
 };

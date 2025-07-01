@@ -2,37 +2,86 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import {  useOrderContext } from "../context/index.js";
 import { useCallback, useEffect, useState } from "react";
 import { Truck, ArrowLeftCircle } from "lucide-react";
-import {ChangeStatus} from "../components/ordercomponents/index.js"
+import { ChangeStatus } from "../components/ordercomponents/index.js"
+import { useToast } from "../context/Modal/useModal&Toast.js";
 
 const OrderDetails = () => {
-  const { fetchSingleOrder, singleOrder: order } = useOrderContext();
-  const [isOpen, setIsOpen] = useState(false);
+  const { fetchSingleOrder, singleOrder: order, isLoadingSingleOrder, singleOrderError, orders, changeStatus } = useOrderContext();
+    const { showToast, TOAST_TYPES } = useToast();
   
-  const location = useLocation();
-  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [localStatus, setLocalStatus] = useState(null)
+  const [isUpdating, setIsUpdating] = useState(false)
 
-  const goBack = () => {
-    const from = location.state?.from;
-    if (from) {
-      navigate(`${from.pathname}?page=${from.page}`);
-    } else {
-      navigate("/orders");
-    }
-  };
+  const { id } = useParams();
+  const location = useLocation();
 
   const checkStatusClick = useCallback(() => {
     const from = location.state?.from;
     if (from) {
-     setIsOpen(from.isOpen)
+      setIsOpen(from.isOpen);
     }
   }, [location.state?.from]);
- 
-  const { id } = useParams();
+
 
   useEffect(() => {
-    fetchSingleOrder(id);
-    checkStatusClick()
-  }, [id, fetchSingleOrder, checkStatusClick]);
+    if (orders.length > 0) {
+      fetchSingleOrder(id);
+      checkStatusClick();
+    }
+  }, [id, fetchSingleOrder, checkStatusClick, orders.length]);
+
+  useEffect(() => {
+    if (orders.length > 0) {
+      const order = orders.find((o) => o.orderId === id);
+      setLocalStatus(order?.orderStatus);
+    }
+  }, [orders, id]);
+
+  const handleStatusChange = async (newStatus) => {
+
+    try {
+      setIsUpdating(true)
+      setLocalStatus(newStatus);
+      await changeStatus(id, newStatus); 
+      showToast("Status updated successfully", TOAST_TYPES.SUCCESS);
+    } catch (error) {
+      showToast(`Failed to update status: ${error.message}`, TOAST_TYPES.ERROR);
+    }
+    finally {
+      setIsUpdating(false)
+    }
+    
+  };
+
+  
+  const navigate = useNavigate();
+
+  const goBack = () => {
+   
+      navigate("/orders");
+  };
+
+
+ 
+
+
+
+  if (isLoadingSingleOrder) {
+    return <div>Loading order...</div>;
+  }
+
+  // Show error state
+  if (singleOrderError) {
+    return <div>Error: {singleOrderError}</div>;
+  }
+
+  // Show "not found" state
+  if (!order) {
+    return <div>Order not found</div>;
+  }
+  
+  
   
 
   return (
@@ -49,7 +98,7 @@ const OrderDetails = () => {
         </button>
       </div>
       <div className='flex gap-6 max-md:flex-col'>
-        <div className='flex-1'>
+        <div className='flex-1 md:max-w-[60%]'>
           {/* Product List */}
 
           <div className='bg-white dark:bg-slate-800 dark:text-dark-text rounded-lg shadow-lg p-8 mb-10'>
@@ -59,11 +108,11 @@ const OrderDetails = () => {
             <div className='overflow-x-auto scrollbar-hidden bg-white dark:bg-slate-800'>
               <table className='border-separate border-spacing-y-6 min-w-full'>
                 <tbody className='bg-white dark:bg-slate-800 mt-10 dark:text-dark-text'>
-                  {[1, 2, 4].map((item, index) => (
+                  {order?.orderItems?.map((orderItem, index) => (
                     <tr key={index} className=''>
                       <td className='p-8'>
                         <div className='h-23 w-23 max-sm:h-20 max-sm:w-20 flex-shrink-0 flex items-center'>
-                          <img src={order.image} alt='Product' />
+                          <img src={orderItem.image} alt='Product' />
                         </div>
                       </td>
                       <td className='p-8'>
@@ -71,25 +120,31 @@ const OrderDetails = () => {
                           Product name
                         </p>
                         <p className='font-medium max-w-[250px] max-sm:max-w-[170px] text-nowrap overflow-hidden overflow-ellipsis'>
-                          {order.productName}
+                          {orderItem.productName}
                         </p>
                       </td>
                       <td className='p-8'>
                         <p className='text-sm text-light-text-secondary dark:text-dark-text-secondary'>
                           Quantity
                         </p>
-                        <p className='font-medium'>x{order.quantity}</p>
+                        <p className='font-medium'>x{orderItem.quantity}</p>
                       </td>
                       <td className='p-8'>
                         <p className='text-sm text-light-text-secondary dark:text-dark-text-secondary'>
                           Price
                         </p>
                         <p className='font-medium'>
-                          ₦{Number(order.price).toLocaleString()}
+                          ₦{Number(orderItem.price).toLocaleString()}
                         </p>
                       </td>
                     </tr>
-                  ))}
+                  )) || (
+                    <tr>
+                      <td colSpan='4' className='p-8 text-center'>
+                        No order items available
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -129,15 +184,7 @@ const OrderDetails = () => {
                     Shipping:
                   </td>
                   <td className='px-4 py-6 whitespace-nowrap max-sm:text-sm'>
-                    ₦{Number(order.shipping).toLocaleString()}
-                  </td>
-                </tr>
-                <tr>
-                  <td className='px-4 py-6 whitespace-nowrap max-sm:text-sm text-light-text-secondary dark:text-dark-text-secondary'>
-                    Tax (GST):
-                  </td>
-                  <td className='px-4 py-6 whitespace-nowrap max-sm:text-sm'>
-                    ₦{Number(order.tax).toLocaleString()}
+                    ₦{Number(order.shippingFee).toLocaleString()}
                   </td>
                 </tr>
                 <tr>
@@ -145,7 +192,7 @@ const OrderDetails = () => {
                     Total price:
                   </td>
                   <td className='px-4 py-6 whitespace-nowrap max-sm:text-sm text-orange-600'>
-                    ₦{Number(order.total).toLocaleString()}
+                    ₦{Number(order.totalAmount).toLocaleString()}
                   </td>
                 </tr>
               </tbody>
@@ -154,7 +201,7 @@ const OrderDetails = () => {
         </div>
 
         {/* Right sidebar */}
-        <div className='w-240 shrink-0 max-md:w-full'>
+        <div className='w-[39%] shrink-0 max-md:w-full'>
           {/* Summary */}
           <div className='bg-white dark:bg-slate-800 dark:text-dark-text rounded-lg shadow-lg p-10 mb-10'>
             <h2 className='font-semibold mb-4'>Summary</h2>
@@ -169,13 +216,19 @@ const OrderDetails = () => {
                 <span className='text-light-text-secondary dark:text-dark-text-secondary'>
                   Date
                 </span>
-                <span>{order.orderDate}</span>
+                <span>
+                  {order?.orderedAt instanceof Date
+                    ? order.orderedAt.toLocaleString()
+                    : order?.orderedAt
+                    ? new Date(order.orderedAt).toLocaleString()
+                    : "Date not available"}
+                </span>
               </div>
               <div className='flex justify-between'>
                 <span className='text-light-text-secondary dark:text-dark-text-secondary'>
                   Total
                 </span>
-                <span className='text-orange-600'>₦{order.total}</span>
+                <span className='text-orange-600'>₦{order.totalAmount}</span>
               </div>
             </div>
           </div>
@@ -184,7 +237,9 @@ const OrderDetails = () => {
           <div className='bg-white dark:bg-slate-800 dark:text-dark-text rounded-lg shadow-lg p-10 mb-10'>
             <h2 className='font-semibold mb-4'>Shipping Address</h2>
             <p className='text-light-text-secondary dark:text-dark-text-secondary'>
-              {order.shippingAddress}
+              {order?.customerDetails?.address
+                ? `${order.customerDetails.address.line1}, ${order.customerDetails.address.city}, ${order.customerDetails.address.state}, ${order.customerDetails.address.country}`
+                : "Address not available"}
             </p>
           </div>
 
@@ -208,10 +263,12 @@ const OrderDetails = () => {
           </div>
           <ChangeStatus
             order={order}
-            currentStatus={order.status}
+            currentStatus={localStatus}
+            onStatusChange={handleStatusChange}
             orderId={order.orderId}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
+            isUpdating = {isUpdating}
           />
         </div>
       </div>

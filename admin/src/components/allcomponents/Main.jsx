@@ -4,17 +4,21 @@ import { tableDetails } from "../../lib/constants";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProductContext } from "../../context/index.js";
-import { useModal, useToast } from "../../context/Modal/useModal&Toast.js";
+import { useModal, } from "../../context/Modal/useModal&Toast.js";
 
 const Main = ({ products, setSelectedProduct, setIsOpen, searchInput, setSearchInput }) => {
-const {editProduct, editOn, deleteProduct, addFeatured, removeFeatured, productSearch, clearSearch} = useProductContext()
+const {editProduct, editOn, deleteProduct, toggleFeatured, productSearch, clearSearch} = useProductContext()
 const {showConfirmation, OPERATION_TYPES} = useModal()
-const {showToast, TOAST_TYPES} = useToast()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [entriesPerPage, setEntriesPerPage] = useState(20)
   // const [searchInput, setSearchInput] = useState(searchTerm || "")
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  // eslint-disable-next-line no-unused-vars
+  const [error, setError] = useState(null)
+
+
+  
 
   
   const navigate = useNavigate()
@@ -42,13 +46,9 @@ const {showToast, TOAST_TYPES} = useToast()
         itemName: `${product.name} product`,
         onConfirm: async () => {
           try {
-            await deleteProduct(product.id);
-            showToast("Product deleted successfully", TOAST_TYPES.SUCCESS);
+            await deleteProduct(product.productId);
           } catch (error) {
-            showToast(
-              `Failed to delete Product: ${error.message}`,
-              TOAST_TYPES.ERROR
-            );
+            setError(error)
           }
         },
       });
@@ -56,36 +56,33 @@ const {showToast, TOAST_TYPES} = useToast()
 
     const handleFeaturedAdd = (product) => {
       showConfirmation({
-        operationType: OPERATION_TYPES.ADD,
+        operationType: OPERATION_TYPES.APPROVE,
+        title: "Change product featured status",
+        description: "Are you sure you want to change featured status of product",
         itemType: "product",
         itemName: `${product.name} among featured products`,
         onConfirm: async () => {
           try {
-            await addFeatured(product.id);
-            showToast("Product added successfully", TOAST_TYPES.SUCCESS);
+            await toggleFeatured(product.productId, product.featured);
           } catch (error) {
-            showToast(
-              `Failed to delete product: ${error.message}`,
-              TOAST_TYPES.ERROR
-            );
+            setError(error)
           }
         },
       });
     };
     const handleFeaturedRemove = (product) => {
       showConfirmation({
-        operationType: OPERATION_TYPES.REMOVE,
+        operationType: OPERATION_TYPES.APPROVE,
+        title: "Change product featured status",
+        description:
+          "Are you sure you want to change featured status of product",
         itemType: "product",
         itemName: `${product.name} from featured products`,
         onConfirm: async () => {
           try {
-            await removeFeatured(product.id);
-            showToast("Product removed successfully", TOAST_TYPES.SUCCESS);
+            await toggleFeatured(product.productId, product.featured);
           } catch (error) {
-            showToast(
-              `Failed to delete product: ${error.message}`,
-              TOAST_TYPES.ERROR
-            );
+           setError(error)
           }
         },
       });
@@ -101,10 +98,7 @@ const {showToast, TOAST_TYPES} = useToast()
             editProduct(product);
             navigate("/add-product");
           } catch (error) {
-            showToast(
-              `Failed to edit product: ${error.message}`,
-              TOAST_TYPES.ERROR
-            );
+            setError(error)
           }
         },
       });
@@ -126,11 +120,12 @@ const {showToast, TOAST_TYPES} = useToast()
 
   useEffect(() => {
     if (debouncedSearch.trim()) {
-     productSearch(debouncedSearch)
+      productSearch(debouncedSearch);
     } else {
-     clearSearch()
+      clearSearch();
     }
-  }, [debouncedSearch, clearSearch, productSearch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, productSearch]);
 
   return (
     <div className='p-6'>
@@ -206,7 +201,7 @@ const {showToast, TOAST_TYPES} = useToast()
           <tbody className='bg-white dark:bg-slate-800 mt-10 '>
             {currentProducts.map((product, index) => (
               <tr
-                key={product.id}
+                key={product.productId}
                 className={`${
                   index % 2 === 0
                     ? "bg-white dark:bg-slate-800"
@@ -228,7 +223,7 @@ const {showToast, TOAST_TYPES} = useToast()
                 </td>
 
                 <td className='px-4 py-6 whitespace-nowrap text-[15px] max-sm:text-xs min-w-[160px] max-sm:min-w-[120px]'>
-                  #{product.id}
+                  #{product.productId}
                 </td>
                 <td className='px-4 py-6 whitespace-nowrap text-[15px] max-sm:text-xs min-w-[180px] max-sm:min-w-[140px]'>
                   {product.category}

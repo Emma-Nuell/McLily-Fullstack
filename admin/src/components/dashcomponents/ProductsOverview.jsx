@@ -12,7 +12,7 @@ const ProductsOverview = () => {
 
     const navigate = useNavigate();
     const handleProductlick = (product) => {
-        navigate(`/products?productId=${product.id}&openPanel=true`);
+        navigate(`/products?productId=${product.productId}&openPanel=true`);
     }
 
         const [currentPage, setCurrentPage] = useState(1);
@@ -73,7 +73,7 @@ const ProductsOverview = () => {
           <tbody className='bg-white dark:bg-slate-800 mt-10 dark:text-dark-text'>
             {currentProducts.map((product, index) => (
               <tr
-                    key={product.id}
+                    key={product.productId}
                     onClick={() => handleProductlick(product)}
                 className={`${
                   index % 2 === 0
@@ -95,7 +95,7 @@ const ProductsOverview = () => {
                 </td>
 
                 <td className='px-4 py-6 whitespace-nowrap text-[14px] max-sm:text-xs'>
-                  #{product.id}
+                  #{product.productId}
                 </td>
                 <td className='px-4 py-6 whitespace-nowrap text-[14px] max-sm:text-xs'>
                   ₦{product.price}

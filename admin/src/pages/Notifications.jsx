@@ -1,12 +1,28 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useNotificationContext, useThemeContext } from "../context/index.js";
 import { useModal, useToast } from "../context/Modal/useModal&Toast.js";
+import { SpinnerLoader } from "../components/Loaders/index.js"
+import {ErrorAlert} from "../components/index.js"
 
-import { SlidersHorizontal, Trash, Check, Bell, X, Eye, User, MonitorCog, Banknote, Package, Warehouse, ChartNoAxesCombined } from "lucide-react";
+import {
+  SlidersHorizontal,
+  Trash,
+  Check,
+  Bell,
+  X,
+  Eye,
+  User,
+  MonitorCog,
+  Banknote,
+  Package,
+  Warehouse,
+  ChartNoAxesCombined,
+  Loader2,
+} from "lucide-react";
 
 const Notifications = () => {
-const {showConfirmation, OPERATION_TYPES} = useModal()
-const {showToast, TOAST_TYPES} = useToast()
+  const { showConfirmation, OPERATION_TYPES } = useModal();
+  const { showToast, TOAST_TYPES } = useToast();
 
   const {
     unreadCount,
@@ -14,32 +30,72 @@ const {showToast, TOAST_TYPES} = useToast()
     markAllAsRead,
     deleteNotification,
     clearReadNotifications,
-    getFilteredNotifications,
+    filteredNotifications,
+    isMarkingAll,
+    error,
+    loading,
+    setFilter,
+    filter
   } = useNotificationContext();
   const { theme } = useThemeContext();
-  const [filter, setFilter] = useState("all");
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
-  
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleMarkAsRead = async (notification) => {
+    setIsUpdating(true);
+    await markAsRead(notification._id);
+    setIsUpdating(false);
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setIsFilterMenuOpen(false);
+  };
 
   const handleNotificationDelete = (notification) => {
     showConfirmation({
       operationType: OPERATION_TYPES.DELETE,
       itemType: "notification",
-      itemName: `${notification.title} notification`,  
+      itemName: `${notification.title} notification`,
       onConfirm: async () => {
         try {
-          await deleteNotification(notification.id);
+          setIsDeleting(true)
+          await deleteNotification(notification._id);
           showToast("Notification deleted successfully", TOAST_TYPES.SUCCESS);
         } catch (error) {
-          showToast(`Failed to delete notification: ${error.message}`, TOAST_TYPES.ERROR);
+          showToast(
+            `Failed to delete notification: ${error.message}`,
+            TOAST_TYPES.ERROR
+          );
         }
-      }
-    })
-  }
+        finally {
+          setIsDeleting(false)
+        }
+      },
+    });
+  };
+  const handleNotificationMarkAllAsRead = () => {
+    showConfirmation({
+      operationType: OPERATION_TYPES.APPROVE,
+      title: "Mark all as read",
+      description: "Are you sure you want to mark all notifications as read?",
+      itemType: "notification",
+      itemName: `notification`,
+      onConfirm: async () => {
+        try {
+          await markAllAsRead();
+          showToast("Notifications all marked as read", TOAST_TYPES.INFO);
+        } catch (error) {
+          showToast(
+            `Failed to delete notification: ${error.message}`,
+            TOAST_TYPES.ERROR
+          );
+        }
+      },
+    });
+  };
 
-  useEffect(() => {
-    getFilteredNotifications(filter);
-  }, [filter, getFilteredNotifications]);
 
   const getNotificationTypeIcon = (type) => {
     switch (type) {
@@ -58,13 +114,11 @@ const {showToast, TOAST_TYPES} = useToast()
       default:
         return <Bell className='size-10 max-sm:size-8' />;
     }
-  }
-
+  };
 
   const getNotificationIcon = (type, priority) => {
     let bgColor = "";
 
-    
     if (theme === "dark") {
       switch (priority) {
         case "high":
@@ -104,6 +158,15 @@ const {showToast, TOAST_TYPES} = useToast()
     );
   };
 
+    
+  if (loading) {
+      return <SpinnerLoader />;
+  }
+  
+  if (error) {
+    return <ErrorAlert />;
+  }
+
   return (
     <div className='p-6'>
       <div className='mb-8 flex justify-between items-center'>
@@ -122,8 +185,7 @@ const {showToast, TOAST_TYPES} = useToast()
             <div className='absolute right-0 mt-2 p-2.5 w-auto min-w-[130px] rounded-md shadow-lg z-10 bg-white dark:bg-dark-surface dark:text-dark-text'>
               <button
                 onClick={() => {
-                  setFilter("all");
-                  setIsFilterMenuOpen(false);
+                  handleFilterChange("all");
                 }}
                 className={`w-full text-left px-4 py-2 text-[15px] 
                    dark:hover:bg-gray-800 hover:bg-gray-100 rounded-md
@@ -133,8 +195,7 @@ const {showToast, TOAST_TYPES} = useToast()
               </button>
               <button
                 onClick={() => {
-                  setFilter("unread");
-                  setIsFilterMenuOpen(false);
+                  handleFilterChange("unread");
                 }}
                 className={`w-full text-left px-4 py-2 text-[15px] 
                   dark:hover:bg-gray-800 hover:bg-gray-100 rounded-md
@@ -144,8 +205,7 @@ const {showToast, TOAST_TYPES} = useToast()
               </button>
               <button
                 onClick={() => {
-                  setFilter("read");
-                  setIsFilterMenuOpen(false);
+                  handleFilterChange("read");
                 }}
                 className={`w-full text-left px-4 py-2 text-[15px]  
                   dark:hover:bg-gray-800 hover:bg-gray-100 rounded-md
@@ -178,16 +238,23 @@ const {showToast, TOAST_TYPES} = useToast()
 
           <div className='flex space-x-4'>
             <button
-              onClick={markAllAsRead}
+              onClick={handleNotificationMarkAllAsRead}
               className={`flex items-center px-3 py-1.5 text-sm rounded bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700  ${
                 unreadCount === 0
                   ? "opacity-50 cursor-not-allowed"
                   : "cursor-pointer"
               }`}
-              disabled={unreadCount === 0}
+              disabled={unreadCount === 0 || isMarkingAll}
             >
-              <Check className='size-12 mr-2' />
-              Mark all as read
+              {isMarkingAll ? (
+                <>
+                  <Loader2 size='sm' /> Marking...
+                </>
+              ) : (
+                <div className='flex items-center'>
+                  <Check className='size-12 mr-2' /> Mark all as read
+                </div>
+              )}
             </button>
 
             <button
@@ -202,14 +269,13 @@ const {showToast, TOAST_TYPES} = useToast()
       </div>
       <div className='bg-white dark:bg-slate-800 p-6 py-8 rounded-lg shadow-lg'>
         <div className='space-y-3'>
-          {getFilteredNotifications().length > 0 ? (
-            getFilteredNotifications(filter).map((notification) => (
+          {filteredNotifications.length > 0 ? (
+            filteredNotifications.map((notification) => (
               <div
-                key={notification.id}
+                key={notification._id}
                 className={`p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 mb-8 cursor-pointer dark:bg-slate-800`}
               >
                 <div className='flex items-start'>
-                  
                   <div className='flex-shrink-0 mr-6 max-sm:mr-4'>
                     {getNotificationIcon(
                       notification.type,
@@ -217,7 +283,6 @@ const {showToast, TOAST_TYPES} = useToast()
                     )}
                   </div>
 
-                 
                   <div className='flex-1 min-w-0 '>
                     <div className='flex items-start justify-between mb-1 pr-6 max-sm:pr-3'>
                       <h3
@@ -245,7 +310,6 @@ const {showToast, TOAST_TYPES} = useToast()
                       {notification.message}
                     </p>
 
-    
                     <div className='mt-3 flex items-center justify-between w-full space-x-3'>
                       <div className='flex gap-4 items-center'>
                         <span
@@ -275,23 +339,32 @@ const {showToast, TOAST_TYPES} = useToast()
                     </div>
                   </div>
 
-                 
                   <div className='ml-2 flex-shrink-0 flex items-start space-x-4'>
                     {!notification.isRead && (
                       <button
-                        onClick={() => markAsRead(notification.id)}
+                        onClick={() => handleMarkAsRead(notification)}
                         className={`p-2 rounded-full flex items-center justify-center dark:bg-gray-600 bg-gray-300 hover:bg-gray-400 dark:hover:bg-gray-700`}
                         title='Mark as read'
+                        disabled={isUpdating || notification.isRead}
                       >
-                        <Eye className='size-10' />
+                        {isUpdating ? (
+                          <Loader2 className='size-10' />
+                        ) : (
+                          <Eye className='size-10' />
+                        )}
                       </button>
                     )}
                     <button
                       onClick={() => handleNotificationDelete(notification)}
                       className={`p-2 rounded-full flex items-center justify-center dark:bg-gray-600 bg-light-button hover:bg-light-buttonhover dark:hover:bg-gray-700 `}
                       title='Delete notification'
+                      disabled={isDeleting}
                     >
-                      <X className='size-10' />
+                      {isDeleting ? (
+                        <Loader2 size='sm' />
+                      ) : (
+                        <X className='size-10' />
+                      )}
                     </button>
                   </div>
                 </div>

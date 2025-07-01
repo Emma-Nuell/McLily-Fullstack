@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react"
-import {  useOrderContext } from "../../context/index.js";
 
 
-const ChangeStatus = ({ currentStatus, orderId, isOpen, setIsOpen}) => {
-    const {changeStatus} = useOrderContext()
+const ChangeStatus = ({ currentStatus,  isOpen, setIsOpen, onStatusChange, isUpdating}) => {
   const [selectedStatus, setSelectedStatus] = useState(currentStatus);
   
   useEffect(() => {
@@ -47,7 +45,7 @@ const ChangeStatus = ({ currentStatus, orderId, isOpen, setIsOpen}) => {
 
     const handleSubmit = () => {
       if (selectedStatus !== currentStatus) {
-        changeStatus(orderId, selectedStatus);
+        onStatusChange(selectedStatus);
       }
       setIsOpen(false);
     };
@@ -58,7 +56,7 @@ const ChangeStatus = ({ currentStatus, orderId, isOpen, setIsOpen}) => {
             className='w-full text-center cursor-pointer bg-blue-600 text-white rounded-lg py-2'
             onClick={() => setIsOpen(true)}
           >
-            Change Status
+            {isUpdating ? "Updating..." : "Update Status"}
           </button>
         </div>
 

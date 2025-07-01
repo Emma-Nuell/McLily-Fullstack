@@ -1,49 +1,61 @@
 import express from "express";
-import multer from "multer";
-import path from "path";
+import http from "http"
 import cors from "cors";
 import dotenv from "dotenv";
 import productRoute from "./routes/productRoute.js";
 import accountRoute from "./routes/accountRoute.js";
 import userRoute from "./routes/userRoute.js";
+import adminRoute from "./routes/adminRoute.js"
 import connectDB from "./config/database.js";
 import logger from "./middlewares/logger.js";
 import errorHandler from "./middlewares/errorhandler.js";
+import { apiLimiter } from "./middlewares/rateLimiter.js";
+import {Server} from "socket.io"
 
-const port = 4000;
 export const app = express();
+const server = http.createServer(app)
+const port = process.env.PORT || 4000;
+
+if (!process.env.FRONTEND_URL) {
+  console.error("Missing FRONTEND_URL in .env");
+  process.exit(1);
+}
 
 //middleware
+app.use(apiLimiter)
 app.use(express.json());
 app.use(cors());
 app.use(logger);
+
 
 //api creation
 app.get("/", (req, res) => {
   res.send("Express app is running");
 });
 
-//image storage
-const storage = multer.diskStorage({
-  destination: "./upload/images",
-  filename: (req, file, cb) => {
-    return cb(
-      null,
-      `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
-    );
-  },
-});
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    methods: ["GET", "POST"]
+  }
+})
 
-const upload = multer({ storage: storage });
+io.on("connection", (socket) => {
+  console.log(`Client connected: ${socket.id}`);
 
-//upload endpoint for images
-app.use("/images", express.static("upload/images"));
-app.post("/upload", upload.single("product"), (req, res) => {
-  res.json({
-    success: 1,
-    image_url: `http://localhost:${port}/images/${req.file.filename}`,
+  socket.on("disconnect", () => {
+    console.log(`Client disconnected: ${socket.id}`);
+  });
+
+  socket.on("error", (err) => {
+    console.error("Socket error:", err);
   });
 });
+
+
+app.set("io", io)
+
+
 
 dotenv.config()
 connectDB()
@@ -53,13 +65,15 @@ connectDB()
 app.use("/account", accountRoute)
 app.use("/products", productRoute)
 app.use("/cart", userRoute)
+app.use("/admin", adminRoute)
 
 
 app.use(errorHandler);
 
-app.listen(port, (error) => {
+server.listen(port, (error) => {
   if (!error) {
     console.log("server is running on port", port);
+    console.log(`WebSocket ready on ws://localhost:${port}`);
   } else {
     console.log("Error :", error);
   }

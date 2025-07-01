@@ -13,21 +13,59 @@ const global_reducer = (state, action) => {
     const { products, orders, value } = action.payload;
     const searchTerm = value.toLowerCase();
 
-    const matchingProducts = products.filter(
-      (product) =>
-        product.name.toLowerCase().includes(searchTerm) ||
-        product.id.toString().includes(searchTerm) ||
-        product.category.includes(searchTerm) ||
-        product.subCategory.toLowerCase().includes(searchTerm)
-    );
+    const matchingProducts = products.filter((product) => {
+      const nameMatch = product.name.toLowerCase().includes(searchTerm);
+      const idMatch = product.productId.toString().includes(searchTerm);
+      const categoryMatch = product.category.toLowerCase().includes(searchTerm);
+      const subCategoryMatch = product.subCategory
+        .toLowerCase()
+        .includes(searchTerm);
+      const priceMatch = product.price.toString().includes(searchTerm);
+      const tagsMatch = product.tags.some((tag) =>
+        tag.toLowerCase().includes(searchTerm)
+      );
 
-    const matchingOrders = orders.filter(
-      (order) =>
-        order.orderId.toString().toLowerCase().includes(searchTerm) ||
-        order.customerName.toLowerCase().includes(searchTerm) ||
-        order.status.toLowerCase().includes(searchTerm) ||
-        order.orderDate.toLowerCase().includes(searchTerm)
-    );
+      return (
+        nameMatch ||
+        idMatch ||
+        categoryMatch ||
+        subCategoryMatch ||
+        priceMatch ||
+        tagsMatch
+      );
+    });
+
+    const matchingOrders = orders.filter(order => {
+      const orderIdMatch = order.orderId
+        .toString()
+        .toLowerCase()
+        .includes(searchTerm);
+      const customerNameMatch = order.customerDetails.name
+        .toLowerCase()
+        .includes(searchTerm);
+      const customerPhoneMatch = order.customerDetails.phone
+        .toLowerCase()
+        .includes(searchTerm);
+      const statusMatch = order.orderStatus.toLowerCase().includes(searchTerm);
+      const orderDateMatch = order.orderedAt
+        .toString()
+        .toLowerCase()
+        .includes(searchTerm);
+      const subtotalMatch = order.subtotal.toString().includes(searchTerm);
+      const productNameMatch = order.orderItems.some((item) =>
+        item.productName.toLowerCase().includes(searchTerm)
+      );
+
+      return (
+        orderIdMatch ||
+        customerNameMatch ||
+        customerPhoneMatch ||
+        statusMatch ||
+        orderDateMatch ||
+        subtotalMatch ||
+        productNameMatch
+      );
+    })
 
     return {
       ...state,

@@ -1,7 +1,7 @@
 import { useProductContext } from "../../context/index.js";
 import { featuredTable } from "../../lib/constants.jsx";
 import { useState } from "react";
-import { useModal, useToast } from "../../context/Modal/useModal&Toast.js";
+import { useModal, } from "../../context/Modal/useModal&Toast.js";
 import { useNavigate } from "react-router-dom";
 import {
   Pen,
@@ -12,9 +12,14 @@ import {
 } from "lucide-react";
 
 const FeaturedProducts = () => {
-  const { featuredProducts, editProduct, editOn, removeFeatured } = useProductContext();
+  const { featuredProducts, editProduct, editOn,  toggleFeatured } = useProductContext();
   const { showConfirmation, OPERATION_TYPES } = useModal();
-  const { showToast, TOAST_TYPES } = useToast();
+ 
+  // eslint-disable-next-line no-unused-vars
+  const [error, setError] = useState(null)
+
+
+  
 
    const [currentPage, setCurrentPage] = useState(1);
    let entriesPerPage = 5;
@@ -34,18 +39,16 @@ const FeaturedProducts = () => {
 
   const handleFeaturedRemove = (product) => {
     showConfirmation({
-      operationType: OPERATION_TYPES.REMOVE,
+      operationType: OPERATION_TYPES.APPROVE,
+      title: "Change product featured status",
+      description: "Are you sure you want to change the featured status of this product",
       itemType: "product",
       itemName: `${product.name} from featured products`,
       onConfirm: async () => {
         try {
-          await removeFeatured(product.id);
-          showToast("Product removed successfully", TOAST_TYPES.SUCCESS);
+          await toggleFeatured(product.productId, product.featured);
         } catch (error) {
-          showToast(
-            `Failed to delete product: ${error.message}`,
-            TOAST_TYPES.ERROR
-          );
+          setError(error)
         }
       },
     });
@@ -62,10 +65,7 @@ const FeaturedProducts = () => {
           editProduct(product);
           navigate("/add-product");
         } catch (error) {
-          showToast(
-            `Failed to edit product: ${error.message}`,
-            TOAST_TYPES.ERROR
-          );
+          setError(error);
         }
       },
     });
@@ -73,7 +73,7 @@ const FeaturedProducts = () => {
   
   const navigate = useNavigate();
   const handleProductlick = (product) => {
-    navigate(`/products?productId=${product.id}&openPanel=true`);
+    navigate(`/products?productId=${product.productId}&openPanel=true`);
   };
 
  return (
@@ -108,7 +108,7 @@ const FeaturedProducts = () => {
          <tbody className='bg-white dark:bg-slate-800 mt-10 dark:text-dark-text'>
            {currentProducts.map((product, index) => (
              <tr
-               key={product.id}
+               key={product.productId}
                className={`${
                  index % 2 === 0
                    ? "bg-white dark:bg-slate-800"
@@ -129,7 +129,7 @@ const FeaturedProducts = () => {
                </td>
 
                <td className='px-4 py-6 whitespace-nowrap text-xs'>
-                 #{product.id}
+                 #{product.productId}
                </td>
                <td className='px-4 py-6 whitespace-nowrap text-xs'>
                  {product.category}

@@ -6,7 +6,8 @@ import { Hamburger } from "./addcomponents/index.js";
 import { Link, useLocation } from "react-router-dom";
 import { sidebarLinks } from "../lib/constants.jsx";
 import Messages from "./Messages.jsx";
-import {useGlobalContext} from "../context/index.js"
+import { useGlobalContext } from "../context/index.js"
+import UserB from "./User.jsx";
 
 
 const Navbar = ({searchInput, setSearchInput}) => {
@@ -100,7 +101,7 @@ const Navbar = ({searchInput, setSearchInput}) => {
             <div className='flex items-center justify-end gap-4 pr-4 cursor-pointer'>
               <Messages />
               <ThemeToggle />
-              <User className='text-xl dark:text-white' />
+              <UserB />
             </div>
           </div>
         </div>

@@ -5,6 +5,8 @@ const ProductSchema = new mongoose.Schema({
   productId: {
     type: String,
     required: true,
+    unique: true, 
+    index: true,
   },
   name: {
     type: String,
@@ -32,7 +34,7 @@ const ProductSchema = new mongoose.Schema({
   },
   tags: {
     type: [String],
-    required: true,
+   default: [],
   },
   brand: {
     type: String,
@@ -41,6 +43,7 @@ const ProductSchema = new mongoose.Schema({
   stock: {
     type: Number,
     required: true,
+    min: 0,
   },
   sizes: {
     type: [
@@ -71,7 +74,7 @@ const ProductSchema = new mongoose.Schema({
   },
   featured: {
     type: Boolean,
-    default: null,
+    default: false,
   },
   sales: {
     type: Number,
@@ -86,11 +89,11 @@ const ProductSchema = new mongoose.Schema({
       type: Number,
       default: 0, // Default rating average
     },
-    reviews: {
+    reviewsCount: {
       type: Number,
       default: 0, // Default number of reviews
     },
   },
-});
+}, { timestamps: true });
 
 export const Product = mongoose.model("Product", ProductSchema);

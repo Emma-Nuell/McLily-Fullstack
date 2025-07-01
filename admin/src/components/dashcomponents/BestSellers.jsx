@@ -62,7 +62,7 @@ const BestSellers = () => {
          <tbody className='bg-white dark:bg-slate-800 mt-10 dark:text-dark-text'>
            {currentProducts.map((product, index) => (
              <tr
-               key={product.id}
+               key={product.productId}
                className={`${
                  index % 2 === 0
                    ? "bg-white dark:bg-slate-800"
@@ -83,7 +83,7 @@ const BestSellers = () => {
                </td>
 
                <td className='px-4 py-6 whitespace-nowrap text-xs'>
-                 #{product.id}
+                 #{product.productId}
                </td>
                <td className='px-4 py-6 whitespace-nowrap text-xs'>
                  ₦{Number(product.price).toLocaleString()}

@@ -3,26 +3,31 @@ import {
   useOrderContext,
   useProductContext,
 } from "../context/index.js";
-import { useModal, useToast } from "../context/Modal/useModal&Toast.js";
+import { useModal } from "../context/Modal/useModal&Toast.js";
 import { useNavigate } from "react-router-dom";
 import { MBlobLoader } from "../components/Loaders/index.js";
 import { globalOrdersTable, globalProductsTable } from "../lib/constants.jsx";
 import { Trash, Pen, Plus, X, ScrollText } from "lucide-react";
+import { useState } from "react";
 
 const GlobalSearchResults = ({ onClose, setSearchInput }) => {
   const { results, loading, searchTerm, setShowResults, clearSearch } = useGlobalContext();
   const { getStatusColor, deleteOrder } = useOrderContext();
-  const { deleteProduct, removeFeatured, editOn, addFeatured, editProduct } =
+  const { deleteProduct, editOn, editProduct, toggleFeatured } =
     useProductContext();
   const { showConfirmation, OPERATION_TYPES } = useModal();
-  const { showToast, TOAST_TYPES } = useToast();
+  // eslint-disable-next-line no-unused-vars
+  const [error, setError] = useState(null)
+
+  
+  
 
   const { products, orders } = results;
   const totalResults = products.length + orders.length;
 
   const navigate = useNavigate();
   const handleProductlick = (product) => {
-    navigate(`/products?productId=${product.id}&openPanel=true`);
+    navigate(`/products?productId=${product.productId}&openPanel=true`);
     clearSearch();
     setSearchInput("");
   };
@@ -49,12 +54,8 @@ const GlobalSearchResults = ({ onClose, setSearchInput }) => {
       onConfirm: async () => {
         try {
           await deleteOrder(order.orderId);
-          showToast("Order deleted successfully", TOAST_TYPES.SUCCESS);
         } catch (error) {
-          showToast(
-            `Failed to delete Order: ${error.message}`,
-            TOAST_TYPES.ERROR
-          );
+          setError(error);
         }
       },
     });
@@ -67,13 +68,9 @@ const GlobalSearchResults = ({ onClose, setSearchInput }) => {
       itemName: `${product.name} product`,
       onConfirm: async () => {
         try {
-          await deleteProduct(product.id);
-          showToast("Product deleted successfully", TOAST_TYPES.SUCCESS);
+          await deleteProduct(product.productId);
         } catch (error) {
-          showToast(
-            `Failed to delete Product: ${error.message}`,
-            TOAST_TYPES.ERROR
-          );
+          setError(error);
         }
       },
     });
@@ -81,42 +78,34 @@ const GlobalSearchResults = ({ onClose, setSearchInput }) => {
 
   const handleFeaturedAdd = (product) => {
     showConfirmation({
-      operationType: OPERATION_TYPES.ADD,
+      operationType: OPERATION_TYPES.APPROVE,
+      title: "Change product featured status",
+      description:
+        "Are you sure you want to change the featured status of this product",
       itemType: "product",
       itemName: `${product.name} among featured products`,
       onConfirm: async () => {
         try {
-          await addFeatured(product.id);
-          showToast(
-            "Product added to featured successfully",
-            TOAST_TYPES.SUCCESS
-          );
+          await toggleFeatured(product.productId, product.featured);
         } catch (error) {
-          showToast(
-            `Failed to delete product: ${error.message}`,
-            TOAST_TYPES.ERROR
-          );
+          setError(error);
         }
       },
     });
   };
   const handleFeaturedRemove = (product) => {
     showConfirmation({
-      operationType: OPERATION_TYPES.REMOVE,
+      operationType: OPERATION_TYPES.APPROVE,
+      title: "Change product featured status",
+      description:
+        "Are you sure you want to change the featured status of this product",
       itemType: "product",
       itemName: `${product.name} from featured products`,
       onConfirm: async () => {
         try {
-          await removeFeatured(product.id);
-          showToast(
-            "Product removed from featured successfully",
-            TOAST_TYPES.SUCCESS
-          );
+          await toggleFeatured(product.productId, product.featured);
         } catch (error) {
-          showToast(
-            `Failed to delete product: ${error.message}`,
-            TOAST_TYPES.ERROR
-          );
+          setError(error);
         }
       },
     });
@@ -133,10 +122,7 @@ const GlobalSearchResults = ({ onClose, setSearchInput }) => {
           navigate("/add-product");
           setShowResults(false);
         } catch (error) {
-          showToast(
-            `Failed to edit product: ${error.message}`,
-            TOAST_TYPES.ERROR
-          );
+          setError(error);
         }
       },
     });
@@ -156,7 +142,7 @@ const GlobalSearchResults = ({ onClose, setSearchInput }) => {
       <div className='fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-dark-overlaybg rounded-lg p-6 w-full max-w-3xl max-md:max-w-sm max-h-[76%] dark:text-dark-text overflow-auto  scrollbar-hidden'>
         {totalResults === 0 ? (
           <div className='p-4'>
-            <p className = "text-xl">No results found for "{searchTerm}"</p>
+            <p className='text-xl'>No results found for "{searchTerm}"</p>
           </div>
         ) : (
           <div className='p-6'>
@@ -213,7 +199,7 @@ const GlobalSearchResults = ({ onClose, setSearchInput }) => {
                     <tbody className='mt-10 bg-white dark:bg-slate-800 dark:text-dark-text'>
                       {products.slice(0, 5).map((product, index) => (
                         <tr
-                          key={product.id}
+                          key={product.productId}
                           onClick={() => handleProductlick(product)}
                           className={`${
                             index % 2 === 0
@@ -238,7 +224,7 @@ const GlobalSearchResults = ({ onClose, setSearchInput }) => {
                           </td>
 
                           <td className='px-4 py-6 whitespace-nowrap text-[14px] max-sm:text-xs'>
-                            #{product.id}
+                            #{product.productId}
                           </td>
                           <td className='px-4 py-6 whitespace-nowrap text-[14px] max-sm:text-xs'>
                             ₦{product.price}
@@ -297,7 +283,7 @@ const GlobalSearchResults = ({ onClose, setSearchInput }) => {
                 {products.length > 5 && (
                   <>
                     <div className='w-full h-1 my-6 bg-aquamine-5 dark:bg-dark-border'></div>
-                    <div className="mb-10 text-right">
+                    <div className='mb-10 text-right'>
                       <button
                         onClick={() => {
                           navigate("/products?search=" + searchTerm);
@@ -364,28 +350,31 @@ const GlobalSearchResults = ({ onClose, setSearchInput }) => {
                           <td className='rounded-l-xl pr-16 px-4 py-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[280px] max-sm:min-w-[190px]'>
                             <div className='flex items-center'>
                               <div className='flex items-center flex-shrink-0 h-23 w-23 max-sm:h-20 max-sm:w-20'>
-                                <img src={order.image} alt={order.name} />
+                                <img
+                                  src={order.orderItems[0].image}
+                                  alt={order.orderItems[0].productName}
+                                />
                               </div>
                               <div className='ml-6'>
                                 <div className='font-medium text-black dark:text-dark-text text-[14px] max-sm:text-xs max-w-[300px] max-sm:max-w-[220px] text-nowrap overflow-hidden overflow-ellipsis'>
-                                  {order.productName}
+                                  {order.orderItems[0].productName}
                                 </div>
                               </div>
                             </div>
                           </td>
 
                           <td className='px-4 py-6 whitespace-nowrap min-w-[180px] max-sm:min-w-[140px] text-[14px] max-sm:text-xs'>
-                            {order.customerName}
+                            {order.customerDetails.name}
                           </td>
                           <td className='px-4 py-6 whitespace-nowrap min-w-[180px] max-sm:min-w-[140px] text-[14px] max-sm:text-xs'>
                             #{order.orderId}
                           </td>
                           <td
                             className={`font-medium text-[15px] max-sm:text-xs min-w-[160px] max-sm:min-w-[110px] whitespace-nowrap px-4 py-6 ${getStatusColor(
-                              order.status
+                              order.orderStatus
                             )}`}
                           >
-                            {order.status}
+                            {order.orderStatus}
                           </td>
                           <td className='rounded-r-xl px-6 py-4 whitespace-nowrap text-sm font-medium min-w-[130px] max-sm:min-w-[90px]'>
                             <div className='flex items-center justify-start gap-4'>
@@ -417,7 +406,7 @@ const GlobalSearchResults = ({ onClose, setSearchInput }) => {
                 {orders.length > 5 && (
                   <>
                     <div className='w-full h-1 my-10 bg-aquamine-5 dark:bg-dark-border'></div>
-                    <div className="mb-6 text-right">
+                    <div className='mb-6 text-right'>
                       <button
                         onClick={() => {
                           navigate(`/orders?search=${searchTerm}&view=all`);

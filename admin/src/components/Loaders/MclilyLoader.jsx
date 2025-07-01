@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Logo from "../../assets/file.svg"
 
 const MclilyLoader = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -27,13 +28,16 @@ const MclilyLoader = () => {
             }}
           ></div>
         </div>
+        <div className="flex items-center justify-center">
+          <img src={Logo} alt="logo" className="w-100" />
+        </div>
 
         <div className='text-center relative z-10'>
-          <div className='text-6xl font-bold tracking-widest inline-block relative'>
+          <div className='text-7xl font-bold tracking-widest inline-block relative'>
             {letters.map((letter, index) => (
               <span
                 key={index}
-                className={`inline-block transition-all duration-300 font-sevilla ${
+                className={`inline-block transition-all duration-300 font-comorant ${
                   activeIndex === index
                     ? "text-aquamine-4 scale-110 drop-shadow-lg"
                     : "text-gray-600"
@@ -54,11 +58,11 @@ const MclilyLoader = () => {
             ))}
           </div>
 
-          <div className='flex justify-center gap-2 mt-8'>
+          <div className='flex justify-center gap-4 mt-8'>
             {[0, 1, 2].map((index) => (
               <div
                 key={index}
-                className='w-2 h-2 bg-emerald-400 rounded-full'
+                className='w-5 h-5 bg-emerald-400 rounded-full'
                 style={{
                   animation: `pulse 1.5s ease-in-out infinite`,
                   animationDelay: `${index * 0.2}s`,

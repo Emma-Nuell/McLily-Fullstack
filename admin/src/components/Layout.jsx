@@ -1,13 +1,24 @@
 import { useState } from "react";
 import { Navbar, Sidebar, GlobalSearchResults } from "../components/index.js";
-import { useGlobalContext } from "../context/index.js";
+import { useGlobalContext, useAuthContext, useNotificationContext, useOrderContext, useProductContext } from "../context/index.js";
+import {MclilyLoader} from "./Loaders/index.js"
 
 const Layout = ({ children }) => {
   const { showResults, setShowResults, searchTerm } = useGlobalContext();
+  const { loading: authLoading } = useAuthContext()
+  const { loading: notLoading } = useNotificationContext()
+  const { loading: productLoading } = useProductContext()
+  const {loading: orderLoading} = useOrderContext()
   const [searchInput, setSearchInput] = useState(searchTerm || "")
   
 
- 
+   if (authLoading || notLoading || productLoading || orderLoading) {
+     return (
+       <div className='flex items-center justify-center h-screen'>
+         <MclilyLoader />
+       </div>
+     );
+   }
 
   return (
     <>

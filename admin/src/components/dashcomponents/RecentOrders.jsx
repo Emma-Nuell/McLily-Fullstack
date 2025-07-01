@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 const RecentOrders = () => {
-  const { recentOrders } = useOrderContext()
+  const { recentOrders, getStatusColor } = useOrderContext()
     const [currentPage, setCurrentPage] = useState(1);
     let entriesPerPage = 10;
 
@@ -29,28 +29,6 @@ const RecentOrders = () => {
        visiblePageNumbers.push(i);
   }
   
-  function getStatusColor(status) {
-    switch (status) {
-      case "Pending":
-        return "text-yellow-600";
-      case "Processing":
-        return "text-blue-600";
-      case "Shipped":
-        return "text-purple-600";
-      case "Out_for_delivery":
-        return "text-indigo-600";
-      case "Delivered":
-        return "text-green-600";
-      case "Cancelled":
-        return "text-red-600";
-      case "Returned":
-        return "text-orange-600";
-      case "Refunded":
-        return "text-pink-600";
-      default:
-        return "text-gray-600";
-    }
-  }
   return (
     <div className='bg-white dark:bg-slate-800 p-6 rounded-md mt-12'>
       <div>
@@ -93,34 +71,37 @@ const RecentOrders = () => {
                 <td className='rounded-l-xl px-4 py-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider'>
                   <div className='flex items-center'>
                     <div className='h-23 w-23 max-sm:h-20 max-sm:w-20 flex-shrink-0 flex items-center'>
-                      <img src={order.image} alt={order.name} />
+                      <img
+                        src={order.orderItems[0].image}
+                        alt={order.orderItems[0].productName}
+                      />
                     </div>
                     <div className='ml-6'>
                       <div className='font-medium text-black dark:text-dark-text text-[14px] max-sm:text-xs max-w-[300px] max-sm:max-w-[220px] text-nowrap overflow-hidden overflow-ellipsis'>
-                        {order.productName}
+                        {order.orderItems[0].productName}
                       </div>
                     </div>
                   </div>
                 </td>
 
                 <td className='px-4 py-6 whitespace-nowrap text-[14px] max-sm:text-xs'>
-                  {order.customerName}
+                  {order.customerDetails.name}
                 </td>
                 <td className='px-4 py-6 whitespace-nowrap text-[14px] max-sm:text-xs'>
                   #{order.orderId}
                 </td>
                 <td className='px-4 py-6 whitespace-nowrap text-[14px] max-sm:text-xs'>
-                  x{order.quantity}
+                  x{order.orderItems.length}
                 </td>
                 <td className='px-4 py-6 whitespace-nowrap text-[14px] max-sm:text-xs'>
                   ₦{Number(order.subtotal).toLocaleString()}
                 </td>
                 <td
                   className={`font-medium text-[15px] max-sm:text-xs min-w-[120px] max-sm:min-w-[80px] whitespace-nowrap px-4 py-6 ${getStatusColor(
-                    order.status
+                    order.orderStatus
                   )}`}
                 >
-                  {order.status}
+                  {order.orderStatus}
                 </td>
               </tr>
             ))}

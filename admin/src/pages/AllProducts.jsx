@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Main, SidePane } from "../components/allcomponents";
 import { productsDetails } from "../lib/constants";
 import { useProductContext } from "../context/index.js";
-// import { useProductContext } from "../../context/index.js";
+import { SpinnerLoader } from "../components/Loaders/index.js"
+import {ErrorAlert} from "../components/index.js"
 
 
 
 
 const AllProducts = () => {
-  const {filteredProducts: products, searchTerm} = useProductContext()
+  const { searchTerm, error, loading, products: main, filterProducts} = useProductContext()
  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isOpen, setIsOpen] = useState(false)
@@ -26,7 +27,7 @@ const AllProducts = () => {
 
     if (productId && openPanel === "true") {
       const product = productsDetails.find(
-        (product) => product.id === productID
+        (product) => product.productId === productID
       );
       
       if (product) {
@@ -38,10 +39,14 @@ const AllProducts = () => {
       }
     }
 
-    if (searchTerm) {
-      setSearchInput(searchTerm)
+    if (searchTerm && searchTerm !== searchInput) {
+      setSearchInput(searchTerm);
     }
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams, searchInput]);
+
+  const products = useMemo(() => {
+    return filterProducts(main, searchTerm);
+  }, [main, searchTerm, filterProducts]);
 
   
 
@@ -50,6 +55,14 @@ const AllProducts = () => {
     setSelectedProduct(null)
     setSearchParams({})
   }
+
+    if (loading) {
+        return <SpinnerLoader />;
+    }
+    
+    if (error) {
+      return <ErrorAlert />;
+    }
   return (
     <div className="p-6">
       <div className="mb-8">

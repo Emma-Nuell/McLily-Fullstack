@@ -17,7 +17,11 @@ const SidePane = ({
 }) => {
   const { editProduct, editOn, deleteProduct } = useProductContext();
   const {showConfirmation, OPERATION_TYPES} = useModal()
-  const {showToast, TOAST_TYPES} = useToast()
+  const { showToast, TOAST_TYPES } = useToast()
+  const [error, setError] = useState(null)
+
+  console.error(error);
+  
 
   const navigate = useNavigate();
 
@@ -58,15 +62,11 @@ const SidePane = ({
           itemName: `${product.name} product`,
           onConfirm: async () => {
             try {
-              await deleteProduct(product.id);
+              await deleteProduct(product.productId);
               setSelectedProduct(null);
               closeSidePane();
-              showToast("Product deleted successfully", TOAST_TYPES.SUCCESS);
             } catch (error) {
-              showToast(
-                `Failed to delete Product: ${error.message}`,
-                TOAST_TYPES.ERROR
-              );
+              setError(error)
             }
           },
         });

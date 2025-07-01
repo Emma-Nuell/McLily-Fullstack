@@ -6,14 +6,21 @@ const orderItemSchema = new mongoose.Schema({
       ref: 'Product',
       required: true
     },
-    productName: String,
+  productName: {
+      type: String,
+      required: true
+    },
     quantity: {
       type: Number,
       required: true
     },
     price: {
-      type: Number, // store price at the time of order
+      type: Number,
       required: true
+  },
+  image: {
+    type: String,
+    required: true
     }
   });
   
@@ -47,18 +54,49 @@ const orderSchema = new mongoose.Schema(
     totalAmount: Number,
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid", "failed"],
+      enum: ["pending", "paid", "failed", "refunded", "partially_refunded"],
       default: "pending",
     },
     paymentMethod: {
       type: String,
-      enum: ["card", "bank_transfer", "cash_on_delivery"],
+      enum: ["card", "bank_transfer", "cash_on_delivery", "paystack"],
+    },
+    paymentDetails: {
+      transactionId: String,
+      paymentDate: Date,
+      paymentGateway: String,
+      currency: {
+        type: String,
+        default: "NGN"
+      },
+      gatewayResponse: Object
     },
     orderStatus: {
       type: String,
-      enum: ["processing", "pending", "shipped", "delivered", "cancelled"],
+      enum: ["Processing", "Pending", "Shipped","Out_for_delivery", "Delivered", "Cancelled", "Returned", "Refunded"],
       default: "processing",
     },
+    statusHistory: [
+      {
+        status: String,
+        changeAt: {
+          type: Date,
+          default: Date.now,
+        },
+        changedBy: {
+          type: String,
+          default: "system"
+        },
+        note: String
+      }
+    ],
+    deliveryTracking: {
+      trackingNumber: String,
+      carrier: String,
+      estimatedDelivery: Date,
+      actualDelivery: Date,
+    },
+    notes: String,
     orderedAt: {
       type: Date,
       default: Date.now,
@@ -67,4 +105,4 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
   
-  export default mongoose.model('Order', orderSchema);
+  export const Order =  mongoose.model('Order', orderSchema);
