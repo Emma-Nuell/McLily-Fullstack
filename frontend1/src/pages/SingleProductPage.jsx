@@ -1,9 +1,17 @@
-import {  useParams, Link } from "react-router-dom"
-import { useProductContext } from "../context/product-context"
-import { useEffect, useState } from "react"
-import styled from "styled-components"
-import { AmountButtons, PageHero, ProductImages, Stars1 } from "../components"
-import { formatPrice } from "../utils/helpers"
+import { useParams, Link } from "react-router-dom";
+import { useProductContext } from "../context/product-context";
+import React, { useEffect, useState } from "react";
+import { AmountButtons, PageHero } from "../components";
+import {
+  ProductImages,
+  DescSpec,
+  SizeSelector,
+  Reviews,
+  YouMayLike,
+  DeliveryOptions,
+} from "../components/singleproduct";
+import { Stars1 } from "../components/products";
+import { formatPrice } from "../utils/helpers";
 import { BsStarFill, BsStar, BsStarHalf } from "react-icons/bs";
 import {
   FaRegCheckCircle,
@@ -12,425 +20,308 @@ import {
   FaHeart,
   FaCartPlus,
 } from "react-icons/fa";
-import { useCartContext } from "../context/cart-context"
-
+import { useCartContext } from "../context/cart-context";
 
 const SingleProductPage = () => {
-  const { id } = useParams() 
+  const { id } = useParams();
   // const navigate = useNavigate()
-  const { fetchSingleProduct, single_product: product } = useProductContext()
-  const [size, setSize] = useState(null)
-  const { addToCart, cart, toggleAmount } = useCartContext()
-  const [amount, setAmount] = useState(1)
+  const { fetchSingleProduct, single_product: product } = useProductContext();
+  const { addToCart, cart, toggleAmount } = useCartContext();
+  const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState(null);
 
-  const inCart = cart.find((item) => item.id === id + size);
+    const {
+      name = "Loading...",
+      images = [
+        "https://www.course-api.com/images/store/product-6.jpeg",
+        "https://www.course-api.com/images/store/extra-product-1.jpeg",
+        "https://www.course-api.com/images/store/extra-product-2.jpeg",
+        "https://www.course-api.com/images/store/extra-product-3.jpeg",
+        "https://www.course-api.com/images/store/extra-product-4.jpeg",
+      ],
+      sizes = [
+        {
+          size: "40",
+          stock: 10,
+        },
+        {
+          size: "41",
+          stock: 8,
+        },
+        {
+          size: "42",
+          stock: 6,
+        },
+        {
+          size: "44",
+          stock: 4,
+        },
+        {
+          size: "45",
+          stock: 10,
+        },
+      ],
+      description = "Loading...",
+      price: basePrice,
+      brand,
+      stock,
+      rating = { average: 4.6, reviewsCount: 75 },
+      specifications = { color: "Red", size: "38", material: "Leather" },
+      reviews = [
+        {
+          userId: "user101",
+          comment: "Fast delivery and great quality. Will buy again!",
+          rating: 5,
+          date: "2025-01-05T00:00:00.000Z",
+          _id: "6859bfd5fedc382b241bf39b",
+        },
+        {
+          userId: "user102",
+          comment: "Good product but packaging was a bit damaged.",
+          rating: 4,
+          date: "2025-01-10T00:00:00.000Z",
+          _id: "6859bfd5fedc382b241bf39c",
+        },
+        {
+          userId: "user104",
+          comment: "Exactly as described. Highly recommended.",
+          rating: 5,
+          date: "2025-01-15T00:00:00.000Z",
+          _id: "6859bfd5fedc382b241bf39d",
+        },
+      ],
+    } = product || {};
+
+  const available = stock > 0;
+
+  const cartItemId = sizes.length > 0 ? `${id}${selectedSize}` : id;
+  const inCart = cart.find((item) => item.id === cartItemId);
+  const maxQuantity =
+    sizes.length > 0
+      ? sizes.find((s) => s.value === selectedSize)?.stock || stock
+      : stock;
 
   const increase = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleAmount(inCart.id, "inc");
+    if (inCart) {
+      toggleAmount(inCart.id, "inc");
+    } else {
+      setQuantity((prev) => Math.min(prev + 1, maxQuantity));
+    }
   };
   const decrease = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleAmount(inCart.id, "dec");
+    if (inCart) {
+      toggleAmount(inCart.id, "dec");
+    } else {
+      setQuantity((prev) => Math.max(prev - 1, 1));
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (product.sizes.length > 0 && !selectedSize) {
+      alert("Please select a size before adding to cart.");
+      return;
+    }
+
+    addToCart(id, selectedSize, quantity, product);
+  };
+
+  const renderCartButton = () => {
+    if (!available) {
+        return (
+          <button
+            disabled= {true}
+            className='flex justify-center py-2 items-center gap-4 text-base bg-gray-300 dark:bg-gray-600 text-text rounded-md cursor-not-allowed'
+          >
+            Out Of Stock
+          </button>
+        );
+  }
+
+    if (inCart) {
+      return (
+        <AmountButtons
+          amount={inCart.amount}
+          increase={increase}
+          decrease={decrease}
+        />
+      );
+    }
+
+    if (sizes.length > 0 && !selectedSize) {
+      return (
+        <button
+          className='flex justify-center py-2 items-center gap-4 text-base bg-gray-300 text-text rounded-md cursor-not-allowed'
+          disabled
+        >
+          <FaCartPlus /> Select Size
+        </button>
+      );
+    }
+
+    return (
+      <button
+        className='flex justify-center py-2 items-center gap-4 text-base bg-primary-400 dark:bg-primary-300 text-text hover:bg-primary-500 rounded-md cursor-pointer'
+        onClick={handleAddToCart}
+      >
+        <FaCartPlus /> Add To Cart
+      </button>
+    );
   };
 
   useEffect(() => {
-  fetchSingleProduct(id)
-}, [id])
+    fetchSingleProduct(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
-  const {
-    name = "Loading...",
-    images = [
-      "https://www.course-api.com/images/store/product-6.jpeg",
-      "https://www.course-api.com/images/store/extra-product-1.jpeg",
-      "https://www.course-api.com/images/store/extra-product-2.jpeg",
-      "https://www.course-api.com/images/store/extra-product-3.jpeg",
-      "https://www.course-api.com/images/store/extra-product-4.jpeg",
-    ],
-    sizes = [
-      {
-        size: "40",
-        stock: 10,
-      },
-      {
-        size: "41",
-        stock: 8,
-      },
-      {
-        size: "42",
-        stock: 6,
-      },
-      {
-        size: "44",
-        stock: 4,
-      },
-      {
-        size: "45",
-        stock: 10,
-      },
-    ],
-    description = "Loading...",
-    price,
-    brand,
-    stock,
-    ratings = { average: 4.6, reviews: 75 },
-    specifications = { color: "Red", size: "38", material: "Leather" },
-    reviews = [
-      {
-        userId: "90876",
-        comment: "Comfortable and stylish!",
-        rating: 5,
-        date: "2024-11-15",
-      },
-    ],
-  } = product || {};
-  // console.log(specifications);
+  const [displayPrice, setDisplayPrice] = useState(basePrice);
+  
+
+  useEffect(() => {
+    if (selectedSize && sizes?.length > 0) {
+      const selectedSizeData = sizes.find(
+        (size) => size.value === selectedSize
+      );
+      setDisplayPrice(selectedSizeData?.price || basePrice);
+    } else {
+      setDisplayPrice(basePrice);
+    }
+  }, [selectedSize, sizes, basePrice]);
+
+  const getLowestSizePrice = () => {
+    if (!sizes || sizes.length === 0) return basePrice;
+    return Math.min(...sizes.map((size) => size.price));
+  };
+  const getHighestSizePrice = () => {
+    if (!sizes || sizes.length === 0) return basePrice;
+    return Math.max(...sizes.map((size) => size.price));
+  };
+
+
 
   return (
-    <Wrapper>
+    <main className='bg-background mb-16'>
       <PageHero title={name} product />
-      <div className='section section-center page'>
-        <div className='product-center'>
-          <div className='details'>
+      {/* dont remove py-0 */}
+      <div className='section py-0 pb-10'>
+        <div className=''>
+          {/* Product Details */}
+          <div className='text-text w-full bg-surface px-5 pb-6'>
             <ProductImages images={images} />
-            <h4>{name}</h4>
-            <p className='brand'>
-              Brand: <span>{brand}</span>
+            <h2 className='capitalize whitespace-normal text-lg tracking-wide text-wrap'>
+              {name}
+            </h2>
+            <p className='text-text'>
+              Brand:{" "}
+              <span className='text-gray-700 dark:text-gray-300'>{brand}</span>
             </p>
-            <p className='price'>{formatPrice(price)}</p>
-            {stock > 20 ? (
-              <p className='units stock'>In stock</p>
-            ) : stock > 10 ? (
-              <p className='units few'>few units left</p>
+            <div className='text-lg font-medium  text-gray-800 my-2'>
+              {sizes?.length > 0 ? (
+                <>
+                  <span className=''>
+                    {!selectedSize ? (
+                      <div className='price text-base font-semibold text-primary-600 dark:text-primary-200'>
+                        {formatPrice(getLowestSizePrice())}
+                        {getHighestSizePrice() > getLowestSizePrice() &&
+                          ` - ${formatPrice(getHighestSizePrice())}`}
+                      </div>
+                    ) : (
+                      <span className='price text-base font-semibold text-primary-600 dark:text-primary-200'>
+                        {formatPrice(displayPrice)}
+                      </span>
+                    )}
+                  </span>
+                  {!selectedSize && (
+                    <div className='italic mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                      (Price varies by size)
+                    </div>
+                  )}
+                </>
+              ) : (
+                <span className='price text-base font-semibold text-primary-600 dark:text-primary-200'>
+                  {formatPrice(basePrice)}
+                </span>
+              )}
+            </div>
+            {stock > 10 ? (
+              <p className='text-sm text-gray-700 dark:text-gray-300 my-1'>
+                In stock
+              </p>
+            ) : stock > 3 ? (
+              <p className='text-sm text-amber-600'>few units left</p>
+            ) : stock > 0 ? (
+              <p className='text-sm text-red-500'>
+                {stock} units left!
+              </p>
             ) : (
-              <p className='units lack'>{stock} units left!</p>
+              <p className='text-sm text-red-500 font-medium my-1'>
+                OUT OF STOCK!!!
+              </p>
             )}
-            <Stars1 stars={ratings.average} reviews={ratings.reviews} />
-            {stock ? (
-              <div className='size'>
-                <hr className='grey' />
-                <p>Sizes:</p>
-                <div className='buttons-cont'>
-                  {sizes.map((p, index) => {
-                    return (
-                      <button
-                        key={index}
-                        onClick={() => setSize(p.size)}
-                        className={`${
-                          size === p.size ? "size-btn active-size" : "size-btn"
-                        }`}
-                      >
-                        {p.size}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ) : null}
+            <Stars1 stars={rating.average} reviews={rating.reviewsCount} />
+
+            {sizes.length > 0 && (
+              <SizeSelector
+                sizes={sizes}
+                selectedSize={selectedSize}
+                onSelectSize={setSelectedSize}
+              />
+            )}
           </div>
 
-          <hr className='main' />
-          <div className='delivery'>
-            <h5>Delivery and returns info</h5>
-            <hr className='grey' />
-            <p>Product is available and can be delivered to your doorstep</p>
-          </div>
-          <hr className='main' />
-          <div className='description'>
-            <h5>Product details</h5>
-            <hr className='grey' />
-            <p>{description}</p>
 
-            <ul>
-              {Object.entries(specifications).map(([key, value], index) => (
-                <li key={index}>
-                  <strong>{key}</strong>: {value}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <hr className='main' />
-          <div className='reviews'>
-            <h5>Product Rating & Reviews</h5>
-            <p className='rate'>
-              <span>{ratings.average}/5</span> ({ratings.reviews} ratings)
+          {/* Delivery Info */}
+          <DeliveryOptions />
+
+          {/* Product Description */}
+          <DescSpec specifications={specifications} description={description} />
+
+
+          {/* Reviews */}
+          <div className='bg-surface text-text px-5 pb-10 mb-6'>
+            <h5 className='mb-0.5'>Product Rating & Reviews</h5>
+            <p className='rate text-sm text-gray-800 dark:text-gray-300 font-light mb-5 mt-2'>
+              <span className='border border-primary-400 dark:border-primary-300 tracking-wider  rounded-sm p-1 px-2.5'>
+                {rating.average}/5
+              </span>{" "}
+              ({rating.reviewsCount} ratings)
             </p>
-            <hr className='grey' />
+            <hr className='grey border-t border-gray-300' />
             {reviews.length > 0 ? (
-              reviews.map((review, index) => {
-                const tempStars = Array.from({ length: 5 }, (_, index) => {
-                  const number = index + 0.5;
-                  return (
-                    <span key={index}>
-                      {review.rating >= index + 1 ? (
-                        <BsStarFill />
-                      ) : review.rating >= number ? (
-                        <BsStarHalf />
-                      ) : (
-                        <BsStar />
-                      )}
-                    </span>
-                  );
-                });
-                return (
-                  <article key={index}>
-                    <div className='first'>
-                      <p>{tempStars}</p>
-                      <p>{review.date}</p>
-                    </div>
-                    <h5>{review.comment}</h5>
-                    <div className='second'>
-                      <p className='user'>By User {review.userId}</p>
-                      <p className='purchase'>
-                        <FaRegCheckCircle /> Verified Purchase
-                      </p>
-                    </div>
-                  </article>
-                );
-              })
+              <Reviews reviews={reviews} />
             ) : (
-              <h5 className='no-rating'>No Customer Rating</h5>
+              <h5 className='no-rating text-center text-lg text-text'>
+                No Customer Rating
+              </h5>
             )}
           </div>
-          <div className='cart'>
-            <div className='button-cont'>
-              <Link to='/' className='btn home'>
+
+          <div>
+            <YouMayLike />
+          </div>
+
+          {/* Fixed Cart Buttons */}
+          <div className='fixed bottom-0 bg-surface w-full z-50 h-26 flex items-center justify-center border-t border-primary-400 dark:border-primary-300'>
+            <div className='grid grid-cols-[1fr_1fr_6fr] items-center gap-4 px-10 py-4  w-full'>
+              <Link
+                to='/'
+                className='flex justify-center p-4.5  items-center text-text rounded-md text-base border border-primary-400'
+              >
                 <FaHome />
               </Link>
-              <button className='btn fave'>
+              <button className='flex justify-center p-4.5 items-center rounded-md text-text text-base border border-primary-400'>
                 <FaRegHeart />
               </button>
-              {inCart ? (
-                <AmountButtons
-                  amount={inCart.amount}
-                  // amount={amount}
-                  increase={(e) => increase(e)}
-                  decrease={(e) => decrease(e)}
-                />
-              ) : (
-                <button
-                  className='btn cart-add'
-                  onClick={() => addToCart(id, size, amount, product)}
-                >
-                  <FaCartPlus /> Add To Cart
-                </button>
-              )}
+              {renderCartButton()}
             </div>
           </div>
         </div>
       </div>
-    </Wrapper>
+    </main>
   );
-}
+};
 
-const Wrapper = styled.main`
-  background: var(--white);
-  margin-bottom: 4rem;
-  .section {
-    padding: 1rem 0;
-  }
-  .details {
-  width: 100%;
-    h4 {
-      text-transform: capitalize;
-    }
-    p {
-      margin-bottom: 0.5rem;
-    }
-
-    .brand span {
-      color: var(--color-2);
-    }
-
-    .units {
-      font-size: 0.7rem;
-    }
-
-    .stock {
-      color: #525151;
-    }
-
-    .few {
-      color: rgb(199, 131, 4);
-    }
-
-    .lack {
-      color: red;
-    }
-
-    .buttons-cont {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-      gap: 7px;
-    }
-      .size {
-      width: 100%;
-      }
-
-    .size-btn {
-      background: none;
-      outline: none;
-      border: 1px solid var(--color-5);
-      width: 40px;
-      height: fit-content;
-      text-align: center;
-      cursor: pointer;
-      padding: 2px;
-      border-radius: 3px;
-    }
-
-    .active-size {
-      background: var(--color-5);
-    }
-
-    hr {
-      margin: 3px 0;
-    }
-    .price {
-      font-size: 1.25;
-      font-weight: 600;
-    }
-  }
-
-  .grey {
-    border-top: 1px solid rgb(172, 170, 170);
-  }
-
-  .main {
-    margin: 1rem 0;
-  }
-
-  .delivery {
-    h5 {
-      margin-bottom: 0.4rem;
-    }
-
-    hr {
-      margin-bottom: 0.5rem;
-    }
-  }
-
-  .description {
-    h5 {
-      margin-bottom: 0.4rem;
-    }
-
-    hr {
-      margin-bottom: 0.5rem;
-    }
-
-    li strong {
-      text-transform: capitalize;
-    }
-
-    p {
-      margin-bottom: 0.5rem;
-    }
-  }
-
-  .reviews {
-    h5 {
-      margin-bottom: 0.1rem;
-    }
-
-    .rate {
-      font-size: 0.7rem;
-      color: rgb(27, 27, 27);
-      font-weight: light;
-      margin-bottom: 0.7rem;
-    }
-
-    .rate span {
-      border: 0.5px solid var(--color-5);
-      padding: 0.1rem;
-    }
-
-    article {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 0.3rem;
-      border-bottom: 1.5px solid grey;
-      gap: 3px;
-    }
-
-    article p {
-      margin-bottom: 0.3rem;
-    }
-
-    article h5 {
-      margin-bottom: 0.3rem;
-    }
-
-    article div {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      align-items: center;
-    }
-
-    .first {
-      font-size: 0.7rem;
-      margin-bottom: 0;
-    }
-
-    .second {
-      display: flex;
-    }
-
-    .user {
-      font-size: 0.7rem;
-    }
-
-    .purchase {
-      color: green;
-      font-size: 0.8rem;
-    }
-
-    .no-rating {
-      text-align: center;
-    }
-  }
-
-  .cart {
-    background: var(--white);
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    z-index: 50;
-    height: 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-top: 1px solid var(--maincolor-4);
-
-    .button-cont {
-      width: 85%;
-      display: grid;
-      grid-template-columns: 1fr 1fr 4fr;
-      gap: 5px;
-    }
-
-    .btn {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 5px;
-      font-size: 1rem;
-    }
-    .btn:active {
-      background: var(--maincolor-4);
-    }
-
-    .home,
-    .fave {
-      background: none;
-      border: 1.5px solid var(--maincolor-4);
-    }
-  }
-`;
-export default SingleProductPage
+export default SingleProductPage;

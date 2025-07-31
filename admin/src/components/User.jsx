@@ -62,7 +62,7 @@ const User = () => {
         <User2 className='text-xl' />
       </button>
       {isOpen && (
-        <div className='absolute right-0 max-sm:-right-35 top-17 mt-2 p-6 w-auto min-w-[280px] rounded-lg shadow-lg z-10 bg-white dark:bg-slate-800 dark:text-dark-text'>
+        <div className='absolute right-0 max-sm:-right-10 top-17 mt-2 p-6 w-auto max-sm:min-w-[220px] min-w-[280px] rounded-lg shadow-lg z-10 bg-white dark:bg-slate-800 dark:text-dark-text'>
           <div className='border-b-1 py-4 pt-1 border-light-border dark:border-dark-border'>
             <h3 className='font-extrabold text-xl'>Welcome {admin.name}</h3>
           </div>

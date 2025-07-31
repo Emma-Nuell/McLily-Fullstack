@@ -56,7 +56,7 @@ const Navbar = ({searchInput, setSearchInput}) => {
           <div
             className={`${
               mobileMenu ? "flex" : "hidden"
-            } absolute z-50 flex-col items-center self-end py-8 px-6 mt-16 space-y-6 font-bold sm:w-auto left-6 right-6 dark:text-white bg-white shadow-lg dark:bg-slate-700 drop-shaow md rounded-xl`}
+            } absolute z-50 flex-col w-[95%] items-center self-end py-8 px-6 mt-16 space-y-6 font-bold sm:w-auto top-16 right-6 dark:text-white bg-white shadow-lg dark:bg-slate-700 drop-shaow md rounded-xl`}
           >
             {sidebarLinks.map((link, index) => {
               return (

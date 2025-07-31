@@ -58,6 +58,25 @@ export const getAdminProfile = async (req, res) => {
 }
 
 export const protectedRoute = async (req, res) => {
-  res.json({ message: "You have access to this protected route" });
+  try {
+     res.json({ valid: true });
+  } catch (error) {
+    res.status(401).json({valid: false})
+  }
+  
 };
 
+export const logout = async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      message: "Logged out successfully",
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};

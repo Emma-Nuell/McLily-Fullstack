@@ -41,14 +41,21 @@ const orderSchema = new mongoose.Schema(
       email: String,
       phone: String,
       address: {
-        line1: String,
+        street: String,
         city: String,
         state: String,
-        postalCode: String,
-        country: String,
+        country: {
+          type: String,
+          default: "Nigeria"
+        },
       },
     },
     orderItems: [orderItemSchema],
+    itemCount: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
     subtotal: Number,
     shippingFee: Number,
     totalAmount: Number,

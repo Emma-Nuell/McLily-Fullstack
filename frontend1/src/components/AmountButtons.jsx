@@ -1,33 +1,28 @@
+import React from "react"
 import { FaMinus, FaPlus } from "react-icons/fa"
-import styled from "styled-components"
 
-const AmountButtons = ({increase, decrease, amount}) => {
+const AmountButtons = ({ increase, decrease, amount }) => {
   return (
-      <Wrapper className="amount-btns">
-          <button type="button" className="amount-btn btn" onClick={decrease}><FaMinus /></button>
-          <p className="amount">{amount}</p>
-          <button type="button" className="amount-btn btn" onClick={increase}><FaPlus /></button>
-    </Wrapper>
-  )
-}
+    <div className='grid grid-cols-[auto_1fr_auto] items-center gap-6'>
+      <button
+        type='button'
+        className='text-sm p-3 text-text bg-primary-300 hover:bg-primary-400 rounded-md transition-colors'
+        onClick={decrease}
+      >
+        <FaMinus  size={14}/>
+      </button>
+      <p className='text-base text-text font-semibold mb-0 flex items-center justify-center'>
+        {amount}
+      </p>
+      <button
+        type='button'
+        className=' text-sm p-3 text-text bg-primary-300 hover:bg-primary-400 rounded-md transition-colors'
+        onClick={increase}
+      >
+        <FaPlus size={14} />
+      </button>
+    </div>
+  );
+};
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 7px;
-  .btn {
-  font-size: 0.7rem;
-  }
-  p {
-  font-size: 1rem;
-    margin-bottom: 0;
-    font-weight: 600;
-  }
-    .amount {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    }
-`;
-export default AmountButtons
+export default AmountButtons;

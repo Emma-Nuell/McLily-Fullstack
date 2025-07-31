@@ -1,161 +1,126 @@
-import styled from "styled-components";
-import { sidebarLinks, sidebarCat } from "../utils/constants";
-import { FaTimes, FaHeart, FaUser, FaPhoneAlt } from "react-icons/fa";
-import {
-  MdKeyboardArrowRight,
-  MdOutlineKeyboardArrowDown,
-} from "react-icons/md";
-import { useEffect, useState } from "react";
+import { sidebarLinks, sidebarCat } from "../utils/constants.jsx";
+import {  X, ChevronDown, ChevronRight } from "lucide-react";
+import React, { useEffect, } from "react";
 import { useProductContext } from "../context/product-context";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
-  const { isSidebarOpen, closeSidebar, changeLink, activeLink } = useProductContext();
-  // const [active, setActive] = useState(null)
+  const { isSidebarOpen, closeSidebar, changeLink, activeLink } =
+    useProductContext();
 
   useEffect(() => {
     document.body.style.overflow = isSidebarOpen ? "hidden" : "auto";
     return () => {
-    document.body.style.overflow = "auto"
-    }
-  }, [isSidebarOpen])
-  
+      document.body.style.overflow = "auto";
+    };
+  }, [isSidebarOpen]);
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate("/products")
+    closeSidebar()
+  }
+
   return (
-    <SidebarContainer
-      className="sidebarContainer"
-    >
-      <aside className={`${isSidebarOpen ? "sidebar show-sidebar" : "sidebar"}`}>
-      <button type='button' className='close-btn btn' onClick={closeSidebar}>
-        <FaTimes />
-      </button>
-        <div className="main">
-        <div className='categories'>
-          <h4>Shop By Category</h4>
-          <hr />
-          {sidebarLinks.map((link) => {
-            const subcategories = link[`${activeLink}Subcategory`];
-            return (
-              <ul key={link.id}>
-                <li onClick={() => changeLink(link.name)}>
-                  {link.category}
-                  {link.subCategory ? (
-                    activeLink === link.name ? (
-                      <MdOutlineKeyboardArrowDown />
-                    ) : (
-                      <MdKeyboardArrowRight />
-                    )
-                  ) : null}
-                </li>
-                <ul>
-                  {subcategories?.map((item, index) => (
-                    <li key={index} onClick={closeSidebar}>
-                      <Link to='/products' className="link">{item}</Link>
-                    </li>
-                  ))}
+    <div className='relative'>
+      {/* Overlay */}
+      <aside
+        className={`fixed w-full h-[calc(100%-6rem)] bg-black/50 z-[999] transition-all duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <button
+          type='button'
+          className='absolute right-2 top-3 text-text bg-primary-500 dark:bg-primary-200 rounded-md w-25 h-15 flex items-center justify-center'
+          onClick={closeSidebar}
+        >
+          <X size={21} />
+        </button>
+        {/* Sidebar Content */}
+        <div className='absolute left-0 w-[290px] h-full overflow-y-auto bg-white dark:bg-surface shadow-[2px_0_5px_rgba(0,0,0,0.1)] transition-all duration-300 z-[9999] p-5 pl-7 text-text mt-0 scrollbar-hidden'>
+          <div>
+            <h2 className='font-medium text-xl tracking-wider'>
+              Shop By Category
+            </h2>
+            <div className='border-t-1 my-3 border-primary-500'></div>
+
+            {sidebarLinks.map((link) => {
+              const subcategories = link[`${activeLink}Subcategory`];
+              return (
+                <ul key={link.id} className='mb-2'>
+                  <li
+                    className='py-4 font-medium flex items-center justify-between cursor-pointer hover:px-4 hover:bg-gray-100 dark:hover:bg-gray-500 rounded transition-all tracking-wide'
+                    onClick={() => changeLink(link.name)}
+                  >
+                    {link.category}
+                    {link.subCategory &&
+                      (activeLink === link.name ? (
+                        <ChevronDown size={21} />
+                      ) : (
+                        <ChevronRight size={21} />
+                      ))}
+
+                    {link.category === "Anime" && (
+                      <div className='text-xs border-1 rounded-md px-2 border-primary-500 py-1'>
+                        Coming soon
+                      </div>
+                    )}
+                  </li>
+
+                  <ul>
+                    {subcategories?.map((item, index) => (
+                      <li
+                        onClick={handleClick}
+                        key={index}
+                        className='py-3 px-6 font-normal text-sm my-0.5 tracking-wide cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-500 rounded'
+                      >
+                        <Link to='/products' className='w-full block'>
+                          {item}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </ul>
-              </ul>
-            );
-          })}
-        </div>
-        <hr />
-        <div className='cat'>
-          <ul>
-              {sidebarCat.map((cat, index) => {
-                return (
-                  <li key={index} onClick={closeSidebar}>
-                    <Link to={cat.url} className="link">{cat.icon}{cat.name}</Link>
-                </li>
-              )
+              );
             })}
-          </ul>
+          </div>
+
+          <div className='border-t-1 my-4 border-primary-500'></div>
+
+          <div className='mt-4'>
+            <ul>
+              {sidebarCat.map((cat, index) => (
+                <li
+                  key={index}
+                  className='py-4 font-medium flex items-center cursor-pointer hover:px-4 hover:bg-gray-100 dark:hover:bg-gray-500 rounded transition-all'
+                  onClick={closeSidebar}
+                >
+                  <Link to={cat.url} className='w-full flex items-center gap-3'>
+                    {cat.icon}
+                    {cat.name}
+                  {cat.name === "Pre-orders" && (
+                    <div className='text-xs border-1 rounded-md px-2 border-primary-500 py-1'>
+                      Coming soon
+                    </div>
+                  )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className='center mt-10 mb-4 flex justify-center'>
+            <button
+              type='button'
+              className='bg-primary-500 px-6 py-4 rounded-md text-black tracking-wide'
+            >
+              Login / Sign Up
+            </button>
+          </div>
         </div>
-        <div className='center'>
-          <button type='button' className='btn'>
-            Login
-          </button>
-          </div>
-          </div>
       </aside>
-    </SidebarContainer>
+    </div>
   );
 };
 
-const SidebarContainer = styled.div`
-  aside {
-    position: fixed;
-    top: 6rem;
-    width: 100%;
-    height: calc(100% - 6rem);
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    transition: var(--transition);
-    transform: translate(-100%);
-    padding: 0;
-  }
-  .main {
-    left: 0;
-    top: 6rem;
-    width: 300px;
-    height: 100%;
-    overflow-y: auto;
-    background-color: #fff;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    transition: var(--transition);
-    z-index: 9999;
-    padding: 0.8rem;
-    font-size: 1rem;
-    margin-top: 0
-  }
-  .close-btn {
-    position: absolute;
-    right: 8px;
-    top: 4px;
-  }
-  aside .main::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
-    display: none;
-  }
-    .link {
-    width: 100%;
-    }
-  .categories ul > li {
-    padding: 0.7rem 0;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-  }
-  .categories ul > li:hover {
-    padding: 0.7rem 1rem;
-  }
-  .categories ul ul > li {
-    padding: 0.3rem 1.5rem;
-    font-weight: 400;
-    font-size: 0.9rem;
-  }
-  .cat ul > li {
-    padding: 0.5rem 0;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: 500;
-  }
-  .cat .link {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .cat ul > li:hover {
-    padding: 0.7rem 1rem;
-  }
-  .center {
-    display: flex;
-    justify-content: center;
-  }
-  .show-sidebar {
-    transform: translate(0);
-  }
-`;
 export default Sidebar;

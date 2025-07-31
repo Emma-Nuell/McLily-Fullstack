@@ -9,8 +9,9 @@ import Products from "./ProductsPage";
 import SingleProduct from "./SingleProductPage";
 import Profile from "./ProfilePage";
 import Login from "./LoginPage"
-import Preoder from "./PreorderPage"
+import Preorder from "./PreorderPage"
 import Signup from "./SignupPage";
+import AuthPage from "./AuthPage";
 
 export {
   Home,
@@ -24,6 +25,7 @@ export {
   SingleProduct,
   Profile,
   Login,
-  Preoder,
+  Preorder,
   Signup,
+  AuthPage
 };

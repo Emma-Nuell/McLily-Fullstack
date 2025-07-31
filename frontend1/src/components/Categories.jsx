@@ -1,64 +1,44 @@
-import styled from "styled-components";
-import { categories } from "../utils/constants";
+import { categories } from "../utils/constants.jsx";
+import React from "react";
 
 const Categories = () => {
   return (
-    <Wrapper>
-      <div className='title'>
-        <h3>Featured Categories</h3>
-        <div className='underline'></div>
+    <section className='px-2.5 py-0.75 mb-2.5 bg-white dark:bg-gray-800'>
+      {/* Title Section */}
+      <div className='title my-3.75 text-center'>
+        <h3 className='text-lg font-medium text-gray-800 dark:text-gray-200'>
+          Featured Categories
+        </h3>
+        <div className='underline h-0.5 w-24 mx-auto bg-primary-400 mt-1'></div>
       </div>
-      <div className='categories'>
-        {categories.map((category, index) => {
-          return (
-            <div className='category' key={index}>
-              <div className='img-container'>
-                <img src={category.image} alt={category.name} />
-              </div>
-              <h5>{category.name}</h5>
+
+      {/* Categories Grid */}
+      <div className='categories grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.75 text-center'>
+        {categories.map((category, index) => (
+          <div
+            key={index}
+            className='category flex flex-col items-center cursor-pointer group'
+          >
+            {/* Image Container */}
+            <div className=' aspect-square w-20 h-20 sm:w-24 sm:h-24 flex justify-center items-center bg-primary-400 dark:bg-primary-500 rounded-xl p-2 group-hover:bg-primary-500 dark:group-hover:bg-primary-600 transition-colors'>
+              <img
+                src={category.image}
+                alt={category.name}
+                loading="lazy"
+                decoding="async"
+                className='max-h-[90%] w-[90%] object-cover'
+              />
             </div>
-          );
-        })}
+
+            {/* Category Name */}
+            <h5 className='text-xs mt-1.5 text-gray-700 dark:text-gray-300 font-medium'>
+              {category.name}
+            </h5>
+          </div>
+        ))}
       </div>
-    </Wrapper>
+    </section>
   );
 };
-const Wrapper = styled.section`
-  padding: 3px 10px;
-  margin-bottom: 10px;
-  background: var(--white);
-  .title {
-    margin: 15px 0;
-  }
-  .categories {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-    gap: 7px;
-    text-align: center;
-  }
 
-  .category {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    cursor: pointer;
-  }
-
-  .img-container {
-    background: var(--maincolor-4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-  }
-
-  img {
-    max-height: 90%;
-    width: 90%;
-    object-fit: cover;
-  }
-  h5 {
-    font-size: 0.6rem;
-  }
-`;
 export default Categories;

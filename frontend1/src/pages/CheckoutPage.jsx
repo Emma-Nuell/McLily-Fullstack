@@ -1,6 +1,11 @@
+import React from "react"
+import { CheckoutWizard } from "../components/checkout"
+
 const CheckoutPage = () => {
   return (
-    <div>CheckoutPage</div>
+    <main>
+< CheckoutWizard/>
+    </main>
   )
 }
 export default CheckoutPage

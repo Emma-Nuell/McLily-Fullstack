@@ -3,15 +3,12 @@ import { AlertCircle, ArrowLeft, Home, RefreshCw } from "lucide-react";
 
 const Error = () => {
   const [countdown, setCountdown] = useState(10);
-  const [errorCode, setErrorCode] = useState(404);
-  const [errorMessage, setErrorMessage] = useState("Page not found");
-  const [errorDescription, setErrorDescription] = useState(
+  const [errorCode] = useState(404);
+  const [errorMessage] = useState("Page not found");
+  const [errorDescription] = useState(
     "The page you are looking for doesn't exist or has been moved."
   );
-  setErrorCode(404);
-  setErrorMessage("Page not found");
-  setErrorDescription(
-    "The page you are looking for doesn't exist or has been moved.")
+
 
   useEffect(() => {
     const timer =

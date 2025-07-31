@@ -9,6 +9,7 @@ import {
   CLEAR_ERROR,
   LOGOUT,
 } from "../../actions";
+import { useState } from "react";
 
 const initialState = {
   isAuthenticated: !!localStorage.getItem("adminToken"),
@@ -20,6 +21,8 @@ const initialState = {
 
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(auth_reducer, initialState);
+  const [isValidatingToken, setIsValidatingToken] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false)
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -41,13 +44,16 @@ const AuthProvider = ({ children }) => {
     checkAuthStatus();
   }, []);
 
+  const isAuthenticated = () => {
+    return !!state.token && !!state.admin;
+  };
+
   const login = async (email, password) => {
     dispatch({ type: LOGIN_START });
 
     try {
       const response = await axios.post("/admin/login", { email, password });
       const data = response.data;
-      
 
       if (!(response.status >= 200 && response.status < 300)) {
         throw new Error(data.message || "Login failed");
@@ -60,7 +66,7 @@ const AuthProvider = ({ children }) => {
         type: LOGIN_SUCCESS,
         payload: { admin: data.admin, token: data.token },
       });
-
+  setAuthChecked(true);
       return data;
     } catch (error) {
       dispatch({
@@ -83,6 +89,7 @@ const AuthProvider = ({ children }) => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+            timeout: 7000,
           }
         );
       }
@@ -103,34 +110,38 @@ const AuthProvider = ({ children }) => {
   const verifyAdminRole = async () => {
     const token = localStorage.getItem("adminToken");
     if (!token) return false;
-      try {
-          const response = await axios.get("/admin/verify", {
-              headers: {
-                Authorization: `Bearer ${token}`
-            },
-          })
-          if (!(response.status >= 200 && response.status < 300)) {
-            throw new Error(response.message || "Login failed");
-          }
-          return true
-      } catch (error) {
-          console.error("Admin verification failed", error);
-          logout()
-          return false;   
-    }
-    };
-    
-    const value = {
-        ...state, 
-        login,
-        logout,
-        clearError,
-        verifyAdminRole,
-    }
 
-  return (
-    <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-  );
+    if (!isAuthenticated()) return false;
+    try {
+      setIsValidatingToken(true);
+      const response = await axios.get("/admin/verify", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.status >= 200 && response.status < 300;
+    } catch (error) {
+      console.error("Admin verification failed", error);
+      logout();
+      return false;
+    } finally {
+      setIsValidatingToken(false);
+    }
+  };
+
+  const value = {
+    ...state,
+    login,
+    logout,
+    clearError,
+    verifyAdminRole,
+    isAuthenticated,
+    authChecked,
+    setAuthChecked,
+    loading: state.loading || isValidatingToken,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

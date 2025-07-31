@@ -9,7 +9,10 @@ import {
   OrderDetails,
   Orders,
   Error,
-  Login
+  Login,
+  PhysicalSalesForm,
+  StockPriceEdit,
+  PhysicalOrderDetails
 } from "./pages";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
@@ -31,8 +34,10 @@ const App = () => {
                   <Route path='/orders' element={<Orders />} />
                   <Route path='/orders/:id' element={<OrderDetails />} />
                   <Route path='/new-arrival' element={<NewArrival />} />
-                  <Route path='/upload' element={<ExcelUpload />} />
+                  <Route path='/upload' element={<PhysicalSalesForm />} />
                   <Route path='/notifications' element={<Notifications />} />
+                  <Route path='/details' element={<PhysicalOrderDetails />} />
+                  <Route path='/edit' element={<StockPriceEdit />} />
                   <Route path='*' element={<Error />} />
                 </Routes>
               </Layout>

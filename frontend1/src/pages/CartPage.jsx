@@ -1,40 +1,38 @@
-import styled from "styled-components"
-import { useCartContext } from "../context/cart-context"
-import { Link } from "react-router-dom"
-import { CartContent, PageHero } from "../components"
+import { useCartContext } from "../context/cart-context";
+import { Link } from "react-router-dom";
+
+import { CartContent, CartNavbar } from "../components/cart";
+import React from "react";
 
 const CartPage = () => {
-  const { cart } = useCartContext()
-  if(cart.length < 1) {
+  const { cart } = useCartContext();
+
+  if (cart.length < 1) {
     return (
-      <Wrapper
-        className='page-100'
-        style={{ height: "100vh", background: "#fcfcfc" }}
-      >
-        <div className='empty'>
-          <h2>Your cart is empty</h2>
-          <Link to='/products' className='btn'>
+      <main className='min-h-screen bg-background-white flex items-center justify-center px-4'>
+        <CartNavbar />
+
+        <div className='empty text-center'>
+          <h2 className='text-2xl font-medium text-text mb-4'>
+            Your cart is empty
+          </h2>
+          <Link
+            to='/products'
+            className='px-6 py-2 bg-primary-500 dark:bg-primary-300 text-gray-900 rounded-md hover:bg-primary-600 dark:hover:bg-primary-400 transition-colors'
+          >
             Fill it
           </Link>
         </div>
-      </Wrapper>
+      </main>
     );
   }
-  return (
-    <main style={{minHeight: "100vh", background: "#fcfcfc"}}>
-      <Wrapper>
-        <CartContent />
-      </Wrapper>
-    </main>
-  )
-}
 
-const Wrapper = styled.main`
-  .empty{
-text-align: center;
-h2 {
-margin-bottom: 1rem;
-}
-}
-`
-export default CartPage
+  return (
+    <main className='min-h-screen bg-gray-50 dark:bg-background-white scrollbar-hidden overflow-auto pb-36'>
+      <CartNavbar />
+        <CartContent />
+    </main>
+  );
+};
+
+export default CartPage;

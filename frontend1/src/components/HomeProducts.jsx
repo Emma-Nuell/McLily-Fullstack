@@ -1,118 +1,70 @@
-import styled from "styled-components"
-import { useProductContext } from "../context/product-context"
-import Stars from "./Stars"
-import { formatPrice } from "../utils/helpers"
-import {Link} from "react-router-dom"
+import { useProductContext } from "../context/product-context";
+import Stars from "./products/Stars";
+import { formatPrice } from "../utils/helpers";
+import { Link } from "react-router-dom";
+import React from "react";
 
 const HomeProducts = () => {
-    const { products } = useProductContext()
-  
-    
-   
+  const { products } = useProductContext();
+
   return (
-    <Wrapper>
-      <div className='title'>
-        <h3>Some of our products...</h3>
-        <div className='underline'></div>
-          </div>
-          <div className="products">
-              {products.slice(0, 16).map((product) => {
-                  const ratings = product.ratings  
-                  return (
-                    <Link to={`/products/${product.id}`} key={product.id}>
-                      <article className='product'>
-                        <div className='img-container'>
-                          <img src={product.images[0]} alt={product.name} />
-                        </div>
-                        <div className='details'>
-                          <h5>{product.name}</h5>
-                          <Stars
-                            stars={ratings.average}
-                            reviews={ratings.reviews}
-                          />
-                          <p className='price'>{formatPrice(product.price)}</p>
-                        </div>
-                      </article>
-                    </Link>
-                  );
-              })}
-          </div>
-          <div className="btn-container"> 
-          <Link to ='/products' className="btn">All Products</Link>
-          </div>
-    </Wrapper>
+    <section className='px-2.5 py-2.5 bg-white dark:bg-gray-800'>
+      {/* Title Section */}
+      <div className='title text-left'>
+        <h3 className='text-xl font-medium text-gray-800 dark:text-gray-200'>
+          Some of our products...
+        </h3>
+        <div className='underline h-0.5 w-40 ml-5 bg-primary-400 mt-1'></div>
+      </div>
+
+      {/* Products Grid */}
+      <div className='products grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 mt-5'>
+        {products.slice(0, 16).map((product) => {
+          const ratings = product.ratings;
+          return (
+            <Link
+              to={`/products/${product.id}`}
+              key={product.id}
+              className='group'
+            >
+              <article className='product bg-white dark:bg-gray-700 shadow-lg flex flex-col justify-center items-center gap-1.5 rounded-md h-64 border border-gray-300 dark:border-gray-600 group-hover:shadow-xl transition-shadow'>
+                {/* Image Container */}
+                <div className='img-container w-full h-[57%] flex justify-center items-center overflow-hidden'>
+                  <img
+                    src={product.images[0]}
+                    alt={product.name}
+                    loading='lazy'
+                    className='h-full w-full object-cover rounded-t-md'
+                  />
+                </div>
+
+                {/* Product Details */}
+                <div className='details w-full px-2.5 pb-1 h-[40%] flex flex-col'>
+                  <h5 className='w-full overflow-hidden whitespace-nowrap text-ellipsis text-gray-800 dark:text-gray-200 mb-1 text-sm font-medium'>
+                    {product.name}
+                  </h5>
+                  <Stars stars={ratings.average} reviews={ratings.reviews} />
+                  <p className='price text-primary-600 dark:text-primary-400 font-medium mt-1'>
+                    {formatPrice(product.price)}
+                  </p>
+                </div>
+              </article>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* View All Button */}
+      <div className='btn-container flex justify-center items-center my-1.75 py-2.5'>
+        <Link
+          to='/products'
+          className='btn px-4 py-2 text-sm bg-primary-400 dark:bg-primary-500 text-white rounded hover:bg-primary-500 dark:hover:bg-primary-600 transition-colors'
+        >
+          All Products
+        </Link>
+      </div>
+    </section>
   );
-}
-const Wrapper = styled.section`
-  padding: 10px 10px;
-  background: var(--white);
-  .title {
-  text-align: left;
-  }
-  .underline {
-  margin-left: 20px;
-  width: 10rem;
-  }
-  .products {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(150px, 1fr));
-    gap: 10px;
-    margin-top: 20px;
-  }
+};
 
-  .product {
-    background-color: var(--white);
-    box-shadow: var(--dark-shadow);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    border-radius: 7px;
-    height: 250px;
-    border: 0.5px solid var(--color-3);
-  }
-
-  .img-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 57%;
-    overflow: hidden;
-  }
-
-  img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    border-radius: 7px 7px 0 0;
-  }
-
-  .details {
-    width: 100%;
-    padding: 10px;
-    padding-bottom: 5px;
-    height: 40%;
-  }
-
-  .details h5 {
-  width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    margin-bottom: 0.5rem;
-  }
-
-  .btn-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 7px 0;
-    padding: 10px 0;
-    .btn {
-    font-size: 0.9rem;
-    }
-  }
-`;
-export default HomeProducts
+export default HomeProducts;

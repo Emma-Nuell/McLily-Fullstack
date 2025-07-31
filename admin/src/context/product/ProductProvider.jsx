@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useReducer } from "react";
 import products_reducer from "../../reducers/products-reducer.js";
 import ProductsContext from "./ProductContext";
 import { useToast } from "../Modal/useModal&Toast.js";
-import {ProductsAPI} from "../../lib/endpoints/index.js"
+import { ProductsAPI } from "../../lib/endpoints/index.js"
+import { useAuthContext } from "../index.js";
 import {
   EDIT_PRODUCT,
   LOW_STOCK,
@@ -40,22 +41,28 @@ const initialState = {
 
 const ProductsProvider = ({ children }) => {
   const [state, dispatch] = useReducer(products_reducer, initialState);
+  const {isAuthenticated, authChecked} = useAuthContext()
     const { showToast, TOAST_TYPES } = useToast();
   
 
   const fetchProducts = async() => {
     dispatch({ type: GET_PRODUCTS_START });
-    try {
-      const res = await ProductsAPI.getAll()
-      dispatch({type: GET_PRODUCTS_SUCCESS, payload: res.data})
-    } catch (error) {
-      dispatch({type: GET_PRODUCTS_ERROR, payload: error.message})
+    if (isAuthenticated()) {
+      try {
+        const res = await ProductsAPI.getAll()
+        dispatch({type: GET_PRODUCTS_SUCCESS, payload: res.data})
+      } catch (error) {
+        dispatch({type: GET_PRODUCTS_ERROR, payload: error.message})
+      }
     }
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    if (isAuthenticated()) {    
+      fetchProducts();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authChecked]);
 
   const createProduct = async (productData) => {
     try {

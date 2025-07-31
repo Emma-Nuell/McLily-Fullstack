@@ -446,3 +446,64 @@ export const submitReview = async (req, res) => {
       .json({ message: "An error occured", details: error.message });
   }
 };
+
+// Update product stock and/or price
+export const updateProductStockPrice = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { stock, price, size } = req.body;
+
+    const product = await Product.findOne({ productId });
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    // Update for size variation
+    if (size && size.form && size.value) {
+      const sizeIndex = product.sizes.findIndex(
+        s => s.form === size.form && s.value === size.value
+      );
+      
+      if (sizeIndex === -1) {
+        return res.status(400).json({ error: 'Size not found' });
+      }
+
+      if (stock !== undefined) {
+        product.sizes[sizeIndex].stock = stock;
+      }
+      if (price !== undefined) {
+        product.sizes[sizeIndex].price = price;
+      }
+      
+      // Update main product stock (sum of all sizes)
+      product.stock = product.sizes.reduce((sum, s) => sum + s.stock, 0);
+      
+      // Update main product price (minimum of all sizes)
+      product.price = Math.min(...product.sizes.map(s => s.price));
+    } 
+    // Update for non-size product
+    else {
+      if (stock !== undefined) {
+        product.stock = stock;
+      }
+      if (price !== undefined) {
+        product.price = price;
+      }
+    }
+
+    await product.save();
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get all products (simplified for selection)
+export const getProductsForSelection = async (req, res) => {
+  try {
+    const products = await Product.find({}, 'productId name price stock sizes');
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

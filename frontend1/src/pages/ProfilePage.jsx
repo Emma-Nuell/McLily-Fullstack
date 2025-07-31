@@ -1,20 +1,14 @@
-import styled from "styled-components"
-import { Link } from "react-router-dom"
+
+import React from "react"
+import { ProfilePageSetup } from "../components/profile"
 
 const ProfilePage = () => {
+
   return (
-    <Wrapper>
-      <div className="section section-center page-100">
-        <h5>Create an account with us and enjoy a seamless shopping experince personalised to your needs </h5>
-        <Link className="btn">Login</Link>
+    <div className='page bg-background dark:bg-surface'>
+      <ProfilePageSetup />
       </div>
-    </Wrapper>
   )
 }
 
-const Wrapper = styled.section`
-background: var(--white);
-margin: 10px 0;
-text-align: center;
-`
 export default ProfilePage

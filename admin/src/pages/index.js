@@ -9,6 +9,9 @@ import NewArrival from "./NewArrival";
 import OrderDetails from "./OrderDetails";
 import Orders from "./Orders";
 import Error from "./Error";
+import PhysicalSalesForm from "./PhysicalSalesForm";
+import StockPriceEdit from "./StockPriceEdit";
+import PhysicalOrderDetails from "./PhysicalOrderDetails";
 
 export {
   Admin,
@@ -22,4 +25,7 @@ export {
   OrderDetails,
   Orders,
   Error,
+  PhysicalSalesForm,
+  StockPriceEdit,
+  PhysicalOrderDetails,
 };

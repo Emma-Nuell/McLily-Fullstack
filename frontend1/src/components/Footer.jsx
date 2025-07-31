@@ -1,31 +1,15 @@
-import styled from "styled-components";
+import React from "react";
 
 const Footer = () => {
   return (
-    <Wrapper>
-      <h5>
-        &copy;{new Date().getFullYear()} 
-         <span> McLily Stores</span>
+    <footer className='bg-surface h-[5rem] border-t border-gray-200 dark:border-gray-600 flex flex-col items-center justify-center text-center md:flex-row'>
+      <h5 className='normal-case mb-0.5 md:mb-0'>
+        &copy;{new Date().getFullYear()}
+        <span className='font-semibold'> McLily Stores</span>
       </h5>
-      <h5>All Rights Reserved</h5>
-    </Wrapper>
+      <h5 className='normal-case md:ml-2'>All Rights Reserved</h5>
+    </footer>
   );
 };
 
-const Wrapper = styled.footer`
-  background: var(--white);
-  height: 5rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  h5 {
-    text-transform: none;
-    margin-bottom: 0.1rem;
-  }
-  @media (min-width: 776px) {
-    flex-direction: row;
-  }
-`;
 export default Footer;

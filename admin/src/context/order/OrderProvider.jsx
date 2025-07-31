@@ -2,7 +2,8 @@ import OrdersContext from "./OrderContext";
 import orders_reducer from "../../reducers/orders-reducer";
 import { useCallback, useEffect, useReducer } from "react";
 import { useToast } from "../Modal/useModal&Toast.js";
-import {OrdersAPI} from "../../lib/endpoints/index.js"
+import { OrdersAPI } from "../../lib/endpoints/index.js"
+import { useAuthContext } from "../index.js";
 import {
   GET_ORDERS_SUCCESS,
   GET_SINGLE_ORDER_SUCCESS,
@@ -41,27 +42,32 @@ const initialState = {
 
 const OrdersProvider = ({ children }) => {
   const [state, dispatch] = useReducer(orders_reducer, initialState);
+    const {isAuthenticated, authChecked} = useAuthContext()
       const { showToast, TOAST_TYPES } = useToast();
   
 
   const fetchOrders = async()  => {
     dispatch({ type: GET_ORDERS_START });
-    
-    try {
-      const res = await OrdersAPI.getAll()
-      dispatch({type: GET_ORDERS_SUCCESS, payload: res.data})
-    } catch (error) {
-      dispatch({
-        type: GET_ORDERS_ERROR,
-        payload: error.response?.data?.message || error.message,
-      });
+    if (isAuthenticated()) {
+      try {
+        const res = await OrdersAPI.getAll()
+        dispatch({type: GET_ORDERS_SUCCESS, payload: res.data})
+      } catch (error) {
+        dispatch({
+          type: GET_ORDERS_ERROR,
+          payload: error.response?.data?.message || error.message,
+        });
+      }     
     }
 
     
   };
   useEffect(() => {
-  fetchOrders();
-  }, []);
+    if (isAuthenticated()) {
+      fetchOrders();    
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authChecked]);
 
   const deleteOrder = async (id) => {
     

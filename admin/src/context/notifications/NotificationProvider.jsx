@@ -3,6 +3,7 @@ import notification_reducer from "../../reducers/notification-reducer";
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { NotificationAPI } from "../../lib/endpoints";
 import { useToast } from "../Modal/useModal&Toast";
+import { useAuthContext } from "../index.js";
 import io from "socket.io-client"
 import {
   FILTERED_NOTIFICATIONS,
@@ -37,26 +38,32 @@ const initialState = {
 const NotificationProvider = ({ children }) => {
   const [state, dispatch] = useReducer(notification_reducer, initialState);
   const [filter, setFilter] = useState("all"); 
+    const {isAuthenticated, authChecked} = useAuthContext()
   const { showToast, TOAST_TYPES } = useToast();
 
   
 
   const fetchNotifications = async () => {
-    dispatch({type: FETCH_NOTIFICATIONS_START})
-    try {
-      const res = await NotificationAPI.getAll()
-      dispatch({type: FETCH_NOTIFICATIONS_SUCCESS, payload: res.data})
-    } catch (error) {
-      dispatch({
-        type: FETCH_NOTIFICATIONS_ERROR,
-        payload: error.response?.data?.message || error.message,
-      });
+    dispatch({ type: FETCH_NOTIFICATIONS_START })
+    if (isAuthenticated()) {
+      try {
+        const res = await NotificationAPI.getAll()
+        dispatch({type: FETCH_NOTIFICATIONS_SUCCESS, payload: res.data})
+      } catch (error) {
+        dispatch({
+          type: FETCH_NOTIFICATIONS_ERROR,
+          payload: error.response?.data?.message || error.message,
+        });
+      }    
     }
   };
 
   useEffect(() => {
-    fetchNotifications()
-  }, []);
+    if (isAuthenticated()) {
+      fetchNotifications()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authChecked]);
 
   useEffect(() => {
     const socket = io(import.meta.env.VITE_API_BASE_URL);

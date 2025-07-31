@@ -1,23 +1,21 @@
-import styled from "styled-components"
-import { PageHero, ProductList, Sort } from "../components"
+import { PageHero } from "../components"
+import {ProductList, Sort} from "../components/products"
+import React from "react"
 
 const ProductsPage = () => {
   return (
-    <main>
+    <main className = "bg-background-white">
       <PageHero title="products" />
-      <Wrapper>
-        <div className="section-center products">
-          <div>
+      <div className="">
+        <div className="">
+          <div className = "">
             <Sort />
             <ProductList />
           </div>
         </div>
-      </Wrapper>
+      </div>
     </main>
   )
 }
 
-const Wrapper = styled.div`
-background: var(--white);
-`
 export default ProductsPage

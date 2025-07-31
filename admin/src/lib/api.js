@@ -1,5 +1,5 @@
-const CLOUD_NAME = "dtamm3ss1";
-const UPLOAD_PRESET = "ml_default";
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const UPLOAD_PRESET = "mclily";
 
 export const uploadImage = async (file) => {
   if (!file) throw new Error("No file selected");

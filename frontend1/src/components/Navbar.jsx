@@ -1,191 +1,71 @@
-import styled from "styled-components";
-import { Link, useLocation } from "react-router-dom";
-import {
-  FaBars,
-  FaUser,
-  FaShoppingCart,
-  FaSearch,
-  FaRegUser,
-} from "react-icons/fa";
-import "../test.css";
+import { Link } from "react-router-dom";
+import {  ShoppingCart, Menu, User, Search } from "lucide-react";
 import { useProductContext } from "../context/product-context";
 import { useCartContext } from "../context/cart-context";
+import ThemeToggle from "./ThemeToggle";
+import React from "react";
 
 const Navbar = () => {
-  const { openSidebar } = useProductContext()
-  const { total_items } = useCartContext()
-  const location = useLocation()
+  const { openSidebar } = useProductContext();
+  const { total_items } = useCartContext();
 
-  // const isHomepage = location.pathname === "/"
   return (
-    <NavContainer>
-      <div className='nav-center'>
-        <div className='navtop'>
-          <div className='left'>
-            <button type='button' className='nav-toggle' onClick={openSidebar}>
-              <FaBars />
+    <nav className='h-60 bg-white dark:bg-surface text-text flex flex-col items-center justify-center px-0 py-4 sticky top-0 z-50 transition-all duration-300 shadow-sm border-b border-gray-200 dark:border-gray-700'>
+      <div className='w-[90vw] mx-auto max-w-[--max-width]'>
+        <div className='flex justify-between items-center'>
+          {/* Top Navigation /}
+          {/ Left side - Logo and Menu Button */}
+          <div className='flex items-center gap-4 justify-center mb-2'>
+            <button
+              type='button'
+              className='flex items-center justify-center bg-transparent border-none text-2xl text-text cursor-pointer'
+              onClick={openSidebar}
+            >
+              <Menu size={25} />
             </button>
             <Link to='/'>
-              <h1 className='logo'>
-                <span>M</span>c<span>L</span>ily
+              <h1 className='text-3xl text-text font-bold font-comorant'>
+                McLily
               </h1>
             </Link>
           </div>
-          <div className='right'>
-            <Link to="/profile">
-              <FaUser />
+
+          {/* Right side - User and Cart Icons */}
+          <div className='flex justify-center items-center gap-1.5 text-2xl pr-2.5'>
+            <ThemeToggle />
+            <Link to='/profile' className='flex justify-center items-center'>
+              <User className='text-text' size={23} />
             </Link>
-            <Link to='/cart'>
-              <span className='cart-container'>
-                <FaShoppingCart />
-                <span className='cart-value'>{total_items}</span>
-              </span>
+            <Link to='/cart' className='flex justify-center items-center'>
+              <div className='flex items-center justify-center relative'>
+                <ShoppingCart className='text-text' size={23} />
+                <span className='absolute -top-4.5 -right-6 bg-primary-400 dark:bg-primary-200 text-text text-xs  flex justify-center items-center rounded-full p-4 py-1.5'>
+                  {total_items}
+                </span>
+              </div>
             </Link>
           </div>
         </div>
-        <div className='navdown'>
-          <div className='search-container'>
+
+        {/* Bottom Navigation - Search Bar */}
+        <div className='flex justify-center items-center'>
+          <div className='w-full flex-grow relative'>
             <input
-              type='search'
-              className='search-bar'
+              type='text'
+              className='w-full py-2.5 px-7.5 pr-16 rounded-full border-2 border-text outline-none text-text-secondary font-normal'
               placeholder="I'm searching for..."
             />
-            <button type='button' className='search-icon'>
-              <FaSearch />
+            <button
+              type='button'
+              className='flex items-center justify-center absolute right-5.5 top-1/2 -translate-y-1/2 cursor-pointer border-none text-xl p-3 w-22 h-16  rounded-xl bg-primary-400 dark:bg-primary-200 text-text'
+            >
+              <Search size={16} />
             </button>
           </div>
         </div>
       </div>
-    </NavContainer>
+    </nav>
   );
 };
 
-const NavContainer = styled.nav`
-  height: 6rem;
-  background: var(--white);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0px 0;
-  .nav-center {
-    width: 90vw;
-    margin: 0 auto;
-    max-width: var(--max-width);
-  }
-  .navtop {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .left {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    justify-content: center;
-    margin-bottom: 5px;
-    h1 {
-      font-size: 2rem;
-      margin: 0;
-      color: var(--black);
-      font-weight: 700;
-    }
-    button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    span {
-      color: var(--black);
-    }
-  }
-  .nav-toggle {
-    background: transparent;
-    border: none;
-    font-size: 1.7rem;
-    color: var(--black);
-    cursor: pointer;
-  }
-
-  .right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    font-size: 1.5rem;
-    padding-right: 10px;
-    svg {
-      color: var(--black);
-    }
-    link {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
-
-  .cart-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-  .cart-value {
-    position: absolute;
-    top: -10px;
-    right: -16px;
-    background: var(--color-5);
-    color: var(--black);
-    font-size: 0.75rem;
-    height: 16px;
-    width: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    padding: 10px;
-  }
-
-  .navdown {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .search-container {
-    width: 100%;
-    flex-grow: 1;
-    position: relative;
-  }
-
-  .search-bar {
-    width: 100%;
-    padding: 7px 15px;
-    padding-right: 65px;
-    border-radius: 50px;
-    border: 2px solid black;
-    outline: none;
-    font-size: 1rem;
-    font-weight: 400;
-  }
-
-  .search-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    cursor: pointer;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    font-size: 1.25rem;
-    width: 50px;
-    height: 28px;
-    border-radius: 15px;
-    background-color: var(--color-5);
-    color: var(--black);
-  }
-`;
 export default Navbar;

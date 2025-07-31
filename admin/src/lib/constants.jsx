@@ -201,6 +201,119 @@ export const globalProductsTable = [
   "stock",
   "action",
 ]
+export const physicalOrderTable = [
+  "customer name",
+  "orderID",
+  "day bought",
+  "total amount",
+  "amount paid",
+  "amount remaining",
+  "action",
+]
+
+export const physicalOrder1 = {
+  orderId: "PHYS-123456789",
+  customer: {
+    name: "Sarah Johnson",
+    phone: "+2348012345678",
+    email: "sarah.j@example.com"
+  },
+  items: [
+    {
+      productId: "PROD-1001",
+      name: "Floral Summer Dress",
+      size: {
+        form: "Standard",
+        value: "M"
+      },
+      quantity: 1,
+      price: 4500
+    },
+    {
+      productId: "PROD-1005",
+      name: "Straw Handbag",
+      size: null,
+      quantity: 1,
+      price: 3200
+    }
+  ],
+  totalAmount: 7700,
+  amountPaid: 7700,
+  amountRemaining: 0,
+  paymentMethod: "cash",
+  status: "completed",
+  notes: "Customer liked the dress color",
+  paymentHistory: [
+    {
+      date: new Date("2023-06-15T10:30:00Z"),
+      amount: 7700,
+      method: "cash",
+      notes: "Full payment"
+    }
+  ],
+  createdAt: new Date("2023-06-15T10:15:00Z"),
+  updatedAt: new Date("2023-06-15T10:30:00Z")
+};
+
+export const physicalOrder2 = {
+  orderId: "PHYS-987654321",
+  customer: {
+    name: "Michael Adebayo",
+    phone: "+2348098765432",
+    email: "michael.a@example.com",
+  },
+  items: [
+    {
+      productId: "PROD-1010",
+      name: "Men's Formal Suit",
+      size: {
+        form: "Standard",
+        value: "L",
+      },
+      quantity: 1,
+      price: 12500,
+    },
+    {
+      productId: "PROD-1015",
+      name: "Leather Dress Shoes",
+      size: {
+        form: "Shoe",
+        value: "42",
+      },
+      quantity: 1,
+      price: 8500,
+    },
+    {
+      productId: "PROD-1020",
+      name: "Silk Tie",
+      size: null,
+      quantity: 2,
+      price: 2500,
+    },
+  ],
+  totalAmount: 26000, // 12500 + 8500 + (2500 * 2)
+  amountPaid: 10000,
+  amountRemaining: 16000,
+  paymentMethod: "credit",
+  status: "partially_paid",
+  notes: "Regular customer - will pay balance next month",
+  paymentHistory: [
+    {
+      date: new Date("2023-06-20T14:45:00Z"),
+      amount: 5000,
+      method: "transfer",
+      notes: "First installment",
+    },
+    {
+      date: new Date("2023-06-25T11:20:00Z"),
+      amount: 5000,
+      method: "cash",
+      notes: "Second payment",
+    },
+  ],
+  createdAt: new Date("2023-06-20T14:30:00Z"),
+  updatedAt: new Date("2023-06-25T11:20:00Z"),
+};
 
 export const sampleNotifications = [
   {

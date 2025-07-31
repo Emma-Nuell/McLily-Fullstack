@@ -22,12 +22,11 @@ const AllProducts = () => {
     const openPanel = searchParams.get("openPanel")
     const searchTerm = searchParams.get("search")
 
-    const productID = Number(productId)
     
 
     if (productId && openPanel === "true") {
       const product = productsDetails.find(
-        (product) => product.productId === productID
+        (product) => product.productId === productId
       );
       
       if (product) {
