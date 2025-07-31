@@ -2,11 +2,14 @@ import React, { useState } from "react"
 import PropTypes from 'prop-types'
 
 
-const ProductImages = ({ images = [] }) => {
+const ProductImages = ({ product }) => {
+  let images = product?.images || [];
   const [main, setMain] = useState(images[0]);
 
   ProductImages.propTypes = {
-    images: PropTypes.arrayOf(PropTypes.string).isRequired
+    product: PropTypes.shape({
+      images: PropTypes.arrayOf(PropTypes.string).isRequired,
+    }).isRequired,
   }
 
   return (

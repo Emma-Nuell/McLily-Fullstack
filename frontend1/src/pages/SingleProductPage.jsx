@@ -32,13 +32,7 @@ const SingleProductPage = () => {
 
     const {
       name = "Loading...",
-      images = [
-        "https://www.course-api.com/images/store/product-6.jpeg",
-        "https://www.course-api.com/images/store/extra-product-1.jpeg",
-        "https://www.course-api.com/images/store/extra-product-2.jpeg",
-        "https://www.course-api.com/images/store/extra-product-3.jpeg",
-        "https://www.course-api.com/images/store/extra-product-4.jpeg",
-      ],
+      images = [],
       sizes = [
         {
           size: "40",
@@ -210,7 +204,7 @@ const SingleProductPage = () => {
         <div className=''>
           {/* Product Details */}
           <div className='text-text w-full bg-surface px-5 pb-6'>
-            <ProductImages images={images} />
+            <ProductImages product={product} images= {images} />
             <h2 className='capitalize whitespace-normal text-lg tracking-wide text-wrap'>
               {name}
             </h2>

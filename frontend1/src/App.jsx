@@ -32,6 +32,7 @@ import {
   Ratings,
   Wishlist,
 } from "./components/profile";
+import { ScrollToTop } from "./components/index.js";
 import React from "react";
 
 const AppContent = () => {
@@ -68,6 +69,7 @@ const AppContent = () => {
     <>
       {!hiddenNavbarRoutes.includes(location.pathname) && <Navbar />}
       <Sidebar />
+      <ScrollToTop />
       <Routes>
         <Route exact path='/' element={<Home />} />
         <Route exact path='/auth' element={<AuthPage />} />

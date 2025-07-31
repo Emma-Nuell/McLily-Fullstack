@@ -15,6 +15,9 @@ const AllProducts = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [searchInput, setSearchInput] = useState(searchTerm || "");
   
+    const products = useMemo(() => {
+    return filterProducts(main, searchTerm);
+  }, [main, searchTerm, filterProducts]);
   
   useEffect(() => {
     const productId = searchParams.get("productId")
@@ -42,9 +45,7 @@ const AllProducts = () => {
     }
   }, [searchParams, setSearchParams, searchInput, main]);
 
-  const products = useMemo(() => {
-    return filterProducts(main, searchTerm);
-  }, [main, searchTerm, filterProducts]);
+
 
   
 

@@ -209,31 +209,32 @@ const Orders = () => {
   const getStatusColor = (status) => {
     const colors = {
       Processing:
-        "bg-yellow-100 text-yellow-800 dark:bg-yellow-300 dark:text-yellow-900",
-      Pending: "bg-gray-100 text-gray-800 dark:bg-gray-300 dark:text-gray-900",
-      Shipped: "bg-blue-100 text-blue-800 dark:bg-blue-300 dark:text-blue-900",
+        "bg-yellow-100 text-yellow-800 dark:bg-yellow-300/80 dark:text-yellow-900",
+      Pending:
+        "bg-gray-100 text-gray-800 dark:bg-gray-300/80 dark:text-gray-900",
+      Shipped: "bg-blue-100 text-blue-800 dark:bg-blue-300/80 dark:text-blue-900",
       Out_for_delivery:
-        "bg-purple-100 text-purple-800 dark:bg-purple-300 dark:text-purple-900",
+        "bg-purple-100 text-purple-800 dark:bg-purple-300/80 dark:text-purple-900",
       Delivered:
-        "bg-green-100 text-green-800 dark:bg-green-300 dark:text-green-900",
-      Cancelled:
-        "bg-red-100 text-red-800 dark:bg-red-300 dark:text-red-900",
-      Returned: "bg-orange-100 text-orange-800 dark:bg-orange-300 dark:text-orange-900",
+        "bg-green-100 text-green-800 dark:bg-green-300/80 dark:text-green-900",
+      Cancelled: "bg-red-100 text-red-800 dark:bg-red-300/80 dark:text-red-900",
+      Returned:
+        "bg-orange-100 text-orange-800 dark:bg-orange-300/80 dark:text-orange-900",
     };
-    return colors[status] || "bg-gray-100 text-gray-800 dark:bg-gray-300 dark:text-gray-900";
+    return colors[status] || "bg-gray-100 text-gray-800 dark:bg-gray-300/80 dark:text-gray-900";
   };
 
   const getPaymentStatusColor = (status) => {
     const colors = {
-      paid: "bg-green-100 text-green-800 dark:bg-green-300 dark:text-green-900",
+      paid: "bg-green-100 text-green-800 dark:bg-green-300/80 dark:text-green-900",
       pending:
-        "bg-yellow-100 text-yellow-800 dark:bg-yellow-300 dark:text-yellow-900",
-      failed: "bg-red-100 text-red-800 dark:bg-red-300 dark:text-red-900",
-      refunded: "bg-purple-100 text-purple-800 dark:bg-purple-300 dark:text-purple-900",
+        "bg-yellow-100 text-yellow-800 dark:bg-yellow-300/80 dark:text-yellow-900",
+      failed: "bg-red-100 text-red-800 dark:bg-red-300/80 dark:text-red-900",
+      refunded: "bg-purple-100 text-purple-800 dark:bg-purple-300/80 dark:text-purple-900",
     };
     return (
       colors[status] ||
-      "bg-gray-100 text-gray-800 dark:bg-gray-300 dark:text-gray-900"
+      "bg-gray-100 text-gray-800 dark:bg-gray-300/80 dark:text-gray-900"
     );
   };
 
@@ -260,7 +261,7 @@ const Orders = () => {
         item.productName.toLowerCase().includes(searchTerm.toLowerCase())
       );
     const matchesStatus =
-      statusFilter === "all" || order.status === statusFilter;
+      statusFilter === "all" || order.orderStatus === statusFilter;
     const matchesDate = filterOrdersByDate(order);
 
     return matchesSearch && matchesStatus && matchesDate;

@@ -150,7 +150,7 @@ const Wishlist = () => {
     >
       <div
         className={`relative ${
-          isListView ? "w-44 h-44 flex-shrink-0" : "aspect-square h-124 mb-4"
+          isListView ? "w-44 h-44 flex-shrink-0" : "aspect-square mb-4"
         }`}
       >
         <img

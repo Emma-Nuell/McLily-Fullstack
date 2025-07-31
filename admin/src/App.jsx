@@ -15,10 +15,12 @@ import {
   PhysicalOrderDetails
 } from "./pages";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {ScrollToTop} from "./components/index.js"
 
 const App = () => {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route exact path='/login' element={<Login />} />
         <Route

@@ -8,6 +8,7 @@ import GlobalSearchResults from "./GlobalSearchResults";
 import ProtectedRoute from "./ProtectedRoute";
 import User from "./User";
 import ErrorAlert from "./ErrorAlert";
+import ScrollToTop from "./ScrollToTop";
 
 export {
   ThemeToggle,
@@ -19,5 +20,6 @@ export {
   GlobalSearchResults,
   ProtectedRoute,
   User,
-ErrorAlert
+  ErrorAlert,
+ScrollToTop
 };
