@@ -8,7 +8,7 @@ import About from "./About";
 import PageHero from "./PageHero";
 import ProductImages from "./singleproduct/ProductImages";
 import AmountButtons from "./AmountButtons";
-import { ScrollToTop } from "./ScrollToTop";
+import ScrollToTop  from "./ScrollToTop";
 
 export {
   Navbar,
