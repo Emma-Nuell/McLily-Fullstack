@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Main, SidePane } from "../components/allcomponents";
-import { productsDetails } from "../lib/constants";
 import { useProductContext } from "../context/index.js";
 import { SpinnerLoader } from "../components/Loaders/index.js"
 import {ErrorAlert} from "../components/index.js"
@@ -25,7 +24,7 @@ const AllProducts = () => {
     
 
     if (productId && openPanel === "true") {
-      const product = productsDetails.find(
+      const product = main.find(
         (product) => product.productId === productId
       );
       
@@ -41,7 +40,7 @@ const AllProducts = () => {
     if (searchTerm && searchTerm !== searchInput) {
       setSearchInput(searchTerm);
     }
-  }, [searchParams, setSearchParams, searchInput]);
+  }, [searchParams, setSearchParams, searchInput, main]);
 
   const products = useMemo(() => {
     return filterProducts(main, searchTerm);
