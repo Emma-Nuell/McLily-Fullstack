@@ -52,7 +52,7 @@ export const sidebarLinks = [
     category: "Unisex",
     subCategory: true,
     name: "unisex",
-    teensSubcategory: [
+    unisexSubcategory: [
       "All Products",
       "Unisex Clothes",
       "Unisex Shoes",
