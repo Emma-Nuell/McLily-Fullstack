@@ -8,21 +8,20 @@ import { Select } from "radix-ui";
 const SingleProduct = ({ setPrice, setStock, price, stock, isEditMode }) => {
   const [open, setOpen] = useState(false);
   const [productInfo, setProductInfo] = useState(null);
-  const [missing, setMissing] = useState(false)
+  const [missing, setMissing] = useState(false);
 
-  useEffect(() => { 
-    if (isEditMode) { 
+  useEffect(() => {
+    if (isEditMode) {
       const data = { price, stock };
       setProductInfo(data);
     } else {
       setProductInfo(null);
     }
-   
-  },[isEditMode, price, stock])
+  }, [isEditMode, price, stock]);
 
   const handleSave = (e) => {
-    e.preventDefault()
-    if (!price || !stock) return setMissing(true)
+    e.preventDefault();
+    if (!price || !stock) return setMissing(true);
     const data = { price, stock };
     setProductInfo(data);
     setOpen(false);
@@ -43,7 +42,11 @@ const SingleProduct = ({ setPrice, setStock, price, stock, isEditMode }) => {
               <Dialog.Title className='m-0 text-[17px] font-medium dark:text-white'>
                 Price & Stock
               </Dialog.Title>
-              <span className={`text-[13px] text-red-500 opacity-80 ${!missing && "hidden"}`}>
+              <span
+                className={`text-[13px] text-red-500 opacity-80 ${
+                  !missing && "hidden"
+                }`}
+              >
                 Please fill in all fields
               </span>
             </div>
@@ -105,8 +108,8 @@ const SingleProduct = ({ setPrice, setStock, price, stock, isEditMode }) => {
         <div className='border-y mt-4 pt-4 border-aquamine-4 dark:border-slate-950 py-6 dark:text-dark-text'>
           <h2 className='text-lg font-semibold'>Details</h2>
           <div className='mt-4 rounded-md dark:text-white'>
-            <p>Price: { productInfo.price}</p>
-            <p>Stock: { productInfo.stock} </p>
+            <p>Price: {productInfo.price}</p>
+            <p>Stock: {productInfo.stock} </p>
           </div>
         </div>
       )}
@@ -114,14 +117,14 @@ const SingleProduct = ({ setPrice, setStock, price, stock, isEditMode }) => {
   );
 };
 
-const VariableProduct = ({ sizes, setSizes, setPrice, setStock, }) => {
+const VariableProduct = ({ sizes, setSizes, setPrice, setStock }) => {
   const [form, setForm] = useState("");
   const [value, setValue] = useState("");
   const [stocke, setStocke] = useState("");
   const [pricee, setPricee] = useState("");
   const [open, setOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-  const [missing, setMissing] = useState(false)
+  const [missing, setMissing] = useState(false);
 
   useEffect(() => {
     if (!sizes || sizes.length === 0) return;
@@ -134,7 +137,7 @@ const VariableProduct = ({ sizes, setSizes, setPrice, setStock, }) => {
   }, [sizes, setPrice, setStock]);
 
   const handleAddVariation = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!value || !stocke || !pricee || !form) return setMissing(true);
     let stock = stocke;
     let price = pricee;
@@ -144,16 +147,13 @@ const VariableProduct = ({ sizes, setSizes, setPrice, setStock, }) => {
       updatedVariations[editIndex] = newVariation;
       setSizes(updatedVariations);
       setEditIndex(null);
-      console.log("Updated Variation: ", updatedVariations);
     } else {
       setSizes([...sizes, newVariation]);
-      console.log("Added Variation: ", newVariation);
-      console.log(sizes)
     }
     setValue("");
     setStocke("");
     setPricee("");
-    setForm("")
+    setForm("");
 
     setOpen(false);
   };
@@ -187,7 +187,11 @@ const VariableProduct = ({ sizes, setSizes, setPrice, setStock, }) => {
               <Dialog.Title className='m-0 text-[17px] font-medium dark:text-white'>
                 {editIndex !== null ? "Edit Variation" : "Add Variation"}
               </Dialog.Title>
-              <span className={`text-[13px] text-red-500 opacity-80 ${!missing && "hidden"}`}>
+              <span
+                className={`text-[13px] text-red-500 opacity-80 ${
+                  !missing && "hidden"
+                }`}
+              >
                 Please fill in all fields
               </span>
             </div>
@@ -366,14 +370,24 @@ const VariableProduct = ({ sizes, setSizes, setPrice, setStock, }) => {
   );
 };
 
-const PriceStock = ({ price, stock, setStock, setPrice, sizes, setSizes, priceField, isEditMode }) => {
+const PriceStock = ({
+  price,
+  stock,
+  setStock,
+  setPrice,
+  sizes,
+  setSizes,
+  priceField,
+  isEditMode,
+}) => {
   const [hasVariations, setHasVariations] = useState(false);
   useEffect(() => {
     if (isEditMode && sizes.length > 0) {
-      setHasVariations(true)
-    }
-    else {
-      setHasVariations(false)
+      setHasVariations(true);
+    } else if (sizes.length > 0) {
+      setHasVariations(true);
+    } else {
+      setHasVariations(false);
     }
   }, [isEditMode, sizes]);
   return (
@@ -382,7 +396,11 @@ const PriceStock = ({ price, stock, setStock, setPrice, sizes, setSizes, priceFi
         <h2 className='font-semibold text-lg text-left dark:text-white'>
           Price & Stock
         </h2>
-        <span className={`text-[13px] text-red-500 opacity-80 ${!priceField && "hidden"}`}>
+        <span
+          className={`text-[13px] text-red-500 opacity-80 ${
+            !priceField && "hidden"
+          }`}
+        >
           Please enter a valid price and stock
         </span>
       </div>
@@ -416,7 +434,7 @@ const PriceStock = ({ price, stock, setStock, setPrice, sizes, setSizes, priceFi
           price={price}
           stock={stock}
           setPrice={setPrice}
-            setStock={setStock}
+          setStock={setStock}
           isEditMode={isEditMode}
         />
       )}

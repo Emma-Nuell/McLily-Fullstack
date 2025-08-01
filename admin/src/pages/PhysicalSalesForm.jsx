@@ -463,7 +463,7 @@ const PhysicalSalesForm = () => {
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    paymentMethod: e.target.value,
+                    paymentType: e.target.value,
                   }))
                 }
                 required

@@ -69,6 +69,15 @@ export const categories = [
     ],
   },
   {
+    category: "unisex",
+    subCategories: [
+      "Clothes",
+      "Shoes",
+      "Clothing Accessories",
+      "Clothing Materials",
+    ],
+  },
+  {
     category: "Teens & Kids",
     subCategories: ["Clothes", "Shoes", "Clothing Accessories", "Toys & Games"],
   },
