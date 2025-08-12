@@ -12,6 +12,7 @@ import Login from "./LoginPage"
 import Preorder from "./PreorderPage"
 import Signup from "./SignupPage";
 import AuthPage from "./AuthPage";
+import Legal from "./Legal"
 
 export {
   Home,
@@ -27,5 +28,6 @@ export {
   Login,
   Preorder,
   Signup,
-  AuthPage
+  AuthPage,
+  Legal
 };

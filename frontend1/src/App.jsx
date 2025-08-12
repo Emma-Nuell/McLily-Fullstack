@@ -19,6 +19,7 @@ import {
   SingleProduct,
   Preorder,
   AuthPage,
+  Legal
 } from "./pages";
 import {
   AccountManagement,
@@ -46,6 +47,7 @@ const AppContent = () => {
     "/profile/addresses",
     "/profile/addresses/new",
     "/profile/addresses/:addressId",
+    "/legal"
    
   ];
   const hiddenFooterRoutes = [
@@ -90,6 +92,7 @@ const AppContent = () => {
         <Route path='/profile/help' element={<Help />} />
         <Route path='/favourite' element={<Favourite />} />
         <Route path='/preorder' element={<Preorder />} />
+        <Route path='/legal' element={<Legal />} />
         <Route path='*' element={<Error />} />
       </Routes>
       {!shouldHideFooter && <Footer />}
