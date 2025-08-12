@@ -18,7 +18,7 @@ const ProductImages = ({ product }) => {
       <img
         src={main}
         alt="Main product"
-        className="w-full block aspect-square rounded-md object-cover h-[200px] md:h-[300px] sm:h-[250px]"
+        className="w-full block rounded-md object-cover h-[300px] md:h-[350px] sm:h-[320px]"
       />
 
       {/* Image Gallery */}
