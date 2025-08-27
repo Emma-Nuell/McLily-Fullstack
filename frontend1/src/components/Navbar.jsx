@@ -4,6 +4,7 @@ import { useProductContext } from "../context/product-context";
 import { useCartContext } from "../context/cart-context";
 import ThemeToggle from "./ThemeToggle";
 import React from "react";
+import SearchBar from "./SearchBar";
 
 const Navbar = () => {
   const { openSidebar } = useProductContext();
@@ -48,7 +49,8 @@ const Navbar = () => {
         </div>
 
         {/* Bottom Navigation - Search Bar */}
-        <div className='flex justify-center items-center'>
+        <SearchBar />
+        {/* <div className='flex justify-center items-center'>
           <div className='w-full flex-grow relative'>
             <input
               type='text'
@@ -62,7 +64,7 @@ const Navbar = () => {
               <Search size={16} />
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </nav>
   );

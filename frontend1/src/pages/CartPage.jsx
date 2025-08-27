@@ -1,7 +1,7 @@
-import { useCartContext } from "../context/cart-context";
+import { useCartContext } from "../../context/cart-context";
 import { Link } from "react-router-dom";
 
-import { CartContent, CartNavbar } from "../components/cart";
+import { CartContent, CartNavbar, CartMayLike } from "../components/cart";
 import React from "react";
 
 const CartPage = () => {
@@ -30,7 +30,8 @@ const CartPage = () => {
   return (
     <main className='min-h-screen bg-gray-50 dark:bg-background-white scrollbar-hidden overflow-auto pb-36'>
       <CartNavbar />
-        <CartContent />
+      <CartContent />
+      <CartMayLike cartItems={cart} /> 
     </main>
   );
 };

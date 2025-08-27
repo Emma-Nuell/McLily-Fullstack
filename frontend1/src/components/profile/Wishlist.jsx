@@ -2,12 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Grid, Heart, List, Search, ShoppingCart, Star, Trash2 } from "lucide-react";
+import { useUserContext } from "../../context";
+import { Link } from "react-router-dom";
+import Error from "../Error";
 
 const Wishlist = () => {
+  const { isAuthenticated, wishlistItems, wishlistIsLoading, wishlistError } = useUserContext()
   const [viewMode, setViewMode] = useState("grid");
   const [filterBy, setFilterBy] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [wishlistItems, setWishlistItems] = useState([
+  // eslint-disable-next-line no-unused-vars
+  const [wishlistItemss, setWishlistItems] = useState([
     {
       _id: 1,
       productId: "prod1",
@@ -105,6 +110,37 @@ const Wishlist = () => {
       description: "M2 chip, Liquid Retina XDR display, Apple Pencil support",
     },
   ]);
+
+    if (!isAuthenticated) {
+      return (
+        <div className='min-h-screen flex items-center justify-center bg-gray-50'>
+          <div className='text-center'>
+            <div className='text-6xl mb-4'>❤️</div>
+            <h2 className='text-2xl font-bold text-gray-900 mb-2'>
+              Please Login
+            </h2>
+            <p className='text-gray-600 mb-6'>
+              You need to be logged in to view your wishlist.
+            </p>
+            <Link
+              to='/auth'
+              className='px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700'
+            >
+              Login Now
+            </Link>
+          </div>
+        </div>
+      );
+    }
+
+    if (wishlistIsLoading) {
+      return <div>Loading...</div>
+    }
+
+    if (wishlistError) {
+      return <Error error={wishlistError} />;
+    }
+
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-NG", {

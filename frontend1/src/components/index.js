@@ -8,7 +8,11 @@ import About from "./About";
 import PageHero from "./PageHero";
 import ProductImages from "./singleproduct/ProductImages";
 import AmountButtons from "./AmountButtons";
-import ScrollToTop  from "./ScrollToTop";
+import ScrollToTop from "./ScrollToTop";
+import Error from "./Error"
+import CategoryHeader from "./CategoryHeader"
+import EmptyCategory from "./EmptyCategory"
+import SearchBar from "./SearchBar";
 
 export {
   Navbar,
@@ -21,5 +25,8 @@ export {
   PageHero,
   ProductImages,
   AmountButtons,
-   ScrollToTop,
+  ScrollToTop,
+  Error,
+  CategoryHeader,
+   EmptyCategory
 };

@@ -12,6 +12,6 @@ router.post("/forgot", forgotPassword)
 router.post("/reset", resetPassword)
 
 // router.use(verifyToken)
-router.post("/change", changePassword)
+router.post("/changepassword", changePassword)
 
 export default router

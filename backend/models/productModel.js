@@ -111,4 +111,13 @@ const ProductSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+ProductSchema.index({ category: 1, subCategory: 1 }); // For category filtering
+ProductSchema.index({ price: 1 }); // For price sorting
+ProductSchema.index({ sales: -1 }); // For top sellers
+ProductSchema.index({ createdAt: -1 }); // For newest products
+ProductSchema.index({ 'rating.average': -1 }); // For best rated
+ProductSchema.index({ featured: 1 }); // For featured products
+ProductSchema.index({ stock: 1 }); // For stock checking
+ProductSchema.index({ productId: 1 }); // For quick product lookups
+
 export const Product = mongoose.model("Product", ProductSchema);

@@ -1,4 +1,4 @@
-import React, { act, useEffect, useState } from "react"
+import React from "react"
 import {
   FeaturedProducts,
   CategoryFirst,
@@ -8,36 +8,40 @@ import {
   LastViewed,
   ProductCategorySection,
 } from "../components/homepage";
-import { CATEGORIES } from "../utils/constants"
-import { getRandomSections } from "../utils/helpers"
+import { useHomepageData } from "../hooks/productHooks";
+import { Error } from "../components";
 
 const HomePage = () => {
-  const [activeSections, setActiveSections] = useState([])
-  // eslint-disable-next-line no-unused-vars
-  const [user, setUser] = useState(false)
-
-  useEffect(() => {
-    setActiveSections(getRandomSections())
-    
-  }, [])
+  const { data, isLoading, error } = useHomepageData()
   
+  if (isLoading) {
+    return (
+      <div>Loading ...</div>
+    )
+  }
+
+  if (error) return <div><Error error={error} /></div>
+  
+  const {featured, topSellers, recommended, randomCategories, lastViewed} = data.data
+
 
   return (
     <main>
-      <FeaturedProducts />
+      <FeaturedProducts products={featured} />
       <CategoryFirst />
-      <RecommendedProducts />
+      <RecommendedProducts products={recommended} />
       <CategorySecond />
-      <TopSellers />
-      {user && <LastViewed />}
-      {activeSections.map(
-        (section) =>
-          CATEGORIES[section] && (
-            <ProductCategorySection
-              key={section}
-              category={CATEGORIES[section]}
-            />
-          )
+      <TopSellers products={topSellers} />
+      {lastViewed.length > 0 && <LastViewed products={lastViewed} />}
+      {randomCategories.map(
+        ({ mainCategory, subCategory, products }, index) => (
+          <ProductCategorySection
+            key={`${mainCategory}-${subCategory}-${index}`}
+            products={products}
+            mainCategory={mainCategory}
+            subCategory = {subCategory}
+          />
+        )
       )}
     </main>
   );

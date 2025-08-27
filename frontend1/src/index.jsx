@@ -2,28 +2,47 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
-import { ProductsProvider } from "./context/product-context.jsx";
-import { UserProvider } from "./context/user-context.jsx";
-import { CartProvider } from "./context/cart-context.jsx";
-import { FilterProvider } from "./context/filter-context.jsx";
-import { ThemeProvider, ModalToast, AuthProvider } from "./context/index.js";
+import {
+  ThemeProvider,
+  ModalToast,
+  AuthProvider,
+  ProductsProvider,
+  UserProvider,
+  CartProvider,
+  FilterProvider,
+} from "./context/index.js";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    }
+  }
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <ThemeProvider>
-  <AuthProvider>
-  <ModalToast>
-  <UserProvider>
-    <ProductsProvider>
-      <FilterProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </FilterProvider>
-    </ProductsProvider>
-  </UserProvider>
-  </ModalToast>
-  </AuthProvider>
-  </ThemeProvider>
+  <QueryClientProvider client={queryClient}>
+    <ThemeProvider>
+      <AuthProvider>
+        <ModalToast>
+          <ProductsProvider>
+            <FilterProvider>
+              <CartProvider>
+                <UserProvider>
+                  <App />
+                  <ReactQueryDevtools initialIsOpen={false} />
+                </UserProvider>
+              </CartProvider>
+            </FilterProvider>
+          </ProductsProvider>
+        </ModalToast>
+      </AuthProvider>
+    </ThemeProvider>
+  </QueryClientProvider>
 );

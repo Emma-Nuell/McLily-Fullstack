@@ -5,7 +5,6 @@ import React from "react";
 
 const Sort = () => {
   const {
-    filtered_products: products,
     grid_view,
     setGridView,
     setListView,
@@ -81,46 +80,57 @@ const Sort = () => {
           <button
             type='button'
             className={`text-sm px-3 py-2 rounded-md  ${
-              sort === "price-lowest"
+              sort === "price-low"
                 ? "bg-primary-600/60 dark:bg-gray-700/50 text-text"
                 : "bg-transparent border border-primary-600 dark:border-gray-600"
             }`}
-            onClick={() => updateSort({ target: { value: "price-lowest" } })}
+            onClick={() => updateSort({ target: { value: "price-low" } })}
           >
             Price (Lowest)
           </button>
           <button
             type='button'
             className={`text-sm px-3 py-2 rounded-md ${
-              sort === "price-highest"
+              sort === "price-high"
                 ? "bg-primary-600/60 dark:bg-gray-700/50 text-text"
                 : "bg-transparent border border-primary-600 dark:border-gray-600"
             }`}
-            onClick={() => updateSort({ target: { value: "price-highest" } })}
+            onClick={() => updateSort({ target: { value: "price-high" } })}
           >
             Price (Highest)
           </button>
           <button
             type='button'
             className={`text-sm px-3 py-2 rounded-md ${
-              sort === "name-a"
+              sort === "name-az"
                 ? "bg-primary-600/60 dark:bg-gray-700/50 text-text"
                 : "bg-transparent border border-primary-600 dark:border-gray-600"
             }`}
-            onClick={() => updateSort({ target: { value: "name-a" } })}
+            onClick={() => updateSort({ target: { value: "name-az" } })}
           >
             Name (A-Z)
           </button>
           <button
             type='button'
             className={`text-sm px-3 py-2 rounded-md ${
-              sort === "name-z"
+              sort === "name-za"
                 ? "bg-primary-600/60 dark:bg-gray-700/50 text-text"
                 : "bg-transparent border border-primary-600 dark:border-gray-600"
             }`}
-            onClick={() => updateSort({ target: { value: "name-z" } })}
+            onClick={() => updateSort({ target: { value: "name-za" } })}
           >
             Name (Z-A)
+          </button>
+          <button
+            type='button'
+            className={`text-sm px-3 py-2 rounded-md ${
+              sort === "newest"
+                ? "bg-primary-600/60 dark:bg-gray-700/50 text-text"
+                : "bg-transparent border border-primary-600 dark:border-gray-600"
+            }`}
+            onClick={() => updateSort({ target: { value: "newest" } })}
+          >
+            Newest
           </button>
         </div>
       </div>

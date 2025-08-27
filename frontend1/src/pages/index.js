@@ -13,6 +13,7 @@ import Preorder from "./PreorderPage"
 import Signup from "./SignupPage";
 import AuthPage from "./AuthPage";
 import Legal from "./Legal"
+import SearchPage from "./SearchPage";
 
 export {
   Home,
@@ -29,5 +30,6 @@ export {
   Preorder,
   Signup,
   AuthPage,
-  Legal
+  Legal,
+  SearchPage
 };

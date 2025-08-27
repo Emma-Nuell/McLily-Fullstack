@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
-import { useProductContext } from "../context/product-context";
+// import { useProductContext } from "../context/product-context";
 import React, { useEffect, useState } from "react";
-import { AmountButtons, PageHero } from "../components";
+import { AmountButtons, Error, PageHero } from "../components";
 import {
   ProductImages,
   DescSpec,
@@ -11,7 +11,7 @@ import {
   DeliveryOptions,
 } from "../components/singleproduct";
 import { Stars1 } from "../components/products";
-import { formatPrice } from "../utils/helpers";
+import { formatPrice, trackProductViewWithDetails } from "../utils/helpers";
 import { BsStarFill, BsStar, BsStarHalf } from "react-icons/bs";
 import {
   FaRegCheckCircle,
@@ -21,75 +21,90 @@ import {
   FaCartPlus,
 } from "react-icons/fa";
 import { useCartContext } from "../context/cart-context";
+import ProductsAPI from "../utils/endpoints/productsApi";
+import { useSmartProduct } from "../hooks/productHooks";
+import { useUserContext } from "../context";
+
+
 
 const SingleProductPage = () => {
-  const { id } = useParams();
+  const { productId } = useParams();
+  const {data, isLoading, isError, error} = useSmartProduct(productId)
+
+  const product = data?.data;
+  const fromCache = data?.fromCache;
+  const {
+    name,
+    description,
+    stock,
+    sizes,
+    basePrice,
+    images,
+    brand,
+    specifications,
+    rating,
+    reviews,
+  } = product;
+
   // const navigate = useNavigate()
-  const { fetchSingleProduct, single_product: product } = useProductContext();
   const { addToCart, cart, toggleAmount } = useCartContext();
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState(null);
+  const [displayPrice, setDisplayPrice] = useState(basePrice);
+  const { isAuthenticated, isInWishlist, addToWishlist, removeFromWishlist, wishlistIsLoading } =
+    useUserContext(); 
 
-    const {
-      name = "Loading...",
-      images = [],
-      sizes = [
-        {
-          size: "40",
-          stock: 10,
-        },
-        {
-          size: "41",
-          stock: 8,
-        },
-        {
-          size: "42",
-          stock: 6,
-        },
-        {
-          size: "44",
-          stock: 4,
-        },
-        {
-          size: "45",
-          stock: 10,
-        },
-      ],
-      description = "Loading...",
-      price: basePrice,
-      brand,
-      stock,
-      rating = { average: 4.6, reviewsCount: 75 },
-      specifications = { color: "Red", size: "38", material: "Leather" },
-      reviews = [
-        {
-          userId: "user101",
-          comment: "Fast delivery and great quality. Will buy again!",
-          rating: 5,
-          date: "2025-01-05T00:00:00.000Z",
-          _id: "6859bfd5fedc382b241bf39b",
-        },
-        {
-          userId: "user102",
-          comment: "Good product but packaging was a bit damaged.",
-          rating: 4,
-          date: "2025-01-10T00:00:00.000Z",
-          _id: "6859bfd5fedc382b241bf39c",
-        },
-        {
-          userId: "user104",
-          comment: "Exactly as described. Highly recommended.",
-          rating: 5,
-          date: "2025-01-15T00:00:00.000Z",
-          _id: "6859bfd5fedc382b241bf39d",
-        },
-      ],
-    } = product || {};
+
+    useEffect(() => {
+      if (product) {
+        trackProductViewWithDetails(product);
+
+        if (!fromCache) {
+          const timeout = setTimeout(() => {
+            ProductsAPI.trackVisit(product.productId).catch((error) => {
+              console.error("Failed to track visit: ", error);
+            });
+          }, 1000);
+    
+          return () => clearTimeout(timeout);         
+        }
+      }
+
+    }, [product, fromCache, productId]);
+  
+    useEffect(() => {
+      if (selectedSize && sizes?.length > 0) {
+        const selectedSizeData = sizes.find(
+          (size) => size.value === selectedSize
+        );
+        setDisplayPrice(selectedSizeData?.price || basePrice);
+      } else {
+        setDisplayPrice(basePrice);
+      }
+    }, [selectedSize, sizes, basePrice]);
+  
+    
+  
+  if (isLoading) {
+    return (
+      <div>Loading...</div>
+    )
+  }
+
+  if (isError || !product) {
+    return (
+      <Error error={error} />
+    )
+  }
+
+
+  
+
 
   const available = stock > 0;
 
-  const cartItemId = sizes.length > 0 ? `${id}${selectedSize}` : id;
-  const inCart = cart.find((item) => item.id === cartItemId);
+  const cartItemId = sizes.length > 0 ? `${productId}_${selectedSize}` : productId;
+  const inCart = cart.find((item) => item.cartId === cartItemId);
   const maxQuantity =
     sizes.length > 0
       ? sizes.find((s) => s.value === selectedSize)?.stock || stock
@@ -99,7 +114,7 @@ const SingleProductPage = () => {
     e.preventDefault();
     e.stopPropagation();
     if (inCart) {
-      toggleAmount(inCart.id, "inc");
+      toggleAmount(inCart.cartId, "inc");
     } else {
       setQuantity((prev) => Math.min(prev + 1, maxQuantity));
     }
@@ -108,7 +123,7 @@ const SingleProductPage = () => {
     e.preventDefault();
     e.stopPropagation();
     if (inCart) {
-      toggleAmount(inCart.id, "dec");
+      toggleAmount(inCart.cartId, "dec");
     } else {
       setQuantity((prev) => Math.max(prev - 1, 1));
     }
@@ -120,25 +135,29 @@ const SingleProductPage = () => {
       return;
     }
 
-    addToCart(id, selectedSize, quantity, product);
+    const size = sizes.find(
+      (size) => size.value.toLowerCase() === selectedSize.toLowerCase()
+    );
+
+    addToCart(size, quantity, product);
   };
 
   const renderCartButton = () => {
     if (!available) {
-        return (
-          <button
-            disabled= {true}
-            className='flex justify-center py-2 items-center gap-4 text-base bg-gray-300 dark:bg-gray-600 text-text rounded-md cursor-not-allowed'
-          >
-            Out Of Stock
-          </button>
-        );
-  }
+      return (
+        <button
+          disabled={true}
+          className='flex justify-center py-2 items-center gap-4 text-base bg-gray-300 dark:bg-gray-600 text-text rounded-md cursor-not-allowed'
+        >
+          Out Of Stock
+        </button>
+      );
+    }
 
     if (inCart) {
       return (
         <AmountButtons
-          amount={inCart.amount}
+          quantity={inCart.quantity}
           increase={increase}
           decrease={decrease}
         />
@@ -166,24 +185,8 @@ const SingleProductPage = () => {
     );
   };
 
-  useEffect(() => {
-    fetchSingleProduct(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
 
-  const [displayPrice, setDisplayPrice] = useState(basePrice);
-  
 
-  useEffect(() => {
-    if (selectedSize && sizes?.length > 0) {
-      const selectedSizeData = sizes.find(
-        (size) => size.value === selectedSize
-      );
-      setDisplayPrice(selectedSizeData?.price || basePrice);
-    } else {
-      setDisplayPrice(basePrice);
-    }
-  }, [selectedSize, sizes, basePrice]);
 
   const getLowestSizePrice = () => {
     if (!sizes || sizes.length === 0) return basePrice;
@@ -193,6 +196,23 @@ const SingleProductPage = () => {
     if (!sizes || sizes.length === 0) return basePrice;
     return Math.max(...sizes.map((size) => size.price));
   };
+
+    const handleWishlistClick = async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!isAuthenticated) {
+        // Redirect to login or show message
+        alert("Please login to add items to your wishlist");
+        return;
+      }
+
+      if (isInWishlist(productId)) {
+        await removeFromWishlist(productId);
+      } else {
+        await addToWishlist(productId);
+      }
+    };
 
 
 
@@ -204,7 +224,7 @@ const SingleProductPage = () => {
         <div className=''>
           {/* Product Details */}
           <div className='text-text w-full bg-surface px-5 pb-6'>
-            <ProductImages product={product} images= {images} />
+            <ProductImages product={product} images={images} />
             <h2 className='capitalize whitespace-normal text-lg tracking-wide text-wrap'>
               {name}
             </h2>
@@ -247,9 +267,7 @@ const SingleProductPage = () => {
             ) : stock > 3 ? (
               <p className='text-sm text-amber-600'>few units left</p>
             ) : stock > 0 ? (
-              <p className='text-sm text-red-500'>
-                {stock} units left!
-              </p>
+              <p className='text-sm text-red-500'>{stock} units left!</p>
             ) : (
               <p className='text-sm text-red-500 font-medium my-1'>
                 OUT OF STOCK!!!
@@ -266,13 +284,11 @@ const SingleProductPage = () => {
             )}
           </div>
 
-
           {/* Delivery Info */}
           <DeliveryOptions />
 
           {/* Product Description */}
           <DescSpec specifications={specifications} description={description} />
-
 
           {/* Reviews */}
           <div className='bg-surface text-text px-5 pb-10 mb-6'>
@@ -294,7 +310,7 @@ const SingleProductPage = () => {
           </div>
 
           <div>
-            <YouMayLike />
+            <YouMayLike product={product} />
           </div>
 
           {/* Fixed Cart Buttons */}
@@ -306,7 +322,18 @@ const SingleProductPage = () => {
               >
                 <FaHome />
               </Link>
-              <button className='flex justify-center p-4.5 items-center rounded-md text-text text-base border border-primary-400'>
+              <button
+                onClick={handleWishlistClick}
+                disabled={wishlistIsLoading}
+                className={`flex justify-center p-4.5 items-center rounded-md text-text text-base border border-primary-400 ${
+                  isInWishlist(productId) ? "text-red-500" : ""
+                }`}
+                aria-label={
+                  isInWishlist(productId)
+                    ? "Remove from wishlist"
+                    : "Add to wishlist"
+                }
+              >
                 <FaRegHeart />
               </button>
               {renderCartButton()}

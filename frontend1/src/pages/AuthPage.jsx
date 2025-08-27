@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.svg";
+import {useUserContext}from "../context/index.js"
 
 const AuthPage = () => {
+  const { signIn, signUp, isLoading, error: authError, isSigningIn, isSigningUp} = useUserContext()
   const [activeForm, setActiveForm] = useState("login");
   const [formData, setFormData] = useState({
     firstName: "",
@@ -11,7 +13,7 @@ const AuthPage = () => {
     password: "",
   });
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -68,32 +70,28 @@ const AuthPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
     if (!validateForm()) {
-      setIsSubmitting(false);
       return;
     }
 
     try {
       if (activeForm === "login") {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log("Login data", {
+        await signIn({email: formData.email, password: formData.password})
+        navigate(-1);
+      } else {
+        await signUp({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
           email: formData.email,
           password: formData.password,
-        });
-        navigate("/");
-      } else {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log("Signup data", formData);
+        })
         navigate("/");
       }
     } catch (error) {
       setErrors({ form: "An error occured. Please try again" });
       console.log(error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    } 
   };
 
   const switchForm = (form) => {
@@ -134,6 +132,12 @@ const AuthPage = () => {
           {errors.form && (
             <div className='mb-4 p-3 bg-red-100 text-red-700 roudned-lg text-sm'>
               {errors.form}
+            </div>
+          )}
+
+          {authError && (
+            <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded'>
+              {authError}
             </div>
           )}
 
@@ -198,10 +202,10 @@ const AuthPage = () => {
               </div>
               <button
                 type='submit'
-                disabled={isSubmitting}
+                disabled={isLoading || isSigningIn}
                 className='w-full mt-2 py-3 px-4 bg-gradient-to-r from-primary-500 dark:from-primary-300 to-primary-500 dark:to-primary-300 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:translate-y-0.5 transition-all duration-300 mb-4 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer'
               >
-                {isSubmitting ? "Signing In..." : "Sign In"}
+                {isSigningIn ? "Signing In..." : "Sign In"}
               </button>
               <div className='text-center mb-4'>
                 <button
@@ -383,10 +387,10 @@ const AuthPage = () => {
               </div>
               <button
                 type='submit'
-                disabled={isSubmitting}
+                disabled={isLoading || isSigningUp}
                 className='w-full py-3 mt-2 px-4 bg-gradient-to-r from-primary-500 to-primary-500 dark:from-primary-300 dark:to-primary-300 dark:text-gray-200 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 mb-4 disabled:opacity-70 disabled:cursor-not-allowed'
               >
-                {isSubmitting ? "Creating Account..." : "Create Account"}
+                {isSigningUp ? "Creating Account..." : "Create Account"}
               </button>
             </form>
             <div className='flex items-center my-6'>

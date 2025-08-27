@@ -5,5 +5,6 @@ import DeliveryInfo from "./DeliveryInfo";
 import OrderConfirmation from "./OrderConfirmation";
 import PaymentGateway from "./PaymentGateway";
 import PaymentInfo from "./PaymentInfo";
+import OrderSummary from "./OrderSummary";
 
-export {CheckoutWizard, CheckoutProgress, CartReview, DeliveryInfo, OrderConfirmation, PaymentGateway, PaymentInfo}
+export {CheckoutWizard, CheckoutProgress, CartReview, DeliveryInfo, OrderConfirmation, PaymentGateway, PaymentInfo, OrderSummary}

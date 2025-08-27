@@ -8,4 +8,4 @@ import ProductCategorySection from "./ProductCategorySection";
 import ProductCard from "./ProductCard";
 import CategorySkeleton from "./CategorySkeleton";
 
-export {CategoryFirst, FeaturedProducts, CategorySecond, RecommendedProducts, TopSellers, LastViewed, ProductCategorySection}
+export {CategoryFirst, FeaturedProducts, CategorySecond, RecommendedProducts, TopSellers, LastViewed, ProductCategorySection, ProductCard, CategorySkeleton}

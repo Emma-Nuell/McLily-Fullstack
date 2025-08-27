@@ -56,7 +56,7 @@ export const categories = [
       "Clothes",
       "Shoes",
       "Clothing Accessories",
-      "Clothing Materials",
+      "Clothing Fabrics",
     ],
   },
   {
@@ -65,16 +65,16 @@ export const categories = [
       "Clothes",
       "Shoes",
       "Clothing Accessories",
-      "Clothing Materials",
+      "Clothing Fabrics",
     ],
   },
   {
-    category: "unisex",
+    category: "Unisex",
     subCategories: [
       "Clothes",
       "Shoes",
       "Clothing Accessories",
-      "Clothing Materials",
+      "Clothing Fabrics",
     ],
   },
   {

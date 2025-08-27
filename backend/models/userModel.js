@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
+import { populateUserOrders } from "../utils/helpers";
 
 const userSchema = new mongoose.Schema(
   {
@@ -53,6 +54,12 @@ const userSchema = new mongoose.Schema(
         productId: { type: String, ref: "Product" },
         addedAt: { type: Date, default: Date.now},
       },
+    ],
+    orders: [
+      {
+        orderId: { type: String, ref: "Order", required: true },
+      orderedAt: {type: Date, default: Date.now}
+      }
     ],
     address: {
       type: [
@@ -115,6 +122,7 @@ const userSchema = new mongoose.Schema(
       default: [],
       validate: {
         validator: function (addresses) {
+
           const defaultCount = addresses.filter(
             (addr) => addr.isDefault
           ).length;
@@ -130,5 +138,33 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.methods.addOrder = function (orderId) {
+  const orderExists = this.orders.some(order => order.orderId === orderId)
+  if (!orderExists) {
+    this.orders.push({ orderId, orderedAt: new Date() }) 
+  }
+  return this.save()
+}
+
+userSchema.methods.removeOrder = function (orderId) {
+  this.orders = this.orders.filter(order => order.orderId !== orderId)
+  return this.save()
+}
+
+userSchema.methods.getOrders = function () {
+  return this.orders.sort((a,b) => b.orderedAt - a.orderedAt)
+}
+
+userSchema.statics.findUserWithOrders = async function (userId) {
+  const user = await this.findOne({ userId: userId })
+  if (!user) return null
+
+  const populatedOrders = await populateUserOrders(user.orders)
+  return {
+    ...user.toObject(),
+    orders: populatedOrders
+  }
+}
 
 export const User = mongoose.model("User", userSchema);

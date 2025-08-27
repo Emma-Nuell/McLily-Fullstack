@@ -2,12 +2,15 @@ import { Order } from "../models/orderModel.js";
 import { nanoid } from "nanoid";
 import { Product } from "../models/productModel.js";
 import { notify } from "../services/notificationService.js";
+import { populateUserOrders, getOrderSummary } from "../utils/helpers.js";
+import { User } from "../models/userModel.js";
 
 
 //create order
 export const createOrder = async (req, res) => {
     try {
-        const { userId, customerDetails, orderItems, paymentMethod, shippingFee } = req.body;
+        const { customerDetails, orderItems, paymentMethod, shippingFee } = req.body;
+        const {userId} = req.user
 
         //validate required fields
         if (!userId || !orderItems || !orderItems.length) {
@@ -34,7 +37,7 @@ export const createOrder = async (req, res) => {
             orderStatus: "Processing",
             statusHistory: [{
                 status: "Processing",
-                changedBy: req.user?.id || 'system',
+                changedBy: req.user?.userId || 'system',
                 note: "Order created"
             }],
             paymentDetails: {
@@ -44,6 +47,11 @@ export const createOrder = async (req, res) => {
 
         //save order
         const savedOrder = await order.save();
+        const user = await User.findOne({ userId: userId })
+        await  user.addOrder(savedOrder.orderId)
+
+        user.cart = []
+        await user.save()
 
         await updateProductStocks(orderItems);
 
@@ -83,20 +91,15 @@ export const getAllOrdersAdmin = async (req, res) => {
 //get all orders user
 export const getAllOrders = async (req, res) => {
     try {
-        const { status, userId } = req.query;
-        let filter = {};
+        const user = await User.findOne({ userId: req.user.userId })
+        if (!user) {
+            return res.status(404).json({success: false, message: "User not found"})
+        }
 
-        if (status) filter.orderStatus = status;
-        if (userId) filter.userId = userId;
+        const populatedOrders = await populateUserOrders(user.orders)
+        const summary = getOrderSummary(populatedOrders)
 
-        const orders = await Order.find(filter)
-            .populate("userId", "name email")
-            .sort({ createdAt: -1 });
-        
-        res.json({
-            success: true,
-            count: orders.length, orders
-        })
+        res.status(200).json({success: true, orders: populatedOrders, summary})
     } catch (error) {
         handleOrderError(res, error, "fetching orders");
     }
@@ -146,21 +149,25 @@ export const deleteOrder = async (req, res) => {
 //get single order
 export const getOrder = async (req, res) => {
     try {
-        const order = await Order.findOne({ orderId: req.params.orderId })
-            .populate("userId", "name email")
-            .populate("orderItems.productId", "name price");
+        const { orderId } = req.params
         
-        if (!order) {
-            return res.status(404).json({
-                success: false,
-                message: "Order not found"
-            })
+        //verify user owns this order
+        const user = await User.findOne({ userId: req.user.userId })
+        if (!user) {
+            return res.status(404).json({success: false, message: "User not found"})
+        }
+        const userOwnsOrder = user.orders.some(order => order.orderId === orderId)
+
+        if (!userOwnsOrder) {
+            return res.status(403).json({success: false, message: 'Order not found for this user'})
         }
 
-        res.json({
-            success: true,
-            order
-        })
+        const order = await Order.findOne({ orderId })
+        if (!order) {
+            return res.status(404).json({success: false, message: "Order not found"})
+        }
+        res.status(200).json({success: true, order})
+       
     } catch (error) {
         handleOrderError(res, error, "fetching order");
         
@@ -215,7 +222,7 @@ export const updateOrderStatus = async (req, res) => {
         order.statusHistory.push({
           status,
           changedAt: new Date(),
-          changedBy: req.user?.id || "system",
+          changedBy: req.user?.userId || "system",
         });
         await order.save();
 
@@ -233,6 +240,26 @@ export const updateOrderStatus = async (req, res) => {
 export const cancelOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
+        const { reason } = req.body;
+
+        // verify user owns this order
+        const user = await User.findOne({ userId: req.user.userId })
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found"})
+        }
+
+         const userOwnsOrder = user.orders.some(
+           (order) => order.orderId === orderId
+         );
+
+         if (!userOwnsOrder) {
+           return res
+             .status(403)
+             .json({
+               success: false,
+               message: "Order not found for this user",
+             });
+         }
 
         const order = await Order.findOne({ orderId })
         
@@ -254,12 +281,13 @@ export const cancelOrder = async (req, res) => {
         order.statusHistory.push({
             status: "Cancelled",
             changedAt: new Date(),
-            changedBy: req.user?.id || "customer",
+            changedBy: req.user?.userId || "customer",
+            note: reason || 'Cancelled by customer'
         });
 
         await order.save();
 
-        await restoreProductStocks(order.orderIems);
+        await restoreProductStocks(order.orderItems);
 
         res.json({
             success: true,

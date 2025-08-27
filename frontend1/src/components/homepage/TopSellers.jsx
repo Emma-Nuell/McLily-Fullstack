@@ -1,12 +1,11 @@
 import React from "react";
-import { products } from "../../convert/products1";
-import { shuffleArray } from "../../utils/helpers";
+// import { products } from "../../convert/products1";
 import { BsStarFill } from "react-icons/bs";
 import { formatPrice } from "../../utils/helpers";
 import { FaCartPlus } from "react-icons/fa";
+import PropTypes from "prop-types";
 
-const TopSellers = () => {
-  const Products = shuffleArray(products).slice(0, 4);
+const TopSellers = ({products: Products}) => {
 
   return (
     <section className='max-w-7xl mx-auto px-4 py-8 bg-background-white dark:bg-surface mb-10'>
@@ -62,5 +61,9 @@ const TopSellers = () => {
     </section>
   );
 };
+
+TopSellers.propTypes = {
+  products: PropTypes.array
+}
 
 export default TopSellers;

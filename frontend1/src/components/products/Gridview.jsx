@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useCartContext } from "../../context/cart-context";
 import { BsStarFill } from "react-icons/bs";
 import { CarTaxiFront, Star } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
 
@@ -14,9 +14,12 @@ const Gridview = ({ products }) => {
   const [amount, setAmount] = useState(1);
   const [size, setSize] = useState(null);
 
+
   Gridview.propTypes = {
-    products: PropTypes.arrayOf(PropTypes.shape({}))
+    products: PropTypes.arrayOf(PropTypes.shape({})),
   }
+
+  
 
   return (
     <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 px-5'>

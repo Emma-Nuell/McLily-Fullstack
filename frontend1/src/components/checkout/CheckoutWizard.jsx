@@ -35,7 +35,7 @@ const CheckoutWizard = () => {
         {currentStep === CHECKOUT_STEPS.CART_REVIEW && (
           <CartReview
             items={formData.cart}
-            onProceed={() => goToStep(CHECKOUT_STEPS.PAYMENT_METHOD)}
+            onProceed={() => goToStep(CHECKOUT_STEPS.DELIVERY_INFO)}
           />
         )}
 
@@ -45,7 +45,7 @@ const CheckoutWizard = () => {
           data={formData.delivery}
           onSubmit={(delivery) => {
               setFormData({ ...formData, delivery });
-              goToStep(CHECKOUT_STEPS.PAYMENT);
+              goToStep(CHECKOUT_STEPS.PAYMENT_METHOD);
             }}
             />
               )}
@@ -55,7 +55,7 @@ const CheckoutWizard = () => {
             selected={formData.paymentMethod}
             onSelect={(method) => {
               setFormData({ ...formData, paymentMethod: method });
-              goToStep(CHECKOUT_STEPS.DELIVERY_INFO);
+              goToStep(CHECKOUT_STEPS.PAYMENT);
             }}
           />
         )}

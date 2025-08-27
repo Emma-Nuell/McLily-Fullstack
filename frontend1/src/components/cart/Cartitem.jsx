@@ -7,53 +7,53 @@ import PropTypes from "prop-types";
 import React from "react";
 
 const CartItem = ({
-  id,
+  cartId,
   name,
   brand,
   size,
   price,
   stock,
-  amount,
+  quantity,
   image,
-  old,
+  productId,
 }) => {
   const { removeItem, toggleAmount } = useCartContext();
 
   CartItem.propTypes = {
-    id: PropTypes.string.isRequired,
+    cartId: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     stock: PropTypes.number.isRequired,
-    amount: PropTypes.number.isRequired,
+    quantity: PropTypes.number.isRequired,
     image: PropTypes.string.isRequired,
     brand: PropTypes.string.isRequired,
     size: PropTypes.string,
-    old: PropTypes.string.isRequired,
+    productId: PropTypes.string.isRequired,
   };
 
   const increase = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleAmount(id, "inc");
+    toggleAmount(cartId, "inc");
   };
 
   const decrease = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleAmount(id, "dec");
+    toggleAmount(cartId, "dec");
   };
 
   const handleRemove = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    removeItem(id);
+    removeItem(cartId);
   };
 
   return (
     <article className='w-full bg-surface shadow-md hover:shadow-md transition-shadow duration-300 px-5 py-2'>
       <Link
         className='flex flex-col items-start justify-center p-1.5 w-full'
-        to={`/products/${old}`}
+        to={`/products/${productId}`}
       >
         {/* Main Content */}
         <div className='grid grid-cols-4 gap-4 w-full items-start'>
@@ -106,7 +106,7 @@ const CartItem = ({
             )}
 
             <h5 className='sub-total text-xs text-gray-600 dark:text-gray-300 mt-1'>
-              Sub-total: {formatPrice(amount * price)}
+              Sub-total: {formatPrice(quantity * price)}
             </h5>
           </div>
         </div>
@@ -121,7 +121,7 @@ const CartItem = ({
           </button>
 
           <AmountButtons
-            amount={amount}
+            quantity={quantity}
             increase={(e) => increase(e)}
             decrease={(e) => decrease(e)}
           />

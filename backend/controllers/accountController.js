@@ -12,8 +12,8 @@ const secret_key = process.env.JWT_SECRET;
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
+    const { firstName, lastName, email, password } = req.body;
+    if (!firstName || !lastName || !email || !password) {
         return res.status(400).json({
             success: false,
             message: "All fields must be filled"
@@ -46,10 +46,10 @@ export const signup = async (req, res) => {
 
     const newUser = new User({
       userId: `user_${nanoid(6)}`,
-      name,
+      firstName,
+      lastName,
       email,
         password: hashedPassword,
-      createdAt: new Date()
     });
 
     await newUser.save();
@@ -190,7 +190,7 @@ export const allUsers = async (req, res) => {
 export const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-    const userId = req.user.id;
+    const userId = req.user?.userId;
 
     if (!currentPassword || !newPassword) {
       return res.status(400).json({

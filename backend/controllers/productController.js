@@ -91,14 +91,14 @@ export const addProduct = async (req, res) => {
     }
 
     // 5. Duplicate Check (by name and brand combination)
-    const existingProduct = await Product.findOne({ name, brand });
-    if (existingProduct) {
-      return res.status(409).json({ 
-        success: false,
-        message: "Product with this name and brand already exists",
-        existingProductId: existingProduct.productId
-      });
-    }
+    // const existingProduct = await Product.findOne({ name, brand });
+    // if (existingProduct) {
+    //   return res.status(409).json({ 
+    //     success: false,
+    //     message: "Product with this name and brand already exists",
+    //     existingProductId: existingProduct.productId
+    //   });
+    // }
 
     // 6. Create Product Instance
     const product = new Product({
@@ -507,3 +507,17 @@ export const getProductsForSelection = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const trackVisits = async (req, res) => {
+  try {
+    const { productId } = req.body
+    await Product.findOneAndUpdate(
+      { productId },
+      { $inc: {visits: 1}}
+    )
+
+    res.status(200).json({success: true})
+  } catch (error) {
+     res.status(500).json({ success: false, message: error.message });
+  }
+}
