@@ -1,20 +1,19 @@
 import express from "express";
 import {
-  addProduct,
-  deleteProduct,
-  getAllProducts,
-  getSingleProduct,
   submitReview,
-  editProduct,
+  updateReview,
+  deleteReview,
+  trackVisits,
 } from "../controllers/productController.js";
+import { verifyTokenUser } from "../middlewares/authMiddleware.js";
+import { checkPurchase } from "../middlewares/purchaseMiddleware.js";
 
 const router = express.Router()
 
-router.post("/addproduct", addProduct);
-router.post("/removeproduct", deleteProduct);
-router.get("/allproducts", getAllProducts);
-router.get("/product/:id", getSingleProduct);
-router.patch("/editproduct/:id", editProduct);
-router.post("/product/:id/review", submitReview);
+router.post("/track-visit", trackVisits);
+router.use(verifyTokenUser)
+router.post("/reviews/submit",checkPurchase, submitReview);
+router.put("/reviews/update/:productId", updateReview);
+router.delete("/reviews/delete/:productId", deleteReview);
 
 export default router

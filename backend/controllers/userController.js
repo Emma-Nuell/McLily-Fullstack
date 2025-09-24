@@ -7,30 +7,8 @@ import {
   shuffleArray,
   populateWishlist,
 } from "../utils/helpers.js";
+import { Order } from "../models/orderModel.js";
 
-export const getUser = async (req, res) => {
-  const userId = req.params.userId;
-  try {
-    const user = await User.findOne({ userId: userId });
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
-    res.status(200).json(user);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error fetching user", error: error.message });
-  }
-};
-
-export const deleteUser = async (req, res) => {
-  try {
-    await User.findOneAndDelete({ userId: req.params.id });
-    res.status(200).json({ message: "User deleted successfully" });
-  } catch (error) {
-    res.status(400).json({ message: "Server error", details: error.message });
-  }
-};
 
 export const getCart = async (req, res) => {
   const userId = req.user.userId;
@@ -180,8 +158,8 @@ export const mergeCart = async (req, res) => {
         // You might want to fetch current stock from product database
         const currentItem = user.cart[existingItemIndex];
         const newQuantity = Math.min(
-          currentItem.quantity + localItem.quantity,
-          localItem.max || 10 // Fallback if max not provided
+          localItem.quantity,
+          localItem.max || 3 // Fallback if max not provided
         );
         user.cart[existingItemIndex].quantity = newQuantity;
       } else {
@@ -209,541 +187,6 @@ export const mergeCart = async (req, res) => {
     });
   }
 };
-
-export const getHomepage = async (req, res) => {
-  try {
-    const { preferences, lastViewed = [] } = req.body;
-
-    const [
-      featuredProducts,
-      topSellers,
-      recommendedProducts,
-      randomCategoriesData,
-    ] = await Promise.all([
-      //featured products
-      Product.find({
-        featured: true,
-        $or: [{ stock: { $gt: 0 } }, { "sizes.stock": { $gt: 0 } }],
-      })
-        .limit(12)
-        .lean(),
-
-      //top sellers
-      Product.find({
-        $or: [{ stock: { $gt: 0 } }, { "sizes.stock": { $gt: 0 } }],
-      })
-        .sort({ sales: -1 })
-        .limit(6)
-        .lean(),
-
-      //recommended products
-      getRecommendedProducts(preferences, lastViewed),
-
-      //random categories with products
-      getRandomCategoriesWithProducts(),
-    ]);
-
-    const filteredFeatured = filterOutOfStock(featuredProducts).slice(0, 8);
-    const filteredTopSellers = filterOutOfStock(topSellers).slice(0, 4);
-    const filteredRecommended = filterOutOfStock(recommendedProducts).slice(
-      0,
-      8
-    );
-
-    const lastViewedProducts =
-      lastViewed.length > 0
-        ? await Product.find({
-            productId: { $in: lastViewed },
-            $or: [{ stock: { $gt: 0 } }, { "sizes.stock": { $gt: 0 } }],
-          })
-            .limit(6)
-            .lean()
-        : [];
-
-    const filteredLastViewed = filterOutOfStock(lastViewedProducts).slice(0, 4);
-
-    res.status(200).json({
-      success: true,
-      data: {
-        featured: filteredFeatured,
-        topSellers: filteredTopSellers,
-        recommended: filteredRecommended,
-        randomCategories: randomCategoriesData,
-        lastViewed: filteredLastViewed,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-export const getRecommendedProducts = async (preferences, lastViewed) => {
-  try {
-    let query = {
-      $or: [{ stock: { $gt: 0 } }, { "sizes.stock": { $gt: 0 } }],
-    };
-    let sort = {};
-
-    // if user has preferences, use them
-    if (Object.keys(preferences).length > 0) {
-      const preferredCategories = Object.keys(preferences)
-        .sort((a, b) => preferences[b] - preferences[a])
-        .slice(0, 3);
-
-      query.$or = [
-        ...query.$or,
-        ...preferredCategories.map((category) => ({
-          $or: [
-            { category: category },
-            { subCategory: category },
-            {
-              category: {
-                $regex: category.split("-")[0],
-                $options: "i",
-              },
-            },
-          ],
-        })),
-      ];
-    }
-
-    // if user has last viewed products, recommend similar
-    if (lastViewed.length > 0) {
-      const lastViewedProducts = await Product.find({
-        productId: { $in: lastViewed },
-      }).select("category subCategory");
-
-      const categories = [
-        ...new Set(lastViewedProducts.map((p) => p.category)),
-      ];
-      const subCategories = [
-        ...new Set(lastViewedProducts.map((p) => p.subCategory)),
-      ];
-
-      query.$or = [
-        ...query.$or,
-        { category: { $in: categories } },
-        { subCategory: { $in: subCategories } },
-      ];
-
-      query.productId = { $nin: lastViewed }; // exclude already viewed
-    }
-
-    if (Object.keys(preferences).length === 0 && lastViewed.length === 0) {
-      sort = { visits: -1, sales: -1 };
-    }
-
-    const products = await Product.find(query)
-      .sort(sort)
-      .limit(12) // Get more than needed for filtering
-      .lean();
-
-    return filterOutOfStock(products);
-  } catch (error) {
-    console.error("Error getting recommended products: ", error);
-    return [];
-  }
-};
-
-export const getRandomCategoriesWithProducts = async () => {
-  try {
-    //category structure
-    const categoryStructure = [
-      {
-        category: "Women",
-        subCategories: [
-          "Clothes",
-          "Shoes",
-          "Clothing Accessories",
-          "Clothing Fabrics",
-        ],
-      },
-      {
-        category: "Men",
-        subCategories: [
-          "Clothes",
-          "Shoes",
-          "Clothing Accessories",
-          "Clothing Fabrics",
-        ],
-      },
-      {
-        category: "Unisex",
-        subCategories: [
-          "Clothes",
-          "Shoes",
-          "Clothing Accessories",
-          "Clothing Fabrics",
-        ],
-      },
-      {
-        category: "Teens & Kids",
-        subCategories: [
-          "Clothes",
-          "Shoes",
-          "Clothing Accessories",
-          "Toys & Games",
-        ],
-      },
-      {
-        category: "Babies",
-        subCategories: ["Clothes", "Shoes", "Toys & Games", "Baby Products"],
-      },
-      {
-        category: "Accessories",
-        subCategories: [
-          "Household Items",
-          "Clothing Accessories",
-          "Electronic Accessories",
-        ],
-      },
-    ];
-
-    //flatten all subcategories
-    const allSubCategories = categoryStructure.flatMap((cat) =>
-      cat.subCategories.map((sub) => ({
-        subCategory: sub,
-        mainCategory: cat.category,
-      }))
-    );
-
-    //shuffle array and get products for each category
-    const randomSubCategories = shuffleArray(allSubCategories).slice(0, 8);
-
-    const categoriesWithProducts = await Promise.all(
-      randomSubCategories.map(async ({ subCategory, mainCategory }) => {
-        const products = await Product.find({
-          subCategory,
-          $or: [{ stock: { $gt: 0 } }, { "sizes.stock": { $gt: 0 } }],
-        })
-          .limit(6)
-          .lean();
-
-        const filteredProducts = filterOutOfStock(products).slice(0, 4);
-
-        return {
-          mainCategory,
-          subCategory,
-          products: filteredProducts,
-        };
-      })
-    );
-
-    return categoriesWithProducts.filter((item) => item.products.length > 0);
-  } catch (error) {
-    console.error("Error getting random categories:", error);
-    return [];
-  }
-};
-
-export const getCategoryProducts = async () => {
-  try {
-    const {
-      category,
-      subCategory,
-      allSubCategory,
-      surpriseMe,
-      page = 1,
-      limit = 12,
-      sort = "random",
-    } = req.query;
-
-    let query = {
-      $or: [{ stock: { $gt: 0 } }, { "sizes.stock": { $gt: 0 } }],
-    };
-
-    // handle different filter cases
-    if (surpriseMe === "true") {
-      // Random products - no category filter
-    } else if (allSubCategory) {
-      // Get all products with this subCategory regardless of main category
-      // Special case for "Clothing Accessories"
-      query.subCategory = allSubCategory;
-    } else if (subCategory && category) {
-      // Specific category + subcategory (e.g., Women -> Shoes)
-      query.category = category;
-      query.subCategory = subCategory;
-    } else if (subCategory && !category) {
-      // Only subcategory (e.g., just "Shoes" across all categories)
-      query.subCategory = subCategory;
-    } else if (category && !subCategory) {
-      // Only category (e.g., just "Women" category)
-      query.category = category;
-    }
-
-
-    // Sort options
-    let sortOptions = {};
-    switch (sort) {
-      case "price-low":
-        sortOptions = { price: 1 };
-        break;
-      case "price-high":
-        sortOptions = { price: -1 };
-        break;
-      case "top-sellers":
-        sortOptions = { sales: -1 };
-        break;
-      case "newest":
-        sortOptions = { createdAt: -1 };
-        break;
-      case "name-az":
-        sortOptions = { name: 1 };
-        break;
-      case "name-za":
-        sortOptions = { name: -1 };
-        break;
-      case "newest":
-        sortOptions = { createdAt: -1 };
-        break;
-      case "random":
-        // For random, we'll handle it differently
-        break;
-      default:
-        sortOptions = { createdAt: -1 };
-    }
-
-    let products;
-    let total
-
-    if (sort == "random") {
-      total = await Product.countDocuments(query)
-
-      const randomSkip = Math.floor(Math.random() * Math.max(0, total - limit))
-
-      products = await Product.find(query)
-        .skip(randomSkip)
-        .limit(limit * 1)
-        .lean();
-    } else {
-      products = await Product.find(query)
-        .sort(sortOptions)
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
-        .lean();
-
-      total = await Product.countDocuments(query);
-    }
-
-    const filteredProducts = filterOutOfStock(products)
-
-    res.json({
-      success: true,
-      products: filteredProducts,
-      totalPages: Math.ceil(total / limit),
-      currentPage: parseInt(page),
-      total: total,
-      hasMore: parseInt(page) < Math.ceil(total / limit)
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-export const getCategoryFilters = async (req, res) => {
-  try {
-    const { category, subCategory } = req.query;
-
-    let query = {};
-    if (category) query.category = category;
-    if (subCategory) query.subCategory = subCategory
-
-    const brands = await Product.distinct("brand", query);
-
-    const priceRange = await Product.aggregate([
-      { $match: query },
-      {
-        $group: { _id: null, min: { $min: "$price" }, max: { $max: "$price" } },
-      },
-    ]);
-
-    res.status(200).json({
-      success: true,
-      filters: {
-        brands: brands.filter((brand) => brand).sort(),
-        priceRange:
-          priceRange.length > 0 ? priceRange[0] : { min: 0, max: 100000 },
-      },
-    });
-  } catch (error) {
-       res.status(500).json({ success: false, message: error.message})
-  }
-} 
-
-//get search suggestions
-export const getSearchSuggestions = async (req, res) => {
-  try {
- const { q, limit = 5 } = req.query;
-
- if (!q || q.length < 2) {
-   return res.json({ success: true, suggestions: [] });
- }
-
- const suggestions = await Product.aggregate([
-   {
-     $search: {
-       index: "productSearch", // need to create this search index
-       autocomplete: {
-         query: q,
-         path: "name",
-         fuzzy: {
-           maxEdits: 1,
-           prefixLength: 2,
-         },
-       },
-     },
-   },
-   { $limit: parseInt(limit) },
-   {
-     $project: {
-       productId: 1,
-       name: 1,
-       category: 1,
-       subCategory: 1,
-       brand: 1,
-       image: { $arrayElemAt: ["$images", 0] },
-       score: { $meta: "searchScore" },
-     },
-   },
- ]);
-
- // Fallback if search index isn't setup
- if (suggestions.length === 0) {
-   const fallbackSuggestions = await Product.find({
-     $or: [
-       { name: { $regex: q, $options: "i" } },
-       { brand: { $regex: q, $options: "i" } },
-       { category: { $regex: q, $options: "i" } },
-       { subCategory: { $regex: q, $options: "i" } },
-       { tags: { $in: [new RegExp(q, "i")] } },
-     ],
-   })
-     .limit(parseInt(limit))
-     .lean();
-
-   res.json({
-     success: true,
-     suggestions: fallbackSuggestions.map((p) => ({
-       ...p,
-       image: p.images[0],
-     })),
-   });
- } else {
-   res.json({ success: true, suggestions });
- }
-  } catch (error) {
-console.error("Search suggestions error:", error);
-res.status(500).json({ success: false, message: error.message });
-  }
-}
-
-//get searched products
-export const getSearchProducts = async (req, res) => {
-  try {
-    const {
-      q,
-      category,
-      subCategory,
-      minPrice,
-      maxPrice,
-      brand,
-      sort = "relevance",
-      page = 1,
-      limit = 12,
-    } = req.query;
-
-    // Build search query
-    let query = {
-      $or: [{ stock: { $gt: 0 } }, { "sizes.stock": { $gt: 0 } }],
-    };
-
-    // Text search
-    if (q && q.length > 0) {
-      query.$text = { $search: q };
-    }
-
-    // Category filters
-    if (category) query.category = category;
-    if (subCategory) query.subCategory = subCategory;
-
-    // Price range
-    if (minPrice || maxPrice) {
-      query.price = {};
-      if (minPrice) query.price.$gte = parseInt(minPrice);
-      if (maxPrice) query.price.$lte = parseInt(maxPrice);
-    }
-
-    // Brand filter
-    if (brand) {
-      query.brand = { $in: brand.split(",") };
-    }
-
-    // Sort options
-    let sortOptions = {};
-    switch (sort) {
-      case "price-low":
-        sortOptions = { price: 1 };
-        break;
-      case "price-high":
-        sortOptions = { price: -1 };
-        break;
-      case "newest":
-        sortOptions = { createdAt: -1 };
-        break;
-      case "rating":
-        sortOptions = { "rating.average": -1 };
-        break;
-      case "relevance":
-        sortOptions = q ? { score: { $meta: "textScore" } } : { createdAt: -1 };
-        break;
-      default:
-        sortOptions = { createdAt: -1 };
-    }
-
-    const searchQuery = Product.find(query)
-      .sort(sortOptions)
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-
-    // If text search, add text score
-    if (q) {
-      searchQuery.select({ score: { $meta: "textScore" } });
-    }
-
-    const [products, total] = await Promise.all([
-      searchQuery.lean(),
-      Product.countDocuments(query),
-    ]);
-
-    // Get filter options for the search results
-    const brands = await Product.distinct("brand", query);
-    const categories = await Product.distinct("category", query);
-    const subCategories = await Product.distinct("subCategory", query);
-    const priceRange = await Product.aggregate([
-      { $match: query },
-      {
-        $group: { _id: null, min: { $min: "$price" }, max: { $max: "$price" } },
-      },
-    ]);
-
-    res.status(200).json({
-      success: true,
-      products: filterOutOfStock(products),
-      total,
-      totalPages: Math.ceil(total / limit),
-      currentPage: parseInt(page),
-      filters: {
-        brands: brands.filter((b) => b).sort(),
-        categories: categories.filter((c) => c).sort(),
-        subCategories: subCategories.filter((s) => s).sort(),
-        priceRange: priceRange[0] || { min: 0, max: 100000 },
-      },
-      searchQuery: q,
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-}
 
 
 //get user wishlist
@@ -858,3 +301,306 @@ export const checkWishlist = async (req, res) => {
   }
 }
 
+
+//Check if a user can review a product
+export const canReview = async (req, res) => {
+   try {
+     const { productId } = req.params;
+     const userId = req.user.userId;
+
+     // Check if user has purchased this product
+     const hasPurchased = await Order.exists({
+       userId,
+       "orderItems.productId": productId,
+       orderStatus: "delivered",
+     });
+
+     // Check if user already reviewed this product
+     const alreadyReviewed = await Product.exists({
+       productId,
+       "reviews.userId": userId,
+     });
+
+     res.status(200).json({
+       success: true,
+       canReview: hasPurchased && !alreadyReviewed,
+       hasPurchased: !!hasPurchased,
+       alreadyReviewed: !!alreadyReviewed,
+     });
+   } catch (error) {
+     res.status(500).json({ success: false, message: error.message });
+   }
+}
+
+// Get a user pending reviews
+export const userPendingReviews = async (req, res) => {
+    try {
+    const userId = req.user.userId;
+
+    // Find all delivered orders for the user with order details
+    const deliveredOrders = await Order.find({
+      userId,
+      orderStatus: "delivered",
+    }).select("orderId orderedAt orderItems");
+
+    // Create a map of productId to order details
+    const productOrderMap = new Map();
+    const purchasedProductIds = [];
+
+    deliveredOrders.forEach(order => {
+      order.orderItems.forEach(item => {
+        purchasedProductIds.push(item.productId);
+        
+        // Store the most recent order details for each product
+        if (!productOrderMap.has(item.productId) || 
+            new Date(order.orderedAt) > new Date(productOrderMap.get(item.productId).orderedAt)) {
+          productOrderMap.set(item.productId, {
+            orderId: order.orderId,
+            orderedAt: order.orderedAt,
+            deliveredDate: order.orderedAt, // Assuming delivered date is same as orderedAt for simplicity
+            // You might want to add actual delivery date tracking in your Order schema
+          });
+        }
+      });
+    });
+
+    // Find products that user hasn't reviewed yet
+    const productsToReview = await Product.find({
+      productId: { $in: purchasedProductIds },
+      "reviews.userId": { $ne: userId },
+    }).select("productId name images price category");
+
+    // Combine product details with order details
+    const pendingReviews = productsToReview.map(product => {
+      const orderDetails = productOrderMap.get(product.productId);
+      const deliveredDate = new Date(orderDetails.deliveredDate);
+      const currentDate = new Date();
+      const daysSinceDelivery = Math.floor((currentDate - deliveredDate) / (1000 * 60 * 60 * 24));
+      
+      return {
+        _id: product._id,
+        productId: product.productId,
+        productName: product.name,
+        image: product.images[0],
+        category: product.category,
+        purchaseDate: orderDetails.orderedAt,
+        orderId: orderDetails.orderId,
+        price: product.price,
+        hasRated: false,
+        canRate: true,
+        deliveredDate: orderDetails.deliveredDate,
+        daysSinceDelivery: daysSinceDelivery
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      pendingReviews: pendingReviews.sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate)),
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+// Get a user submitted reviews
+export const userReviews = async (req, res) => {
+   try {
+     const userId = req.user.userId;
+
+     // Find all delivered orders to get order details
+     const deliveredOrders = await Order.find({
+       userId,
+       orderStatus: "delivered",
+     }).select("orderId orderedAt orderItems");
+
+     // Create a map of productId to order details
+     const productOrderMap = new Map();
+     deliveredOrders.forEach((order) => {
+       order.orderItems.forEach((item) => {
+         // Store the most recent order details for each product
+         if (
+           !productOrderMap.has(item.productId) ||
+           new Date(order.orderedAt) >
+             new Date(productOrderMap.get(item.productId).orderedAt)
+         ) {
+           productOrderMap.set(item.productId, {
+             orderId: order.orderId,
+             orderedAt: order.orderedAt,
+             deliveredDate: order.orderedAt,
+           });
+         }
+       });
+     });
+
+     // Find all products that user has reviewed
+     const reviewedProducts = await Product.find({
+       "reviews.userId": userId,
+     }).select("productId name images price category reviews");
+
+     // Extract user's reviews with combined product and order info
+     const userReviews = reviewedProducts.flatMap((product) => {
+       const userReview = product.reviews.find(
+         (review) => review.userId === userId
+       );
+
+       if (!userReview) return [];
+
+       const orderDetails = productOrderMap.get(product.productId);
+       const deliveredDate = new Date(
+         orderDetails?.deliveredDate || product.createdAt
+       );
+       const currentDate = new Date();
+       const daysSinceDelivery = orderDetails
+         ? Math.floor((currentDate - deliveredDate) / (1000 * 60 * 60 * 24))
+         : null;
+
+       return {
+         _id: userReview._id,
+         productId: product.productId,
+         productName: product.name,
+         productImage: product.images[0],
+         productPrice: product.price,
+         category: product.category,
+         purchaseDate: orderDetails?.orderedAt,
+         orderId: orderDetails?.orderId,
+         deliveredDate: orderDetails?.deliveredDate,
+         daysSinceDelivery: daysSinceDelivery,
+
+         // Review details
+         rating: userReview.rating,
+         reviewTitle: userReview.reviewTitle,
+         reviewMessage: userReview.reviewMessage,
+         reviewDate: userReview.date,
+         verified: userReview.verified,
+
+         hasRated: true,
+         canRate: false, // Already rated
+       };
+     });
+
+     res.json({
+       success: true,
+       reviews: userReviews.sort(
+         (a, b) => new Date(b.reviewDate) - new Date(a.reviewDate)
+       ),
+     });
+   } catch (error) {
+     res.status(500).json({ success: false, message: error.message });
+   }
+}
+
+
+// Get all user reviews
+export const userAllReviews = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    // Get all delivered orders with details
+    const deliveredOrders = await Order.find({
+      userId,
+      orderStatus: "delivered",
+    }).select("orderId orderedAt orderItems");
+
+    // Create map of productId to order details
+    const productOrderMap = new Map();
+    const allPurchasedProductIds = [];
+
+    deliveredOrders.forEach((order) => {
+      order.orderItems.forEach((item) => {
+        allPurchasedProductIds.push(item.productId);
+        if (
+          !productOrderMap.has(item.productId) ||
+          new Date(order.orderedAt) >
+            new Date(productOrderMap.get(item.productId).orderedAt)
+        ) {
+          productOrderMap.set(item.productId, {
+            orderId: order.orderId,
+            orderedAt: order.orderedAt,
+            deliveredDate: order.orderedAt,
+          });
+        }
+      });
+    });
+
+    // Get all products the user has purchased
+    const purchasedProducts = await Product.find({
+      productId: { $in: allPurchasedProductIds },
+    }).select("productId name images price category reviews");
+
+    // Separate into pending and submitted reviews
+    const pendingReviews = [];
+    const submittedReviews = [];
+
+    purchasedProducts.forEach((product) => {
+      const userReview = product.reviews.find(
+        (review) => review.userId === userId
+      );
+      const orderDetails = productOrderMap.get(product.productId);
+
+      const baseData = {
+        _id: product._id,
+        productId: product.productId,
+        productName: product.name,
+        image: product.images[0],
+        category: product.category,
+        purchaseDate: orderDetails?.orderedAt,
+        orderId: orderDetails?.orderId,
+        price: product.price,
+        deliveredDate: orderDetails?.deliveredDate,
+        daysSinceDelivery: orderDetails
+          ? Math.floor(
+              (new Date() - new Date(orderDetails.deliveredDate)) /
+                (1000 * 60 * 60 * 24)
+            )
+          : null,
+      };
+
+      if (userReview) {
+        // User has reviewed this product
+        submittedReviews.push({
+          ...baseData,
+          rating: userReview.rating,
+          reviewTitle: userReview.reviewTitle,
+          reviewMessage: userReview.reviewMessage,
+          reviewDate: userReview.date,
+          verified: userReview.verified,
+          hasRated: true,
+          canRate: false,
+        });
+      } else {
+        // User hasn't reviewed this product yet
+        pendingReviews.push({
+          ...baseData,
+          hasRated: false,
+          canRate: true,
+        });
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        pendingReviews: pendingReviews.sort(
+          (a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate)
+        ),
+        submittedReviews: submittedReviews.sort(
+          (a, b) => new Date(b.reviewDate) - new Date(a.reviewDate)
+        ),
+        stats: {
+          totalPurchased: allPurchasedProductIds.length,
+          pendingReview: pendingReviews.length,
+          reviewed: submittedReviews.length,
+          reviewRate:
+            allPurchasedProductIds.length > 0
+              ? (
+                  (submittedReviews.length / allPurchasedProductIds.length) *
+                  100
+                ).toFixed(1) + "%"
+              : "0%",
+        },
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

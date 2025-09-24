@@ -8,13 +8,13 @@ const ProductCategorySection = ({ products, mainCategory, subCategory }) => {
 
    const navigate = useNavigate()
   
-    const handleClick = (mainCategory, subCategory) => {
-      navigate(
-        `/products?category=${encodeURIComponent(
-          mainCategory
-        )}&subCategory=${encodeURIComponent(subCategory)}`
-      );
-    }
+   const handleClick = (mainCategory, subCategory) => {
+     navigate(
+       `/products/category/${encodeURIComponent(
+         mainCategory
+       )}/${encodeURIComponent(subCategory)}`
+     );
+   };
   return (
     <section className='mb-8 bg-background-white dark:bg-surface py-6 px-4 max-w-7xl'>
       <div className='flex justify-between items-center mb-8 px-4'>

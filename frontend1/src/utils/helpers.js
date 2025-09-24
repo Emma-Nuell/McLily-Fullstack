@@ -42,14 +42,21 @@ export const findCategoryBySubCategory = (subCategory) => {
 //user helpers
 
 //track when a product is viewed
-export const trackProductView = (productId) => {
+export const trackProductView = (productId, productDetails = null) => {
   try {
     // Update last viewed products (limit to 10)
     const lastViewed = JSON.parse(
       localStorage.getItem(LOCAL_STORAGE_KEYS.LAST_VIEWED) || "[]"
     );
     const updatedLastViewed = [
-      { productId, timestamp: Date.now() },
+      {
+        productId,
+        timestamp: Date.now(),
+        ...(productDetails && {
+          category: productDetails.category,
+          subCategory: productDetails.subCategory,
+        }),
+      },
       ...lastViewed.filter((item) => item.productId !== productId),
     ].slice(0, 10);
 
@@ -62,7 +69,26 @@ export const trackProductView = (productId) => {
     const visitedProducts = JSON.parse(
       localStorage.getItem(LOCAL_STORAGE_KEYS.VISITED_PRODUCTS) || "{}"
     );
-    visitedProducts[productId] = (visitedProducts[productId] || 0) + 1;
+      if (!visitedProducts[productId]) {
+        visitedProducts[productId] = {
+          count: 1,
+          category: productDetails?.category,
+          subCategory: productDetails?.subCategory,
+          lastViewed: Date.now(),
+        };
+      } else {
+        visitedProducts[productId] = {
+          ...visitedProducts[productId],
+          count: (visitedProducts[productId].count || 0) + 1,
+          lastViewed: Date.now(),
+          // Update category info if provided and not already set
+          category:
+            productDetails?.category || visitedProducts[productId].category,
+          subCategory:
+            productDetails?.subCategory ||
+            visitedProducts[productId].subCategory,
+        };
+      }
     localStorage.setItem(
       LOCAL_STORAGE_KEYS.VISITED_PRODUCTS,
       JSON.stringify(visitedProducts)
@@ -75,9 +101,22 @@ export const trackProductView = (productId) => {
 // Get last viewed products
 export const getLastViewedProducts = () => {
   try {
-    return JSON.parse(
+    const lastViewed = JSON.parse(
       localStorage.getItem(LOCAL_STORAGE_KEYS.LAST_VIEWED) || "[]"
     );
+
+    // Enhance with category information from visited products
+    const visitedProducts = JSON.parse(
+      localStorage.getItem(LOCAL_STORAGE_KEYS.VISITED_PRODUCTS) || "{}"
+    );
+
+    return lastViewed
+      .map((item) => ({
+        ...item,
+        category: visitedProducts[item.productId]?.category,
+        subCategory: visitedProducts[item.productId]?.subCategory,
+      }))
+      .filter((item) => item.category); 
   } catch (error) {
     console.error("Error getting last viewed products:", error);
     return [];
@@ -92,12 +131,23 @@ export const getUserCategoryPreferences = () => {
     );
     const preferences = {};
 
-    Object.keys(visitedProducts).forEach((productId) => {
-      // This would be enhanced once we have actual product data
-      // For now, we'll assume we can get category from productId or need to store it
-      // eslint-disable-next-line no-unused-vars
-      const visitCount = visitedProducts[productId];
-      // You might want to store category info when tracking views
+    Object.values(visitedProducts).forEach((productData) => {
+      if (productData.category) {
+        preferences[productData.category] =
+          (preferences[productData.category] || 0) + (productData.count || 1);
+      }
+      if (productData.subCategory) {
+        preferences[productData.subCategory] =
+          (preferences[productData.subCategory] || 0) +
+          (productData.count || 1);
+      }
+
+      // Also track category-subcategory combinations
+      if (productData.category && productData.subCategory) {
+        const combinedKey = `${productData.category}-${productData.subCategory}`;
+        preferences[combinedKey] =
+          (preferences[combinedKey] || 0) + (productData.count || 1);
+      }
     });
 
     return preferences;
@@ -148,43 +198,61 @@ export const withProductContext = (queryFn, context) => {
 };
 
 import { queryClient } from "../index";
+import { useMemo } from "react";
 // function to check if product exists in any querycache
-export const findProductInQueryCache = (productId) => {
-  if (!productId) return null;
+export const useFindProductInQueryCache = (productId) => {
+  return useMemo(() => {
+    if (!productId) return null;
 
-  //Get all queries from cache
-  const queries = queryClient.getQueryCache().getAll();
-  for (const query of queries) {
-    const queryData = query.state.data;
-    if (queryData && Array.isArray(queryData.pages)) {
-      // Check infinite query pages
-      for (const page of queryData.pages) {
-        if (page.products && Array.isArray(page.products)) {
-          const product = page.products.find((p) => p.productId === productId);
-          if (product) return product;
+    //Get all queries from cache
+    const queries = queryClient.getQueryCache().getAll();
+    for (const query of queries) {
+      const queryData = query.state.data;
+      if (queryData && Array.isArray(queryData.pages)) {
+        // Check infinite query pages
+        for (const page of queryData.pages) {
+          if (page.products && Array.isArray(page.products)) {
+            const product = page.products.find(
+              (p) => p.productId === productId
+            );
+            if (product) return product;
+          }
         }
+      } else if (queryData && Array.isArray(queryData.products)) {
+        // Check regular product arrays
+        const product = queryData.products.find(
+          (p) => p.productId === productId
+        );
+        if (product) return product;
+      } else if (
+        queryData &&
+        queryData.data &&
+        Array.isArray(queryData.data.products)
+      ) {
+        // Check nested product arrays (homepage structure)
+        const product = queryData.data.products.find(
+          (p) => p.productId === productId
+        );
+        if (product) return product;
+      } else if (queryData && queryData.productId === productId) {
+        // Check single product queries
+        return queryData;
       }
-    } else if (queryData && Array.isArray(queryData.products)) {
-      // Check regular product arrays
-      const product = queryData.products.find((p) => p.productId === productId);
-      if (product) return product;
-    } else if (
-      queryData &&
-      queryData.data &&
-      Array.isArray(queryData.data.products)
-    ) {
-      // Check nested product arrays (homepage structure)
-      const product = queryData.data.products.find(
-        (p) => p.productId === productId
-      );
-      if (product) return product;
-    } else if (queryData && queryData.productId === productId) {
-      // Check single product queries
-      return queryData;
     }
+
+    return null;
+  }, [productId])
+} 
+
+
+export const shuffleProducts = (array) => {
+  const shuffled = [...array];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
 
-  return null;
+  return shuffled;
 };
-
 

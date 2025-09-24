@@ -14,6 +14,7 @@ import Signup from "./SignupPage";
 import AuthPage from "./AuthPage";
 import Legal from "./Legal"
 import SearchPage from "./SearchPage";
+import Review from "./Review";
 
 export {
   Home,
@@ -31,5 +32,6 @@ export {
   Signup,
   AuthPage,
   Legal,
-  SearchPage
+  SearchPage,
+  Review,
 };

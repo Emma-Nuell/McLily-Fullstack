@@ -1,11 +1,12 @@
 import React, {  useEffect, useReducer } from "react";
-import reducer from "../reducers/user-reducer";
+import reducer from "../../reducers/user-reducer";
 // import { useCartContext } from "./cart-context";
 // import axios from "axios";
 import PropTypes from "prop-types";
 import UserContext from "./UserContext";
 import { useAddToWishlist, useRemoveFromWishlist, useSignIn, useSignOut, useSignUp, useWishlist } from "../../hooks/userHooks";
 import { SET_USER, SET_LOADING_USER, CLEAR_USER, SET_ERROR_USER, SET_ERROR_WISHLIST, SET_LOADING_WISHLIST, ADD_ITEM_WISHLIST, REMOVE_ITEM_WISHLIST, SET_WISHLIST } from "../../actions";
+import { isTokenExpired } from "../../utils/auth";
 
 const initialState = {
   user: null,
@@ -31,6 +32,10 @@ export const UserProvider = ({ children }) => {
       const checkAuthStatus = async () => {
         try {
           const profile = localStorage.getItem("profile");
+          const TokenExpired = isTokenExpired(profile?.token);
+          if (TokenExpired) {
+            localStorage.removeItem("profile");
+          }
           if (profile) {
             const userData = JSON.parse(profile);
             dispatch({ type: SET_USER, payload: userData.user });
@@ -47,8 +52,8 @@ export const UserProvider = ({ children }) => {
     }, []);
 
     useEffect(() => {
-      if (wishlistData?.data?.wishlist) {
-        dispatch({ type: "SET_WISHLIST", payload: wishlistData.data.wishlist });
+      if (wishlistData?.wishlist) {
+        dispatch({ type: SET_WISHLIST, payload: wishlistData.wishlist });
       }
     }, [wishlistData]);
 
@@ -57,11 +62,11 @@ export const UserProvider = ({ children }) => {
         dispatch({ type: SET_ERROR_USER, payload: null });
 
         try {
-          const response = await signInMutation.mutateAsync(credentials);
-          dispatch({ type: SET_USER, payload: response.data.user });
-          return response;
+          const data = await signInMutation.mutateAsync(credentials);
+          dispatch({ type: SET_USER, payload: data.user });
+          return data;
         } catch (error) {
-          const errorMessage = error.response?.data?.message || "Login failed";
+          const errorMessage = error.data?.message || "Login failed";
           dispatch({ type: SET_ERROR_USER, payload: errorMessage });
           throw error;
         }
@@ -72,12 +77,12 @@ export const UserProvider = ({ children }) => {
       dispatch({ type: SET_ERROR_USER, payload: null });
 
       try {
-        const response = await signUpMutation.mutateAsync(userData);
-        dispatch({ type: SET_USER, payload: response.data.user });
-        return response;
+        const data = await signUpMutation.mutateAsync(userData);
+        dispatch({ type: SET_USER, payload: data.user });
+        return data;
       } catch (error) {
         const errorMessage =
-          error.response?.data?.message || "Registration failed";
+          error.data?.message || "Registration failed";
         dispatch({ type: SET_ERROR_USER, payload: errorMessage });
         throw error;
       }
@@ -139,4 +144,6 @@ export const UserProvider = ({ children }) => {
 UserProvider.propTypes = {
     children: PropTypes.node,
 }
+
+export default UserProvider
 

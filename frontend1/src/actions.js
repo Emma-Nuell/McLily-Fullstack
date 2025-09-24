@@ -55,4 +55,14 @@ export const SET_LOADING_WISHLIST = "SET_LOADING_WISHLIST";
 export const SET_ERROR_WISHLIST = "SET_ERROR_WISHLIST";
 
 
+//order actions
+export const SET_ORDERS = "SET_ORDERS";
+export const ADD_ORDER = "ADD_ORDER";
+export const UPDATE_ORDER = "UPDATE_ORDER";
+export const SET_SELECTED_ORDER = "SET_SELECTED_ERROR";
+export const SET_LOADING_ORDER = "SET_LOADING_ERROR";
+export const SET_ERROR_ORDER = "SET_ERROR_ERROR";
+
+
+
 

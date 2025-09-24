@@ -4,7 +4,8 @@ import { CategoryHeader, Error, PageHero } from '../components';
 import { FiltersSidebar, ProductList, Sort } from '../components/products';
 import { useLocation } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import ProductsAPI from '../utils/endpoints/productsApi';
+import StoreAPI from '../utils/endpoints/storeApi';
+import { MBlobLoader } from '../components/loaders';
 
 const SearchPage = () => {
     const location = useLocation()
@@ -23,7 +24,7 @@ const SearchPage = () => {
         isFetchingNextPage
     } = useInfiniteQuery({
         queryKey: ["search-results", searchQuery],
-        queryFn: ({ pageParam = 1 }) => ProductsAPI.getSearchResults({ q: searchQuery, page: pageParam }),
+        queryFn: ({ pageParam = 1 }) => StoreAPI.getSearchResults({ q: searchQuery, page: pageParam }),
         getNextPageParam: (lastPage) => {
             return lastPage.hasMore ? lastPage.currentPage + 1 : undefined;
         }
@@ -34,18 +35,18 @@ const SearchPage = () => {
 
      if (isLoading) {
         return (
-          <main className='bg-background-white'>
-            <PageHero title='Loading...' />
-            <div className=''>
-              <div>Loading.....</div>
-            </div>
+          <main className="min-h-[calc(100vh-11rem)] flex items-center justify-center p-4 dark:bg-background-white bg-gray-100">
+            {/* <PageHero title="Loading..." /> */}
+            <MBlobLoader />
           </main>
         );
     }
     
-      if (isError) {
+      if (isError || !products) {
         return (
-          < Error error={ error} />  
+         <main className="bg-background-white">
+                 <Error error={error} />
+               </main>  
         )
       }
 

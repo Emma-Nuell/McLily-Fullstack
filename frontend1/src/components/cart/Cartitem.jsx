@@ -1,10 +1,10 @@
 import { FaTrash } from "react-icons/fa";
 import AmountButtons from "../AmountButtons";
 import { formatPrice } from "../../utils/helpers";
-import { useCartContext } from "../../context/cart-context";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import React from "react";
+import { useCartContext } from "../../context";
 
 const CartItem = ({
   cartId,
@@ -50,10 +50,10 @@ const CartItem = ({
   };
 
   return (
-    <article className='w-full bg-surface shadow-md hover:shadow-md transition-shadow duration-300 px-5 py-2'>
+    <article className='w-full bg-surface rounded-md shadow-md hover:shadow-md transition-shadow duration-300 px-5 py-2'>
       <Link
         className='flex flex-col items-start justify-center p-1.5 w-full'
-        to={`/products/${productId}`}
+        to={`/products/singleProduct/${productId}`}
       >
         {/* Main Content */}
         <div className='grid grid-cols-4 gap-4 w-full items-start'>

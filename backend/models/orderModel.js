@@ -37,16 +37,17 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
     customerDetails: {
-      name: String,
+      firstName: String,
+      lastName: String,
       email: String,
-      phone: String,
+      phoneNo: String,
       address: {
         street: String,
         city: String,
         state: String,
         country: {
           type: String,
-          default: "Nigeria"
+          default: "Nigeria",
         },
       },
     },
@@ -59,6 +60,19 @@ const orderSchema = new mongoose.Schema(
     subtotal: Number,
     shippingFee: Number,
     totalAmount: Number,
+    deliveryMethod: {
+      type: String,
+      enum: ["delivery", "pickup"],
+    },
+    pickupStation: {
+      type: String,
+      enum: ["none", "stella-maris", "mclily-salon", "mclily-house"],
+      default: "none",
+    },
+    pickupAddress: {
+      type: String,
+      default: "none"
+    },
     paymentStatus: {
       type: String,
       enum: ["pending", "paid", "failed", "refunded", "partially_refunded"],
@@ -66,7 +80,7 @@ const orderSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["card", "bank_transfer", "cash_on_delivery", "paystack"],
+      enum: ["bank_transfer", "cash_on_delivery", "paystack"],
     },
     paymentDetails: {
       transactionId: String,
@@ -74,13 +88,22 @@ const orderSchema = new mongoose.Schema(
       paymentGateway: String,
       currency: {
         type: String,
-        default: "NGN"
+        default: "NGN",
       },
-      gatewayResponse: Object
+      gatewayResponse: Object,
     },
     orderStatus: {
       type: String,
-      enum: ["Processing", "Pending", "Shipped","Out_for_delivery", "Delivered", "Cancelled", "Returned", "Refunded"],
+      enum: [
+        "Processing",
+        "Pending",
+        "Shipped",
+        "Out_for_delivery",
+        "Delivered",
+        "Cancelled",
+        "Returned",
+        "Refunded",
+      ],
       default: "processing",
     },
     statusHistory: [
@@ -92,10 +115,10 @@ const orderSchema = new mongoose.Schema(
         },
         changedBy: {
           type: String,
-          default: "system"
+          default: "system",
         },
-        note: String
-      }
+        note: String,
+      },
     ],
     deliveryTracking: {
       trackingNumber: String,

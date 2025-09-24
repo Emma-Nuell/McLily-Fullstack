@@ -61,7 +61,7 @@ const cart_reducer = (state, action) => {
     return { ...state, cart: action.payload, isLoading: false };
   }
   if (action.type === REMOVE_CART_ITEM) {
-    const tempCart = state.cart.filter((item) => item.id !== action.payload);
+    const tempCart = state.cart.filter((item) => item.cartId !== action.payload);
     return { ...state, cart: tempCart };
   }
   if (action.type === CLEAR_CART) {
@@ -107,26 +107,25 @@ const cart_reducer = (state, action) => {
     return { ...state, total_amount, total_items };
   }
   if (action.type === MERGE_CART) {
-    const mergedItems = [...action.payload.backendCart];
 
-    action.payload.localCart.forEach((localItem) => {
-      const existingIndex = mergedItems.findIndex(
-        (backendItem) => backendItem.cartId === localItem.cartId
-      );
+    // action.payload.localCart?.forEach((localItem) => {
+    //   const existingIndex = mergedItems.findIndex(
+    //     (backendItem) => backendItem.cartId === localItem.cartId
+    //   );
 
-      if (existingIndex > -1) {
-        // items exist in both carts, take the higher quantity without exceeding max value
-        const backendItem = mergedItems[existingIndex];
-        const newQuantity = Math.min(
-          backendItem.quantity + localItem.quantity,
-          backendItem.max
-        );
-        mergedItems[existingIndex] = { ...backendItem, quantity: newQuantity };
-      } else {
-        mergedItems.push(localItem);
-      }
-    });
-    return { ...state, cart: mergedItems };
+    //   if (existingIndex > -1) {
+    //     // items exist in both carts, take the higher quantity without exceeding max value
+    //     const backendItem = mergedItems[existingIndex];
+    //     const newQuantity = Math.min(
+    //       backendItem.quantity + localItem.quantity,
+    //       backendItem.max
+    //     );
+    //     mergedItems[existingIndex] = { ...backendItem, quantity: newQuantity };
+    //   } else {
+    //     mergedItems.push(localItem);
+    //   }
+    // });
+    return { ...state, cart: action.payload};
   }
   throw new Error(`No Matching "${action.type}" - action type`);
 };

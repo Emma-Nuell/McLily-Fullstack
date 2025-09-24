@@ -3,9 +3,11 @@ import http from "http"
 import cors from "cors";
 import dotenv from "dotenv";
 import productRoute from "./routes/productRoute.js";
+import orderRoute from "./routes/orderRoute.js";
 import accountRoute from "./routes/accountRoute.js";
 import userRoute from "./routes/userRoute.js";
 import adminRoute from "./routes/adminRoute.js"
+import storeRoute from "./routes/storeRoute.js"
 import connectDB from "./config/database.js";
 import logger from "./middlewares/logger.js";
 import errorHandler from "./middlewares/errorhandler.js";
@@ -14,7 +16,9 @@ import {Server} from "socket.io"
 
 export const app = express();
 const server = http.createServer(app)
-const port = process.env.PORT || 4000;
+dotenv.config();
+
+const port = process.env.PORT || 4000; 
 
 if (!process.env.FRONTEND_URL) {
   console.error("Missing FRONTEND_URL in .env");
@@ -22,10 +26,11 @@ if (!process.env.FRONTEND_URL) {
 }
 
 //middleware
+// app.set("trust proxy", ["loopback", "linklocal", "uniquelocal"]);
 app.use(apiLimiter)
-app.use(express.json());
+app.use(express.json()); 
 app.use(cors());
-app.use(logger);
+app.use(logger); 
 
 
 //api creation
@@ -57,15 +62,16 @@ app.set("io", io)
 
 
 
-dotenv.config()
 connectDB()
 
 
 //routes
 app.use("/account", accountRoute)
-app.use("/products", productRoute)
-app.use("/cart", userRoute)
+app.use("/product", productRoute)
+app.use("/user", userRoute)
 app.use("/admin", adminRoute)
+app.use("/order", orderRoute)
+app.use("/store", storeRoute)
 
 
 app.use(errorHandler);

@@ -13,8 +13,9 @@ export const verifyTokenUser = (req, res, next) => {
         message: "No token provided"
       })
     }
+
     try {
-        const decoded = jwt.verify(token, secret_key) 
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); 
       req.user = {
         userId: decoded.id,
         email: decoded.email,
@@ -52,7 +53,7 @@ export const verifyToken = (req, res, next) => {
       })
     }
     try {
-        const decoded = jwt.verify(token, secret_key) 
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); 
       req.user = {
         id: decoded.userId,
         email: decoded.email,
@@ -92,7 +93,7 @@ export const verifyAdmin = async (req, res, next) => {
       })
     }
 
-    const decoded = jwt.verify(token, secret_key);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const admin = await Admin.findOne({
       _id: decoded.id,

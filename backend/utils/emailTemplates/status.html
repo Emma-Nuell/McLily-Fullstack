@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Update - McLily</title>
+    <style>
+          @import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, hsl(160, 100%, 50%) 0%, hsl(160, 80%, 45%) 100%);
+            border-radius: 0 0 20px 20px;
+        }
+        .logo {
+            font-size: 50px;
+            font-weight: bold;
+            color: white;
+            font-family: "Cormorant", serif;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+             font-family: 'Crimson Text', serif;
+        }
+        .content {
+            padding: 40px 30px;
+            color: #333;
+        }
+        .greeting {
+            font-size: 24px;
+            color: hsl(160, 100%, 35%);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .status-update-box {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 3px solid hsl(160, 100%, 50%);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+        }
+        .status-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .status-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: hsl(160, 100%, 35%);
+            margin-bottom: 10px;
+        }
+        .status-message {
+            font-size: 16px;
+            color: #495057;
+            margin-bottom: 20px;
+        }
+        /* Status-specific styling */
+        .status-processing {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-color: #f39c12;
+        }
+        .status-shipped {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-color: #28a745;
+        }
+        .status-out-for-delivery {
+            background: linear-gradient(135deg, #cce7ff, #b3d9ff);
+            border-color: #007bff;
+        }
+        .status-delayed {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            border-color: #dc3545;
+        }
+        .status-returned {
+            background: linear-gradient(135deg, #e2e3e5, #d6d8db);
+            border-color: #6c757d;
+        }
+        .order-info {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #e9ecef;
+        }
+        .order-info h3 {
+            color: hsl(160, 100%, 35%);
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .info-value {
+            color: #6c757d;
+        }
+        .tracking-section {
+            background: linear-gradient(135deg, hsl(160, 100%, 96%), hsl(160, 50%, 92%));
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid hsl(160, 100%, 85%);
+        }
+        .tracking-section h4 {
+            color: hsl(160, 100%, 35%);
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+        .tracking-number {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: bold;
+            color: #495057;
+            border: 2px dashed hsl(160, 100%, 50%);
+            margin: 15px 0;
+        }
+        .timeline {
+            margin: 25px 0;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .timeline-dot.completed {
+            background: hsl(160, 100%, 50%);
+        }
+        .timeline-dot.current {
+            background: #f39c12;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+        }
+        .timeline-dot.pending {
+            background: #dee2e6;
+        }
+        .timeline-content {
+            flex: 1;
+        }
+        .timeline-title {
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+        .timeline-time {
+            font-size: 14px;
+            color: #6c757d;
+            margin: 0;
+        }
+        .fun-message {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-left: 4px solid hsl(160, 100%, 50%);
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+            font-style: italic;
+            color: #495057;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        .action-button {
+            display: inline-block;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .primary-button {
+            background: linear-gradient(135deg, hsl(160, 100%, 50%), hsl(160, 80%, 45%));
+            color: white;
+        }
+        .secondary-button {
+            background: white;
+            color: hsl(160, 100%, 35%);
+            border: 2px solid hsl(160, 100%, 50%);
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+            border-radius: 20px 20px 0 0;
+            margin-top: 40px;
+        }
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            .greeting {
+                font-size: 20px;
+            }
+            .status-icon{
+                font-size: 24px;
+            }
+            .status-title {
+                font-size: 20px;
+            }
+            .status-message {
+                font-size: 14px;
+            }
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .action-button {
+                width: 80%;
+                text-align: center;
+            }
+            .info-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .timeline-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .timeline-dot {
+                margin-bottom: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">McLily</div>
+            <div class="status-badge">[STATUS_BADGE_TEXT]</div>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">Hey [First Name]! 👋</div>
+            
+            <p>We've got an update on your order and wanted to keep you in the loop!</p>
+            
+            <!-- Dynamic status update box - CSS class changes based on status -->
+            <div class="status-update-box [STATUS_CSS_CLASS]">
+                <div class="status-icon">[STATUS_ICON]</div>
+                <div class="status-title">[STATUS_TITLE]</div>
+                <div class="status-message">[STATUS_MESSAGE]</div>
+                <div class="status-details">[STATUS_DETAILS]</div>
+            </div>
+            
+            <div class="order-info">
+                <h3>📦 Order Details</h3>
+                <div class="info-row">
+                    <span class="info-label">Order Number:</span>
+                    <span class="info-value">[ORDER_NUMBER]</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Order Date:</span>
+                    <span class="info-value">[ORDER_DATE]</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Current Status:</span>
+                    <span class="info-value">[CURRENT_STATUS]</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Expected Delivery:</span>
+                    <span class="info-value">[EXPECTED_DELIVERY]</span>
+                </div>
+            </div>
+            
+            <!-- Tracking section (show only when tracking is available) -->
+            <!-- <div class="tracking-section" id="trackingSection">
+                <h4>🚚 Track Your Package</h4>
+                <p>Your tracking number:</p>
+                <div class="tracking-number">[TRACKING_NUMBER]</div>
+                <p style="text-align: center; margin: 15px 0 0 0;">
+                    <a href="[CARRIER_TRACKING_URL]" style="color: hsl(160, 100%, 35%); font-weight: bold;">Track with [CARRIER_NAME] →</a>
+                </p>
+            </div> -->
+            
+            <!-- Order timeline -->
+            <div class="timeline">
+                <h4 style="color: hsl(160, 100%, 35%); text-align: center; margin-bottom: 25px;">📅 Order Journey</h4>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot completed"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Order Confirmed</div>
+                        <div class="timeline-time">[ORDER_DATE] at [ORDER_TIME]</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot [PROCESSING_STATUS]"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Processing</div>
+                        <div class="timeline-time">[PROCESSING_DATE]</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot [SHIPPED_STATUS]"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Shipped</div>
+                        <div class="timeline-time">[SHIPPED_DATE]</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot [OUT_FOR_DELIVERY_STATUS]"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Out for Delivery</div>
+                        <div class="timeline-time">[OUT_FOR_DELIVERY_DATE]</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot [DELIVERED_STATUS]"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Delivered</div>
+                        <div class="timeline-time">[DELIVERY_DATE]</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dynamic fun message based on status -->
+            <div class="fun-message">
+                <strong>[FUN_MESSAGE_TITLE]:</strong> [FUN_MESSAGE_CONTENT]
+            </div>
+            
+            <div class="action-buttons">
+                <!-- <a href="[TRACK_ORDER_URL]" class="action-button primary-button">📦 Track Order</a> -->
+                <a href="[ACCOUNT_URL]" class="action-button secondary-button">👤 My Account</a>
+            </div>
+            
+            <p><strong>Need help?</strong> Our customer service team is always here for you! Just reply to this email or visit our <a href="[SUPPORT_URL]" style="color: hsl(160, 100%, 50%);">support center</a>.</p>
+            
+            <p>Thanks for being part of the McLily family! ✨</p>
+            
+            <p>Stay stylish!<br>
+            <strong>The McLily Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Order #[ORDER_NUMBER]</strong> | Status: [CURRENT_STATUS]</p>
+            <p>© 2025 McLily. All rights reserved.</p>
+            <p><a href="[ACCOUNT_URL]" style="color: #6c757d;">My Account</a> | <a href="[SUPPORT_URL]" style="color: #6c757d;">Customer Support</a> | <a href="[FAQ_URL]" style="color: #6c757d;">FAQ</a></p>
+        </div>
+    </div>
+
+    <!-- Status-specific content templates for dynamic insertion -->
+    <script type="text/template" id="status-templates">
+        <!-- Processing Status -->
+        <div data-status="processing">
+            <div data-field="icon">⚡</div>
+            <div data-field="title">Order Being Prepared</div>
+            <div data-field="message">Great news! We've started working on your order and it's currently being prepared in our fulfillment center.</div>
+            <div data-field="fun-title">Behind the scenes</div>
+            <div data-field="fun-content">Our team is carefully selecting and packing your items with the love and attention they deserve. Think of it as a personal styling session, but for your package! 📦✨</div>
+        </div>
+
+        <!-- Shipped Status -->
+        <div data-status="shipped">
+            <div data-field="icon">🚀</div>
+            <div data-field="title">Your Order is On The Way!</div>
+            <div data-field="message">Exciting news! Your package has left our warehouse and is now making its journey to you.</div>
+            <div data-field="fun-title">Adventure time</div>
+            <div data-field="fun-content">Your stylish goodies are currently traveling the world to reach you. We've given them a good map and some snacks for the road! 🗺️✈️</div>
+        </div>
+
+        <!-- Out for Delivery Status -->
+        <div data-status="out-for-delivery">
+            <div data-field="icon">🚛</div>
+            <div data-field="title">Almost There!</div>
+            <div data-field="message">Your package is out for delivery and should arrive today! Keep an eye out for your delivery driver.</div>
+            <div data-field="fun-title">The final countdown</div>
+            <div data-field="fun-content">It's the final stretch! Your package is practically doing a victory lap in your neighborhood. Time to practice your happy dance! 💃🕺</div>
+        </div>
+
+        <!-- Delayed Status -->
+        <div data-status="delayed">
+            <div data-field="icon">⏰</div>
+            <div data-field="title">Slight Delay</div>
+            <div data-field="message">We're sorry, but your order is experiencing a slight delay. Don't worry - we're working hard to get it to you as soon as possible.</div>
+            <div data-field="fun-title">Patience, young grasshopper</div>
+            <div data-field="fun-content">Sometimes good things take a little extra time - like a fine wine or the perfect outfit! We promise it'll be worth the wait. 🍷👗</div>
+        </div>
+
+        <!-- Returned Status -->
+        <div data-status="returned">
+            <div data-field="icon">🔄</div>
+            <div data-field="title">Package Returned</div>
+            <div data-field="message">Your package was returned to us due to delivery issues. We're processing it and will be in touch about next steps.</div>
+            <div data-field="fun-title">Plot twist</div>
+            <div data-field="fun-content">Looks like your package took a scenic route back to us! Don't worry - we'll make sure it finds its way to you. Consider it a brief intermission! 🎭</div>
+        </div>
+    </script>
+</body>
+</html>

@@ -5,6 +5,7 @@ import { Grid, Heart, List, Search, ShoppingCart, Star, Trash2 } from "lucide-re
 import { useUserContext } from "../../context";
 import { Link } from "react-router-dom";
 import Error from "../Error";
+import IsAuthenticated from "../IsAuthenticated";
 
 const Wishlist = () => {
   const { isAuthenticated, wishlistItems, wishlistIsLoading, wishlistError } = useUserContext()
@@ -113,23 +114,9 @@ const Wishlist = () => {
 
     if (!isAuthenticated) {
       return (
-        <div className='min-h-screen flex items-center justify-center bg-gray-50'>
-          <div className='text-center'>
-            <div className='text-6xl mb-4'>❤️</div>
-            <h2 className='text-2xl font-bold text-gray-900 mb-2'>
-              Please Login
-            </h2>
-            <p className='text-gray-600 mb-6'>
-              You need to be logged in to view your wishlist.
-            </p>
-            <Link
-              to='/auth'
-              className='px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700'
-            >
-              Login Now
-            </Link>
-          </div>
-        </div>
+       <main className="min-h-[calc(100vh-6rem)] flex items-center justify-center p-4 dark:bg-background-white bg-gray-100">
+                <IsAuthenticated page="wishlist"/>
+              </main>
       );
     }
 
@@ -397,7 +384,7 @@ const Wishlist = () => {
         ) : viewMode === "grid" ? (
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
             {filteredItems.map((item) => (
-              <WishlistCard key={item.id} item={item} isListView={false} />
+              <WishlistCard key={item._id} item={item} isListView={false} />
             ))}
           </div>
         ) : (

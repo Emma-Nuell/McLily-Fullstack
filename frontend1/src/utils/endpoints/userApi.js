@@ -1,29 +1,69 @@
 import axios from "../axiosInstance.js";
 
 const UserAPI = {
-    signUp: async (userData) => {
-        return axios.post("/account/signup", userData)
-    },
-    signIn: async (userData) => {
-        return axios.post("/account/login", userData)
-    },
-    updateProfile: async (userData) => {
-        return axios.patch("/account/update", userData)
-    },
-    changePassword: async (passwordData) => {
-        return axios.patch("/account/changepassword", passwordData)
-    },
     getWishlist: async () => {
-        return axios.get("/wishlist")
+        try {
+             const response = await axios.get("/user/wishlist")
+             return response.data;
+         } catch (error) {
+           console.error("An Error occured:", error);
+         }
     },
     addToWishlist: async (productId) => {
-        return axios.post("/wishlist/add", {productId})
+         try {
+             const response = await axios.post("/user/wishlist/add", {productId})
+             return response.data;
+         } catch (error) {
+           console.error("An Error occured:", error);
+         }
     },
     removeFromWishlist: async (productId) => {
-        return axios.delete(`/wishlist/remove/${productId}`)
+         try {
+             const response = await axios.delete(`/user/wishlist/remove/${productId}`)
+             return response.data;
+         } catch (error) {
+           console.error("An Error occured:", error);
+         }
     },
     checkWishlist: async (productId) => {
-        return axios.get(`/wishlist/check/${productId}`)
+         try {
+             const response = await axios.get(`/user/wishlist/check/${productId}`)
+             return response.data;
+         } catch (error) {
+           console.error("An Error occured:", error);
+         }
+    },
+    checkCanReview: async (productId) => {
+         try {
+             const response = await axios.get(`/user/reviews/can-review/${productId}`)
+             return response.data;
+         } catch (error) {
+           console.error("An Error occured:", error);
+         }
+    },
+    getPendingReviews: async () => {
+         try {
+             const response = await axios.get("/user/reviews/pending")
+             return response.data;
+         } catch (error) {
+           console.error("An Error occured:", error);
+         }
+    },
+    getUserReviews: async () => {
+         try {
+             const response = await axios.get(`/user/reviews/my-reviews`)
+             return response.data;
+         } catch (error) {
+           console.error("An Error occured:", error);
+         }
+    },
+    getUserAllReviews: async () => {
+         try {
+             const response = await axios.get(`/user/reviews/all-reviews`)
+             return response.data;
+         } catch (error) {
+           console.error("An Error occured:", error);
+         }
     },
 
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Logo from "../../assets/logo.svg"
+import Logo from "../../assets/logo.svg?react";
 
 const MclilyLoader = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -17,9 +17,9 @@ const MclilyLoader = () => {
   }, [letters.length]);
     return (
       <div>
-        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full opacity-30'>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full opacity-30">
           <div
-            className='w-full h-full rounded-full'
+            className="w-full h-full rounded-full"
             style={{
               animation: "breathe 3s ease-in-out infinite",
               background:
@@ -28,17 +28,17 @@ const MclilyLoader = () => {
           ></div>
         </div>
         <div className="flex items-center justify-center">
-          <img src={Logo} alt="logo" className="w-100" />
+          <Logo className="w-100 text-primary-500 dark:text-primary-300 fill-current drop-shadow-md" />
         </div>
 
-        <div className='text-center relative z-10'>
-          <div className='text-7xl font-bold tracking-widest inline-block relative'>
+        <div className="text-center relative z-10">
+          <div className="text-7xl font-bold tracking-widest inline-block relative">
             {letters.map((letter, index) => (
               <span
                 key={index}
                 className={`inline-block transition-all duration-300 font-comorant ${
                   activeIndex === index
-                    ? "text-aquamine-4 scale-110 drop-shadow-lg"
+                    ? "text-primary-500 dark:text-primary-300 scale-110 drop-shadow-lg"
                     : "text-gray-600"
                 }`}
                 style={{
@@ -57,11 +57,11 @@ const MclilyLoader = () => {
             ))}
           </div>
 
-          <div className='flex justify-center gap-4 mt-8'>
+          <div className="flex justify-center gap-4 mt-8">
             {[0, 1, 2].map((index) => (
               <div
                 key={index}
-                className='w-5 h-5 bg-emerald-400 rounded-full'
+                className="w-5 h-5 bg-emerald-400 rounded-full"
                 style={{
                   animation: `pulse 1.5s ease-in-out infinite`,
                   animationDelay: `${index * 0.2}s`,

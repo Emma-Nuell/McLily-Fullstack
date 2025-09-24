@@ -1,8 +1,11 @@
 import React from 'react'
 import ProductCard from "./ProductCard";
-import { products } from "../../convert/products1";
+import PropTypes from "prop-types";
 
-const LastViewed = () => {
+
+
+const LastViewed = ({products}) => {
+  
   return (
         <section className='mb-8 bg-background-white dark:bg-surface py-6 px-4 max-w-7xl'>
           <div className='flex justify-between items-center mb-8 px-4'>
@@ -18,11 +21,11 @@ const LastViewed = () => {
   )
 }
 
-import PropTypes from 'prop-types'
+
 
 
 LastViewed.propTypes = {
-  
+  products: PropTypes.array,
 }
 
 export default LastViewed

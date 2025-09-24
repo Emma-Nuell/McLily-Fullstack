@@ -3,6 +3,180 @@ import { User } from "../models/userModel.js"
 import { Order } from "../models/orderModel.js"
 
 
+// store helpers
+
+export const getRecommendedProducts = async (preferences, lastViewed) => {
+  try {
+    let query = {
+      $or: [{ stock: { $gt: 0 } }, { "sizes.stock": { $gt: 0 } }],
+    };
+    let sort = {};
+
+    // if user has preferences, use them
+    if (Object.keys(preferences).length > 0) {
+      const preferredCategories = Object.keys(preferences)
+        .sort((a, b) => preferences[b] - preferences[a])
+        .slice(0, 3);
+
+      query.$or = [
+        ...query.$or,
+        ...preferredCategories.map((category) => ({
+          $or: [
+            { category: category },
+            { subCategory: category },
+            {
+              category: {
+                $regex: category.split("-")[0],
+                $options: "i",
+              },
+            },
+          ],
+        })),
+      ];
+    }
+
+    // if user has last viewed products, recommend similar
+    if (lastViewed && lastViewed.length > 0) {
+      const lastViewedProducts = await Product.find({
+        productId: { $in: lastViewed },
+      }).select("category subCategory");
+
+      const categories = [
+        ...new Set(lastViewedProducts.map((p) => p.category)),
+      ];
+      const subCategories = [
+        ...new Set(lastViewedProducts.map((p) => p.subCategory)),
+      ];
+
+      query.$or = [
+        ...query.$or,
+        { category: { $in: categories } },
+        { subCategory: { $in: subCategories } },
+      ];
+
+      query.productId = { $nin: lastViewed }; // exclude already viewed
+    }
+
+    if (Object.keys(preferences).length === 0 && lastViewed.length === 0) {
+      sort = { visits: -1, sales: -1 };
+    }
+
+    const products = await Product.find(query)
+      .sort(sort)
+      .limit(12) // Get more than needed for filtering
+      .lean();
+
+    return filterOutOfStock(products);
+  } catch (error) {
+    console.error("Error getting recommended products: ", error);
+    return [];
+  }
+};
+
+
+
+export const getRandomCategoriesWithProducts = async () => {
+  try {
+    //category structure
+    const categoryStructure = [
+      {
+        category: "Women",
+        subCategories: [
+          "Clothes",
+          "Shoes",
+          "Clothing Accessories",
+          "Clothing Fabrics",
+        ],
+      },
+      {
+        category: "Men",
+        subCategories: [
+          "Clothes",
+          "Shoes",
+          "Clothing Accessories",
+          "Clothing Fabrics",
+        ],
+      },
+      {
+        category: "Unisex",
+        subCategories: [
+          "Clothes",
+          "Shoes",
+          "Clothing Accessories",
+          "Clothing Fabrics",
+        ],
+      },
+      {
+        category: "Teens & Kids",
+        subCategories: [
+          "Clothes",
+          "Shoes",
+          "Clothing Accessories",
+          "Toys & Games",
+        ],
+      },
+      {
+        category: "Babies",
+        subCategories: ["Clothes", "Shoes", "Toys & Games", "Baby Products"],
+      },
+      {
+        category: "Accessories",
+        subCategories: [
+          "Household Items",
+          "Clothing Accessories",
+          "Electronic Accessories",
+        ],
+      },
+    ];
+
+    //flatten all subcategories
+    const allSubCategories = categoryStructure.flatMap((cat) =>
+      cat.subCategories.map((sub) => ({
+        subCategory: sub,
+        mainCategory: cat.category,
+      }))
+    );
+
+    //shuffle array and get products for each category
+    const randomSubCategories = shuffleArray(allSubCategories).slice(0, 8);
+
+    const categoriesWithProducts = await Promise.all(
+      randomSubCategories.map(async ({ subCategory, mainCategory }) => {
+        const products = await Product.find({
+          subCategory,
+          $or: [{ stock: { $gt: 0 } }, { "sizes.stock": { $gt: 0 } }],
+        })
+          .limit(6)
+          .lean();
+
+        const filteredProducts = filterOutOfStock(products).slice(0, 4);
+
+        return {
+          mainCategory,
+          subCategory,
+          products: filteredProducts,
+        };
+      })
+    );
+
+    return categoriesWithProducts.filter((item) => item.products.length > 0);
+  } catch (error) {
+    console.error("Error getting random categories:", error);
+    return [];
+  }
+};
+
+export const getRecommendationType = (preferences, lastViewed) => {
+  if (Object.keys(preferences || {}).length > 0) {
+    return "personalized";
+  } else if (lastViewed && lastViewed.length > 0) {
+    return "similar_to_viewed";
+  } else {
+    return "popular";
+  }
+};
+
+
 // order helpers
 /**
  * Populates user orders with order details
@@ -50,6 +224,40 @@ export const getOrderSummary = (orders) => {
 };
 
 
+// Error handling function
+export const handleOrderError = (res, error, context) => {
+  console.error(`Error ${context}:`, error);
+  
+  if (error.name === 'ValidationError') {
+    return res.status(400).json({
+      success: false,
+      message: `Validation error: ${error.message}`
+    });
+  }
+
+  if (error.message.includes('not found')) {
+    return res.status(404).json({
+      success: false,
+      message: error.message
+    });
+  }
+
+  if (error.message.includes('Insufficient stock')) {
+    return res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+
+  res.status(500).json({
+    success: false,
+    message: `Error ${context}. Please try again.`
+  });
+};
+
+
+
+
 //products helpers
 /**
  * filters out products out of stock
@@ -68,6 +276,218 @@ export const filterOutOfStock = (products) => {
     return false;
   });
 };
+
+/**
+ * update product stock after a successful order creation
+ * @param {Array} orderItems - Array of product documents
+ * @returns null 
+ */
+export const updateProductStocks = async (orderItems, session) => {
+  for (const item of orderItems) {
+    const product = await Product.findOne({
+      productId: item.productId,
+    }).session(session);
+
+    if (!product) {
+      throw new Error(`Product ${item.productId} not found`);
+    }
+
+    if (product.stock < item.quantity) {
+      throw new Error(`Insufficient stock for product ${product.name}`);
+    }
+
+    // Update stock
+    product.stock -= item.quantity;
+
+    // Update sales count
+    product.sales = (product.sales || 0) + item.quantity;
+
+    // If product has sizes, update specific size stock
+    if (product.sizes && item.size) {
+      const sizeIndex = product.sizes.findIndex((s) => s.value === item.size);
+      if (sizeIndex !== -1) {
+        if (product.sizes[sizeIndex].stock < item.quantity) {
+          throw new Error(
+            `Insufficient stock for size ${item.size} of product ${product.name}`
+          );
+        }
+        product.sizes[sizeIndex].stock -= item.quantity;
+      }
+    }
+
+    await product.save({ session });
+  }
+};
+
+
+/**
+ * Restore product stocks when orders are cancelled, refunded, or failed
+ * @param {Array} orderItems - Array of order items to restore
+ * @param {Object} session - MongoDB session (optional)
+ * @returns {Promise<Object>} - Result of the restoration process
+ */
+export async function restoreProductStocks(orderItems, session = null) {
+  const results = {
+    successful: [],
+    failed: [],
+    warnings: []
+  };
+
+  try {
+    for (const item of orderItems) {
+      try {
+        const product = await Product.findOne({ productId: item.productId }).session(session);
+        
+        if (!product) {
+          results.warnings.push({
+            productId: item.productId,
+            message: 'Product not found',
+            item
+          });
+          continue;
+        }
+
+        // Restore main stock
+        product.stock += item.quantity;
+        
+        // Restore size-specific stock if applicable
+        if (item.size && product.sizes && product.sizes.length > 0) {
+          const sizeIndex = product.sizes.findIndex(s => s.value === item.size);
+          
+          if (sizeIndex !== -1) {
+            product.sizes[sizeIndex].stock += item.quantity;
+            results.successful.push({
+              productId: item.productId,
+              productName: product.name,
+              size: item.size,
+              quantity: item.quantity,
+              type: 'size-specific'
+            });
+          } else {
+            // Size not found, but we still restore main stock
+            results.warnings.push({
+              productId: item.productId,
+              productName: product.name,
+              size: item.size,
+              message: 'Size not found in product, only main stock restored',
+              item
+            });
+            results.successful.push({
+              productId: item.productId,
+              productName: product.name,
+              quantity: item.quantity,
+              type: 'main-stock-only'
+            });
+          }
+        } else {
+          // No size specified, just restore main stock
+          results.successful.push({
+            productId: item.productId,
+            productName: product.name,
+            quantity: item.quantity,
+            type: 'main-stock'
+          });
+        }
+
+        // Update sales count (decrement)
+        product.sales = Math.max(0, (product.sales || 0) - item.quantity);
+
+        await product.save({ session });
+
+      } catch (itemError) {
+        results.failed.push({
+          productId: item.productId,
+          error: itemError.message,
+          item
+        });
+        console.error(`Error restoring stock for product ${item.productId}:`, itemError);
+      }
+    }
+
+    return results;
+
+  } catch (error) {
+    console.error('Error in restoreProductStocks:', error);
+    throw error;
+  }
+}
+
+/**
+ * Restore stocks with transaction support for atomic operations
+ * @param {Array} orderItems - Array of order items to restore
+ * @returns {Promise<Object>} - Result of the restoration process
+ */
+export async function restoreProductStocksWithTransaction(orderItems) {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const results = await restoreProductStocks(orderItems, session);
+    
+    // If any items failed, roll back the entire transaction
+    if (results.failed.length > 0) {
+      await session.abortTransaction();
+      session.endSession();
+      return {
+        ...results,
+        transaction: 'rolled-back'
+      };
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+    
+    return {
+      ...results,
+      transaction: 'committed'
+    };
+
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.error('Transaction error in restoreProductStocks:', error);
+    throw error;
+  }
+}
+
+
+/**
+ * Restore stocks for a specific order
+ * @param {String} orderId - Order ID to restore stocks for
+ * @returns {Promise<Object>} - Result of the restoration process
+ */
+export async function restoreStocksByOrderId(orderId) {
+  try {
+    const order = await Order.findOne({ orderId });
+    
+    if (!order) {
+      throw new Error(`Order ${orderId} not found`);
+    }
+
+    if (!order.orderItems || order.orderItems.length === 0) {
+      return {
+        success: true,
+        message: 'No items to restore',
+        orderId
+      };
+    }
+
+    const results = await restoreProductStocks(order.orderItems);
+    
+    return {
+      success: results.failed.length === 0,
+      results,
+      orderId,
+      orderStatus: order.orderStatus
+    };
+
+  } catch (error) {
+    console.error(`Error restoring stocks for order ${orderId}:`, error);
+    throw error;
+  }
+}
+
+
 
 // Shuffle function
 export const shuffleArray = (array) => {
@@ -182,3 +602,52 @@ export const populateWishlist = async (wishlistItems) => {
     throw error;
   }
 };
+
+
+
+//payment helpers
+
+
+
+/**
+ * Verify order payment for a user
+ * @param {String} refernence from paystack
+ * @returns true or false
+ */
+export const verifyPaystackPayment = async (reference) => {
+  try {
+
+    // Production: Verify with Paystack API
+    const response = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+
+    if (data.status && data.data.status === "success") {
+      return {
+        success: true,
+        message: "Payment verified successfully",
+        data: data.data
+      };
+    } else {
+      return {
+        success: false,
+        message: data.message || "Payment verification failed",
+        data: data.data
+      };
+    }
+  } catch (error) {
+    console.error("Paystack verification error:", error);
+    return {
+      success: false,
+      message: "Payment verification service unavailable"
+    };
+  }
+};
+
+

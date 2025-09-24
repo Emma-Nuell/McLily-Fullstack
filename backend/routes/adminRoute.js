@@ -29,7 +29,7 @@ router.patch("/notifications/mark-all-as-read", markAllAsRead);
 router.get("/products", getAllProducts)
 router.post("/products", addProduct)
 router.patch("/products/:id", editProduct)
-router.delete("/products/:id", deleteProduct)
+router.delete("/products/:productId", deleteProduct)
 router.patch("/products/:id/featured", toggleFeatured)
 router.patch("/products/:productId/stock-price", updateProductStockPrice);
 router.post("/physical", createPhysicalOrder);

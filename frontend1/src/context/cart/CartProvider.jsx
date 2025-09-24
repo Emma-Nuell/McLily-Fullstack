@@ -17,8 +17,9 @@ import {
   useAddToCart,
   useSyncCart,
   useUpdateCart,
-  useRemoveCart,
+  useRemoveFromCart,
   useCart,
+  useClearCart,
 } from "../../hooks/cartHooks";
 import useUserContext from "../user/useUserContext";
 
@@ -46,7 +47,8 @@ export const CartProvider = ({ children }) => {
   const { isAuthenticated, user } = useUserContext();
   const { data: backendCartData, refetch: refetchBackendCart } = useCart();
   const addToCartMutation = useAddToCart();
-  const removeFromCartMutation = useRemoveCart();
+  const removeFromCartMutation = useRemoveFromCart();
+  const clearCartMutation = useClearCart();
   const updateCartMutation = useUpdateCart();
   const syncCartMutation = useSyncCart();
 
@@ -57,7 +59,7 @@ export const CartProvider = ({ children }) => {
         const savedCart = localStorage.getItem(CART_STORAGE_KEY);
         if (savedCart) {
           const cartData = JSON.parse(savedCart);
-          dispatch({ type: SET_CART, payload: cartData.items || [] });
+          dispatch({ type: SET_CART, payload: cartData.cart || [] });
         }
       } catch (error) {
         console.error("Error loading cart from storage: ", error);
@@ -93,30 +95,67 @@ export const CartProvider = ({ children }) => {
         dispatch({ type: SET_LOADING_CART, payload: true });
 
         try {
+          
           const localCart = state.cart;
           if (localCart.length > 0) {
-            await syncCartMutation.mutateAsync(localCart);
 
-            await refetchBackendCart();
+          const data =  await syncCartMutation.mutateAsync(localCart);
 
-            if (backendCartData?.data?.cart) {
-              const backendCart = backendCartData.data.cart.map((item) => ({
+            
+
+            if (data?.cart) {
+              const backendCart = data.cart.map((item) => ({
                 cartId: item.size
                   ? `${item.productId}_${item.size}`
                   : item.productId,
                 productId: item.productId,
-                quantity: item.quantity,
+                name: item.productDetails.name,
                 size: item.size || null,
-                max: item.productId.stock,
+                quantity: item.quantity,
+                image: item.productDetails.images[0],
+                price: item.productDetails.price,
+                max: item.max,
+                stock: item.availableStock,
+                brand: item.productDetails.brand,
+                product: item.productDetails,
               }));
+
+              
 
               dispatch({
                 type: MERGE_CART,
-                payload: { localCart, backendCart },
+                payload: backendCart,
               });
             }
           } else {
             await refetchBackendCart();
+            
+
+             if (backendCartData?.cart && backendCartData?.cart.length > 0 ) {
+               const backendCart = backendCartData.cart.map((item) => ({
+                 cartId: item.size
+                   ? `${item.productId}_${item.size}`
+                   : item.productId,
+                 productId: item.productId,
+                 name: item.productDetails.name,
+                 size: item.size || null,
+                 quantity: item.quantity,
+                 image: item.productDetails.images[0],
+                 price: item.productDetails.price,
+                 max: item.max,
+                 stock: item.availableStock,
+                 brand: item.productDetails.brand,
+                 product: item.productDetails,
+               }));
+
+               console.log("done merging local");
+               
+
+               dispatch({
+                 type: MERGE_CART,
+                 payload: backendCart,
+               });
+             }
           }
         } catch (error) {
           console.error("Error syncing cart with backend: ", error);
@@ -197,14 +236,15 @@ export const CartProvider = ({ children }) => {
       }
     }
   };
-  const clearCart = () => {
+  const clearCart = async () => {
+    localStorage.removeItem(CART_STORAGE_KEY);
     dispatch({ type: CLEAR_CART });
     if (isAuthenticated) {
-      try {
-        console.log('cart cleared');
-        
-      } catch (error) {
-        console.error('Error syncing to backend: ', error);
+         try {
+        await clearCartMutation.mutateAsync()
+      }
+      catch (error) {
+        console.error('Error clearing to backend: ', error);
         
       }
     }
@@ -233,3 +273,6 @@ export const CartProvider = ({ children }) => {
 CartProvider.propTypes = {
   children: PropTypes.node,
 };
+
+
+export default CartProvider

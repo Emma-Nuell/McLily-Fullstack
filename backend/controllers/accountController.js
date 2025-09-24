@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import validator from 'validator';
 import { hashPassword, validatePasswordStrength } from "../utils/authUtils.js";
 import { notify } from "../services/notificationService.js";
+import { sendNewUserEmail } from "../utils/emailServices/sendNewUser.js";
 dotenv.config();
 
 const secret_key = process.env.JWT_SECRET;
@@ -56,6 +57,8 @@ export const signup = async (req, res) => {
 
       const userResponse = { ...newUser.toObject() }
       delete userResponse.password;
+
+      await sendNewUserEmail(userResponse)
 
        try {
               await notify.newSignUp(userResponse);
@@ -130,8 +133,8 @@ export const login = async (req, res) => {
 export const deleteUser = async (req, res) => {
     try {
       
-        const {id} = req.params
-      const user =  await User.findOneAndDelete({ userId: id });
+        const {userId} = req.params
+      const user =  await User.findOneAndDelete({ userId: userId });
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -225,7 +228,8 @@ export const changePassword = async (req, res) => {
     }
 
     const hashedPassword = await hashPassword(newPassword);
-    user.tokenVersion = (user.tokenVersion || 0) + 1;
+    user.password = hashedPassword
+    // user.tokenVersion = (user.tokenVersion || 0) + 1;
     await user.save();
 
     res.json({
@@ -346,4 +350,286 @@ export const resetPassword = async (req, res) => {
           message,
         });
     }
+}
+
+// Get user profile
+export const getProfile = async(req, res) => {
+   try {
+     const user = await User.findOne({userId: req.user.userId}).select("-password -__v");
+
+     if (!user) {
+       return res
+         .status(404)
+         .json({ success: false, message: "User not found" });
+     }
+
+     res.status(200).json({
+       success: true,
+       user,
+     });
+   } catch (error) {
+     res.status(500).json({ success: false, message: error.message });
+   }
+}
+
+// Update user profile (names and phone no)
+export const updateProfile = async(req, res) => {
+   try {
+     const { firstName, lastName, phoneNo } = req.body;
+
+     const updateData = {};
+     if (firstName) updateData.firstName = firstName.trim();
+     if (lastName) updateData.lastName = lastName.trim();
+     if (phoneNo && Array.isArray(phoneNo)) {
+       // Validate phone numbers
+       const validPhoneNumbers = phoneNo.filter((phone) =>
+         validator.isMobilePhone(phone.toString(), "en-NG")
+       );
+       updateData.phoneNo = validPhoneNumbers;
+     }
+
+     const user = await User.findOneAndUpdate({userId: req.user.userId}, updateData, {
+       new: true,
+       runValidators: true,
+     }).select("-password -__v");
+
+     res.status(200).json({
+       success: true,
+       message: "Profile updated successfully",
+       user,
+     });
+   } catch (error) {
+     res.status(500).json({ success: false, message: error.message });
+   }
+}
+
+// Get all addresses
+export const getAllAddresses = async (req, res) => {
+    try {
+      const user = await User.findOne({userId: req.user.userId}).select("address");
+
+      res.json({
+        success: true,
+        addresses: user.address || [],
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+} 
+
+// Add new address
+export const addNewAddress = async (req, res) => {
+    try {
+      const addressData = req.body;
+      
+
+      // Validate required fields
+      const requiredFields = [
+        "firstName",
+        "lastName",
+        "phoneNo",
+        "street",
+        "city",
+        "state",
+      ];
+      const missingFields = requiredFields.filter(
+        (field) => !addressData[field]
+      );
+
+      if (missingFields.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Missing required fields: ${missingFields.join(", ")}`,
+        });
+      }
+
+      // Validate phone number
+      if (!validator.isMobilePhone(addressData.phoneNo.toString(), "en-NG")) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid phone number format",
+        });
+      }
+
+      // Validate additional phone number if provided
+      if (
+        addressData.additionalPhoneNo &&
+        !validator.isMobilePhone(
+          addressData.additionalPhoneNo.toString(),
+          "en-NG"
+        )
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid additional phone number format",
+        });
+      }
+
+      const user = await User.findOne({userId: req.user.userId});
+
+      // If this is the first address, set it as default
+      if (user.address.length === 0) {
+        addressData.isDefault = true;
+      }
+
+      // If setting as default, remove default from other addresses
+      if (addressData.isDefault) {
+        user.address.forEach((addr) => {
+          addr.isDefault = false;
+        });
+      }
+
+      user.address.push(addressData);
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Address added successfully",
+        addresses: user.address,
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+} 
+
+
+// Update user address
+export const updateAddress = async (req, res) => {
+  try {
+    const { addressId } = req.params;
+    const addressData = req.body;
+
+    const user = await User.findOne({userId: req.user.userId});
+    const addressIndex = user.address.findIndex(
+      (addr) => addr._id.toString() === addressId
+    );
+
+    if (addressIndex === -1) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Address not found" });
+    }
+
+    // Validate phone numbers if provided
+    if (
+      addressData.phoneNo &&
+      !validator.isMobilePhone(addressData.phoneNo.toString(), "en-NG")
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid phone number format",
+      });
+    }
+
+    if (
+      addressData.additionalPhoneNo &&
+      !validator.isMobilePhone(
+        addressData.additionalPhoneNo.toString(),
+        "en-NG"
+      )
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid additional phone number format",
+      });
+    }
+
+    // If setting as default, remove default from other addresses
+    if (addressData.isDefault) {
+      user.address.forEach((addr) => {
+        addr.isDefault = false;
+      });
+    }
+
+    // Update the address
+    user.address[addressIndex] = {
+      ...user.address[addressIndex].toObject(),
+      ...addressData,
+    };
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Address updated successfully",
+      addresses: user.address,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+
+// Delete user address
+export const deleteAddress = async (req, res) => {
+    try {
+      const { addressId } = req.params;
+
+      const user = await User.findOne({userId: req.user.userId});
+      const addressIndex = user.address.findIndex(
+        (addr) => addr._id.toString() === addressId
+      );
+
+      if (addressIndex === -1) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Address not found" });
+      }
+
+      const wasDefault = user.address[addressIndex].isDefault;
+
+      // Remove the address
+      user.address.splice(addressIndex, 1);
+
+      // If we deleted the default address and there are other addresses, set a new default
+      if (wasDefault && user.address.length > 0) {
+        user.address[0].isDefault = true;
+      }
+
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Address deleted successfully",
+        addresses: user.address,
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+// Set a default address
+export const setDefaultAddress = async (req, res) => {
+   try {
+     const { addressId } = req.params;
+
+     const user = await User.findOne({userId: req.user.userId});
+
+     // Remove default from all addresses
+     user.address.forEach((addr) => {
+       addr.isDefault = false;
+     });
+
+     // Set the specified address as default
+     const addressIndex = user.address.findIndex(
+       (addr) => addr._id.toString() === addressId
+     );
+
+     if (addressIndex === -1) {
+       return res
+         .status(404)
+         .json({ success: false, message: "Address not found" });
+     }
+
+     user.address[addressIndex].isDefault = true;
+     await user.save();
+
+     res.status(200).json({
+       success: true,
+       message: "Default address updated successfully",
+       addresses: user.address,
+     });
+   } catch (error) {
+     res.status(500).json({ success: false, message: error.message });
+   }
 }

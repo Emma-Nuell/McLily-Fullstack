@@ -6,7 +6,6 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true, 
-    index: true,
   },
   name: {
     type: String,
@@ -54,20 +53,24 @@ const ProductSchema = new mongoose.Schema({
         price: Number
       },
     ],
-    default: null,
+    default: [],
   },
   specifications: {
     type: Map, // This allows you to store key-value pairs dynamically
     of: String, // Values must be strings, but you can adjust this as needed
-    default: null, // Default to an empty object if not provided
+    default: {}, // Default to an empty object if not provided
   },
   reviews: {
     type: [
       {
-        userName: {
+        userId: {
           type: String,
           required: true,
         },
+        // userName: {
+        //   type: String,
+        //   required: true,
+        // },
         reviewTitle: {
           type: String,
         },
@@ -118,6 +121,14 @@ ProductSchema.index({ createdAt: -1 }); // For newest products
 ProductSchema.index({ 'rating.average': -1 }); // For best rated
 ProductSchema.index({ featured: 1 }); // For featured products
 ProductSchema.index({ stock: 1 }); // For stock checking
-ProductSchema.index({ productId: 1 }); // For quick product lookups
+ProductSchema.index({
+  name: "text",
+  description: "text",
+  brand: "text",
+  category: "text",
+  subCategory: "text",
+  tags: "text",
+});
+// ProductSchema.index({ productId: 1 }); // For quick product lookups
 
 export const Product = mongoose.model("Product", ProductSchema);

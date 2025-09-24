@@ -12,19 +12,19 @@ const OrderSummary = ({
   const mockCartItems = [
     {
       id: 1,
-      name: "Wireless Bluetooth Headphones",
+      productName: "Wireless Bluetooth Headphones",
       price: 89.99,
       quantity: 1,
     },
     {
       id: 2,
-      name: "Smartphone Case",
+      productName: "Smartphone Case",
       price: 24.99,
       quantity: 2,
     },
     {
       id: 3,
-      name: "USB-C Cable",
+      productName: "USB-C Cable",
       price: 15.99,
       quantity: 1,
     },
@@ -33,9 +33,9 @@ const OrderSummary = ({
 
   // Pickup station prices
   const pickupStations = {
-    "stella-maris": { name: "Stella Maris Schools", price: 5.0 },
-    "mclily-salon": { name: "McLily Hair Salon", price: 3.5 },
-    "mclily-house": { name: "McLily House", price: 2.0 },
+    "stella-maris": { name: "Stella Maris Schools", price: 2500 },
+    "mclily-salon": { name: "McLily Hair Salon", price: 3700 },
+    "mclily-house": { name: "McLily House", price: 1500 },
   };
 
   // Calculate subtotal
@@ -50,7 +50,7 @@ const OrderSummary = ({
       return { cost: null, description: "To be determined" };
     }
 
-    switch (deliveryMethod.method) {
+    switch (deliveryMethod) {
       case "pickup":
         if (selectedStation && pickupStations[selectedStation]) {
           const station = pickupStations[selectedStation];
@@ -84,42 +84,47 @@ const OrderSummary = ({
   };
 
   return (
-    <div className='bg-white rounded-lg shadow-sm border border-gray-100'>
+    <div className="bg-background-white rounded-lg shadow-sm">
       {/* Header */}
-      <div className='border-b border-gray-100 p-4 flex justify-between items-center'>
-        <h3 className='font-semibold text-gray-900 flex items-center gap-2'>
-          <Calculator className='h-5 w-5 text-primary-500' />
+      <div className=" p-4 flex justify-between items-center">
+        <h3 className="font-semibold text-gray-900 dark:text-gray-200 flex items-center gap-2">
+          <Calculator
+            className="text-primary-600 dark:text-primary-300"
+            size={18}
+          />
           Order Summary
         </h3>
         <button
-          onClick={(prev) => setShowDetails(!prev)}
-          className='text-primary-600 hover:text-primary-700 text-sm font-medium'
+          onClick={() => setShowDetails((prev) => !prev)}
+          className="text-primary-600 dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-200   text-sm font-medium"
         >
-          {showDetails ? "View Details" : "Close Details"}
+          {showDetails ? "Close Details" : "View Details"}
         </button>
       </div>
 
       {showDetails && (
         <div>
           {/* items summary */}
-          <div className='p-4 border-b border-gray-100'>
-            <div className='flex items-center justify-between mb-3'>
-              <span className='font-medium text-gray-700 flex items-center gap-2'>
-                <ShoppingCart className='h-4 w-4' />
+          <div className="p-4 border-b border-primary-300 dark:border-primary-100">
+            <div className="flex items-center justify-between mb-3">
+              <span className="font-medium text-gray-700 dark:text-gray-400 flex text-sm items-center gap-2">
+                <ShoppingCart className="" size={20} />
                 Items ({items.length})
               </span>
             </div>
-            <div className='space-y-2'>
+            <div className="space-y-2">
               {items.map((item) => (
                 <div
-                  key={item.id}
-                  className='flex justify-between items-center text-sm'
+                  key={item.productId}
+                  className="flex justify-between items-center text-sm"
                 >
-                  <div className='flex-1'>
-                    <span className='text-gray-900'>{item.name}</span>
-                    <span className='text-gray-500 ml-2'>×{item.quantity}</span>
+                  <div className="flex-1">
+                    <span className="text-gray-900 dark:text-gray-200">
+                      {item.productName}
+                    </span>
+                    <span className="text-gray-500 ml-2">×{item.quantity}</span>
                   </div>
-                  <span className='font-medium text-gray-900'>
+                  <span className="font-medium text-gray-900 dark:text-gray-200">
                     {formatCurrency(item.price * item.quantity)}
                   </span>
                 </div>
@@ -127,35 +132,45 @@ const OrderSummary = ({
             </div>
           </div>
           {/* Cost Breakdown */}
-          <div className='p-4'>
-            <div className='space-y-3'>
+          <div className="p-4">
+            <div className="space-y-3">
               {/* Subtotal */}
-              <div className='flex justify-between items-center'>
-                <span className='text-gray-600'>Subtotal:</span>
-                <span className='font-medium'>{formatCurrency(subtotal)}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600 dark:text-gray-400">
+                  Subtotal:
+                </span>
+                <span className="font-medium text-gray-600 dark:text-gray-400">
+                  {formatCurrency(subtotal)}
+                </span>
               </div>
 
               {/* Delivery */}
-              <div className='flex justify-between items-center'>
-                <div className='flex items-center gap-2'>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
                   {deliveryMethod?.method === "pickup" ? (
-                    <Package className='h-4 w-4 text-primary-500' />
+                    <Package
+                      className=" text-primary-600 dark:text-primary-300"
+                      size={18}
+                    />
                   ) : (
-                    <Truck className='h-4 w-4 text-primary-500' />
+                    <Truck
+                      className="text-primary-600 dark:text-primary-300"
+                      size={16}
+                    />
                   )}
-                  <span className='text-gray-600'>
+                  <span className="text-gray-600 dark:text-gray-400">
                     {deliveryMethod?.method === "pickup"
                       ? "Pickup Fee:"
                       : "Delivery:"}
                   </span>
                 </div>
-                <div className='text-right'>
+                <div className="text-right">
                   {deliveryInfo.cost !== null ? (
-                    <span className='font-medium'>
+                    <span className="font-medium text-gray-600 dark:text-gray-400">
                       {formatCurrency(deliveryInfo.cost)}
                     </span>
                   ) : (
-                    <span className='text-gray-500 text-sm'>
+                    <span className="text-gray-500 text-sm">
                       {deliveryInfo.description}
                     </span>
                   )}
@@ -164,33 +179,33 @@ const OrderSummary = ({
 
               {/* Delivery Method Description */}
               {deliveryMethod && (
-                <div className='text-xs text-gray-500 pl-6'>
+                <div className="text-xs text-gray-500 pl-6">
                   {deliveryInfo.description}
                 </div>
               )}
 
               {/* Third Party Delivery Notice */}
               {deliveryMethod?.method === "delivery" && (
-                <div className='bg-blue-50 border border-blue-200 rounded p-2 text-xs text-blue-800'>
+                <div className="bg-blue-50 dark:bg-blue-600/30 border border-blue-200 dark:border-blue-800  rounded p-2 text-xs text-blue-800 dark:text-blue-400">
                   <strong>Note:</strong> Delivery fee will be paid directly to
                   the delivery service
                 </div>
               )}
 
               {/* Divider */}
-              <div className='border-t border-gray-200 pt-3'>
+              <div className="border-t border-primary-300 dark:border-primary-100 pt-3">
                 {/* Total */}
-                <div className='flex justify-between items-center'>
-                  <span className='text-lg font-semibold text-gray-900'>
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-semibold text-gray-900 dark:text-gray-200">
                     Total:
                   </span>
-                  <div className='text-right'>
-                    <div className='text-xl font-bold text-primary-600'>
+                  <div className="text-right">
+                    <div className="text-xl font-bold text-primary-600 dark:text-primary-300">
                       {formatCurrency(total)}
                     </div>
                     {deliveryInfo.cost === null &&
                       deliveryMethod?.method === "delivery" && (
-                        <div className='text-xs text-gray-500'>
+                        <div className="text-xs text-gray-500">
                           + delivery fee
                         </div>
                       )}

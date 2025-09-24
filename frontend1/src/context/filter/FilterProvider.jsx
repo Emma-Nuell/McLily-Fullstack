@@ -1,6 +1,5 @@
 import React, {  useEffect, useReducer } from "react";
-import reducer from "../reducers/filter-reducer";
-import { useProductContext } from "./product-context";
+import reducer from "../../reducers/filter-reducer"
 import {
   CLEAR_FILTERS,
   LOAD_PRODUCTS,
@@ -8,15 +7,16 @@ import {
   SET_LISTVIEW,
   SORT_PRODUCTS,
   UPDATE_SORT,
-} from "../actions";
+} from "../../actions";
 import PropTypes from "prop-types";
 import FilterContext from "./FilterContext";
+import useProductsContext from "../product/useProductContext";
 
 const initialState = {
   filtered_products: [],
   all_products: [],
   grid_view: true,
-  sort: "random",
+  sort: "top-sellers",
   filters: {
     text: "",
     company: "all",
@@ -29,11 +29,13 @@ const initialState = {
 
 
 export const FilterProvider = ({ children }) => {
-  const { products } = useProductContext();
+  const { products } = useProductsContext();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    dispatch({ type: LOAD_PRODUCTS, payload: products });
+    if (products.length > 0 ) {
+      dispatch({ type: LOAD_PRODUCTS, payload: products });
+    }
   }, [products]);
 
   useEffect(() => {
@@ -69,5 +71,7 @@ export const FilterProvider = ({ children }) => {
 FilterProvider.propTypes = {
     children: PropTypes.node,
 }
+
+export default FilterProvider
 
 

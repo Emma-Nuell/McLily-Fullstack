@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import {
   FeaturedProducts,
   CategoryFirst,
@@ -8,22 +8,31 @@ import {
   LastViewed,
   ProductCategorySection,
 } from "../components/homepage";
-import { useHomepageData } from "../hooks/productHooks";
 import { Error } from "../components";
+import { useHomepageData } from "../hooks/storeHooks";
+import { MBlobLoader, MclilyLoader } from "../components/loaders";
 
 const HomePage = () => {
-  const { data, isLoading, error } = useHomepageData()
-  
+  const { data, isLoading, error } = useHomepageData();
+
   if (isLoading) {
     return (
-      <div>Loading ...</div>
-    )
+      <main className="fixed inset-0 z-50 flex items-center justify-center p-4 dark:bg-background-white bg-gray-100">
+        <MclilyLoader />
+      </main>
+    );
   }
 
-  if (error) return <div><Error error={error} /></div>
-  
-  const {featured, topSellers, recommended, randomCategories, lastViewed} = data.data
+  if (error || !data || data.error) {
+    return (
+     <main className="bg-background-white">
+             <Error error={error} />
+           </main>
+    );
+  }
 
+  const { featured, topSellers, recommended, randomCategories, lastViewed } =
+    data.data;
 
   return (
     <main>
@@ -39,11 +48,11 @@ const HomePage = () => {
             key={`${mainCategory}-${subCategory}-${index}`}
             products={products}
             mainCategory={mainCategory}
-            subCategory = {subCategory}
+            subCategory={subCategory}
           />
         )
       )}
     </main>
   );
-}
-export default HomePage
+};
+export default HomePage;

@@ -44,7 +44,7 @@ const FeaturedProducts = ({products: featured}) => {
         {...handlers}
       >
         <Link
-          to={`/products/${featured[currentIndex].id}`}
+          to={`/products/singleProduct/${featured[currentIndex].productId}`}
           className='relative w-[90%] h-[90%] rounded-xl max-w-[500px] bg-white dark:bg-surface'
         >
           <img

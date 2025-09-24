@@ -7,7 +7,7 @@ import {
   ADD_PRODUCTS,
   CLEAR_PRODUCTS,
   UPDATE_PRODUCT,
-} from "../..actions.js";
+} from "../../actions";
 // import { products } from "../convert/products1.js";
 import PropTypes from "prop-types";
 import ProductsContext from "./ProductContext.jsx";
@@ -38,8 +38,8 @@ export const ProductsProvider = ({ children }) => {
   };
 
 
-  const addProducts = (products) => {
-    dispatch({ type: ADD_PRODUCTS, payload: products})
+  const addProducts = (product) => {
+    dispatch({ type: ADD_PRODUCTS, payload: product})
   }
 
   const updateProduct = (product) => {
@@ -51,6 +51,7 @@ export const ProductsProvider = ({ children }) => {
   }
 
   const getProduct = (productId) => {
+    
     return state.products[productId] || null
   }
 
@@ -76,4 +77,5 @@ ProductsProvider.propTypes = {
     children: PropTypes.node,
 }
 
+export default ProductsProvider
 

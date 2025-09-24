@@ -34,9 +34,9 @@ const Error = ({
              message:
                "Your connection seems to be taking a coffee break. Check your internet and let's get back to shopping!",
              icon: Wifi,
-             iconColor: "text-orange-500",
-             bgColor: "bg-orange-50",
-             borderColor: "border-orange-200",
+             iconColor: "dark:text-orange-400 text-orange-700",
+             bgColor: "bg-orange-100 dark:bg-orange-600/30",
+             borderColor: "border-orange-200 dark:border-orange-800",
            };
          case "server":
            return {
@@ -44,9 +44,9 @@ const Error = ({
              message:
                "It's not you, it's us! Our servers are probably arguing about which product is the best seller. Give us a moment!",
              icon: Server,
-             iconColor: "text-red-500",
-             bgColor: "bg-red-50",
-             borderColor: "border-red-200",
+             iconColor: "dark:text-red-400 text-red-700",
+             bgColor: "bg-red-100 dark:bg-red-600/30",
+             borderColor: "border-red-200 dark:border-red-800",
            };
          case "notfound":
            return {
@@ -54,18 +54,18 @@ const Error = ({
              message:
                "The page you're looking for seems to have wandered off to explore other parts of the internet. Let's get you back on track!",
              icon: ShoppingCart,
-             iconColor: "text-purple-500",
-             bgColor: "bg-purple-50",
-             borderColor: "border-purple-200",
+             iconColor: "dark:text-purple-400 text-purple-700",
+             bgColor: "bg-purple-100 dark:bg-purple-600/30",
+             borderColor: "border-purple-200 dark:border-purple-800",
            };
          default:
            return {
              title: title,
              message: message,
              icon: AlertTriangle,
-             iconColor: "text-amber-500",
-             bgColor: "bg-amber-50",
-             borderColor: "border-amber-200",
+             iconColor: "dark:text-amber-400 text-amber-700",
+             bgColor: "bg-amber-100 dark:bg-amber-600/30",
+             borderColor: "border-amber-200 dark:border-amber-800",
            };
        }
     };
@@ -77,7 +77,7 @@ const Error = ({
         if (!error) return null;
 
         // React Query error structure
-        if (error.response?.data?.message) {
+        if (error.data?.message) {
           return error.response.data.message;
         }
         if (error.response?.statusText) {
@@ -121,53 +121,57 @@ const Error = ({
   };
 
   return (
-    <div className='min-h-96 flex items-center justify-center p-4'>
+    <div className="min-h-[calc(100vh-11rem)] flex items-center justify-center p-4">
       <div
         className={`max-w-md w-full ${variantContent.bgColor} ${variantContent.borderColor} border rounded-lg p-8 text-center shadow-sm`}
       >
         {/* Error Icon */}
-        <div className='flex justify-center mb-6'>
+        <div className="flex justify-center mb-6">
           <div
-            className={`w-16 h-16 ${variantContent.bgColor} rounded-full flex items-center justify-center border-2 ${variantContent.borderColor}`}
+            className={`w-24 h-24 ${variantContent.bgColor} p-2 rounded-full flex items-center justify-center border-2 ${variantContent.borderColor}`}
           >
-            <IconComponent className={`h-8 w-8 ${variantContent.iconColor}`} />
+            <IconComponent
+              className={` ${variantContent.iconColor}`}
+              size={22}
+            />
           </div>
         </div>
 
         {/* Error Title */}
-        <h2 className='text-xl font-bold text-gray-900 mb-4'>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-200 mb-4">
           {variantContent.title}
         </h2>
 
         {/* Error Message */}
-        <p className='text-gray-700 mb-6 leading-relaxed'>
+        <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
           {variantContent.message}
         </p>
 
         {/* Technical Error Details */}
         {errorMessage && (
-          <div className='bg-gray-100 border border-gray-200 rounded-lg p-3 mb-6 text-left'>
-            <h4 className='font-medium text-gray-800 mb-1 text-sm'>
+          <div className="bg-gray-100 dark:bg-gray-700 border border-gray-200 rounded-lg p-3 mb-6 text-left">
+            <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-1 text-sm">
               Technical Details:
             </h4>
-            <p className='text-sm text-gray-600 font-mono break-all'>
+            <p className="text-sm text-gray-600 dark:text-gray-400 font-mono break-all">
               {errorMessage}
             </p>
           </div>
         )}
 
         {/* Action Buttons */}
-        <div className='space-y-3'>
+        <div className="space-y-3">
           {/* Primary Actions Row */}
-          <div className='flex gap-3'>
+          <div className="flex gap-3">
             {showRetry && (
               <button
                 onClick={handleRetry}
                 disabled={isRetrying}
-                className='flex-1 bg-teal-500 hover:bg-teal-600 disabled:bg-teal-300 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2'
+                className="flex-1 bg-primary-600 dark:bg-primary-300 hover:bg-primary-500 dark:hover:bg-primary-200 disabled:bg-teal-300 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <RefreshCw
-                  className={`h-4 w-4 ${isRetrying ? "animate-spin" : ""}`}
+                  className={` ${isRetrying ? "animate-spin" : ""}`}
+                  size={18}
                 />
                 {isRetrying ? retryMessage : "Try Again"}
               </button>
@@ -176,9 +180,9 @@ const Error = ({
             {showHome && (
               <button
                 onClick={onHome}
-                className='flex-1 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2'
+                className="flex-1 border border-gray-300 text-gray-700 dark:text-gray-300 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-transparent cursor-pointer transition-colors flex items-center justify-center gap-2"
               >
-                <Home className='h-4 w-4' />
+                <Home className="" size={18} />
                 Home
               </button>
             )}
@@ -186,13 +190,13 @@ const Error = ({
 
           {/* Secondary Actions Row */}
           {(showBack || showCart || customActions.length > 0) && (
-            <div className='flex gap-3'>
+            <div className="flex gap-3">
               {showBack && (
                 <button
                   onClick={onBack}
-                  className='flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2'
+                  className="flex-1 border border-gray-300 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-transparent cursor-pointer transition-colors flex items-center justify-center gap-2"
                 >
-                  <ArrowLeft className='h-4 w-4' />
+                  <ArrowLeft className="" size={18} />
                   Go Back
                 </button>
               )}
@@ -200,9 +204,9 @@ const Error = ({
               {showCart && (
                 <button
                   onClick={onCart}
-                  className='flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2'
+                  className="flex-1 border border-gray-300 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-transparent cursor-pointer transition-colors flex items-center justify-center gap-2"
                 >
-                  <ShoppingCart className='h-4 w-4' />
+                  <ShoppingCart className="" size={18} />
                   View Cart
                 </button>
               )}
@@ -214,11 +218,11 @@ const Error = ({
                   onClick={action.onClick}
                   className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
                     action.variant === "primary"
-                      ? "bg-teal-500 hover:bg-teal-600 text-white"
-                      : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                      ? "bg-primary-600 dark:bg-primary-300 hover:bg-primary-500 dark:hover:bg-primary-200 text-white"
+                      : "border border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-transparent cursor-pointer"
                   }`}
                 >
-                  {action.icon && <action.icon className='h-4 w-4' />}
+                  {action.icon && <action.icon className="" size={18} />}
                   {action.label}
                 </button>
               ))}
@@ -227,9 +231,10 @@ const Error = ({
         </div>
 
         {/* Fun Footer Message */}
-        <div className='mt-6 pt-4 border-t border-gray-200'>
-          <p className='text-xs text-gray-500'>
-            Don&apos;t worry, our digital shopping assistants are on the case! 🕵️‍♀️
+        <div className="mt-6 pt-4 border-t border-gray-200">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            Don&apos;t worry, our digital shopping assistants are on the case!
+            🕵️‍♀️
           </p>
         </div>
       </div>
@@ -250,7 +255,7 @@ Error.propTypes = {
     onBack: PropTypes.func,
     onCart: PropTypes.func,
     onHome: PropTypes.func,
-    error: PropTypes.string
+    error: PropTypes.shape({})
 }
 
 

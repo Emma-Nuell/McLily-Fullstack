@@ -13,6 +13,7 @@ import Error from "./Error"
 import CategoryHeader from "./CategoryHeader"
 import EmptyCategory from "./EmptyCategory"
 import SearchBar from "./SearchBar";
+import IsAuthenticated from "./IsAuthenticated";
 
 export {
   Navbar,
@@ -28,5 +29,6 @@ export {
   ScrollToTop,
   Error,
   CategoryHeader,
-   EmptyCategory
+   EmptyCategory,
+   IsAuthenticated,
 };

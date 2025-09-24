@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import {  ShoppingCart, Menu, User, Search } from "lucide-react";
-import { useProductContext } from "../context/product-context";
-import { useCartContext } from "../context/cart-context";
 import ThemeToggle from "./ThemeToggle";
 import React from "react";
 import SearchBar from "./SearchBar";
+import { useCartContext, useProductsContext } from "../context";
 
 const Navbar = () => {
-  const { openSidebar } = useProductContext();
+  const { openSidebar } = useProductsContext();
   const { total_items } = useCartContext();
 
   return (

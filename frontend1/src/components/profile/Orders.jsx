@@ -12,157 +12,41 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useOrderContext, useUserContext } from "../../context";
+import Loading from "../Loading";
+import Error from "../Error";
+import IsAuthenticated from "../IsAuthenticated";
 
 const Orders = () => {
+  const {orders, isLoading, error} = useOrderContext()
+  const {isAuthenticated} = useUserContext()
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
 
-  const [orders] = useState([
-    {
-      orderId: "ORD-2024-001234",
-      orderedAt: new Date("2024-07-20T09:15:00Z"),
-      orderStatus: "Delivered",
-      paymentStatus: "paid",
-      totalAmount: 1095000,
-      itemCount: 2,
-      deliveryTracking: {
-        trackingNumber: "TRK-123456789",
-        carrier: "DHL Express",
-        estimatedDelivery: new Date("2024-07-25T00:00:00Z"),
-        actualDelivery: new Date("2024-07-24T14:30:00Z"),
-      },
-      orderItems: [
-        {
-          productId: "prod1",
-          productName: "iPhone 14 Pro Max",
-          quantity: 1,
-          price: 850000,
-          image:
-            "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=100&h=100&fit=crop",
-        },
-        {
-          productId: "prod2",
-          productName: "AirPods Pro",
-          quantity: 2,
-          price: 120000,
-          image:
-            "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=100&h=100&fit=crop",
-        },
-      ],
-    },
-    {
-      orderId: "ORD-2024-001233",
-      orderedAt: new Date("2024-07-18T14:22:00Z"),
-      orderStatus: "Shipped",
-      paymentStatus: "paid",
-      totalAmount: 520000,
-      itemCount: 1,
-      deliveryTracking: {
-        trackingNumber: "TRK-987654321",
-        carrier: "Private",
-        estimatedDelivery: new Date("2024-07-26T00:00:00Z"),
-      },
-      orderItems: [
-        {
-          productId: "prod3",
-          productName: 'iPad Pro 12.9"',
-          quantity: 1,
-          price: 520000,
-          image:
-            "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=100&h=100&fit=crop",
-        },
-      ],
-    },
-    {
-      orderId: "ORD-2024-001232",
-      orderedAt: new Date("2024-07-15T11:45:00Z"),
-      orderStatus: "Processing",
-      paymentStatus: "paid",
-      totalAmount: 195000,
-      itemCount: 1,
-      deliveryTracking: {
-        estimatedDelivery: new Date("2024-07-28T00:00:00Z"),
-      },
-      orderItems: [
-        {
-          productId: "prod4",
-          productName: "Sony WH-1000XM5",
-          quantity: 1,
-          price: 195000,
-          image:
-            "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=100&h=100&fit=crop",
-        },
-      ],
-    },
-    {
-      orderId: "ORD-2024-001231",
-      orderedAt: new Date("2024-07-10T16:30:00Z"),
-      orderStatus: "Cancelled",
-      paymentStatus: "refunded",
-      totalAmount: 650000,
-      itemCount: 1,
-      orderItems: [
-        {
-          productId: "prod5",
-          productName: "MacBook Air M2",
-          quantity: 1,
-          price: 650000,
-          image:
-            "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=100&h=100&fit=crop",
-        },
-      ],
-    },
-    {
-      orderId: "ORD-2024-001230",
-      orderedAt: new Date("2024-07-05T09:12:00Z"),
-      orderStatus: "Returned",
-      paymentStatus: "refunded",
-      totalAmount: 180000,
-      itemCount: 1,
-      orderItems: [
-        {
-          productId: "prod6",
-          productName: "Samsung Galaxy Watch 5",
-          quantity: 1,
-          price: 180000,
-          image:
-            "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=100&h=100&fit=crop",
-        },
-      ],
-    },
-    {
-      orderId: "ORD-2024-001229",
-      orderedAt: new Date("2024-06-28T13:45:00Z"),
-      orderStatus: "Delivered",
-      paymentStatus: "paid",
-      totalAmount: 85000,
-      itemCount: 3,
-      deliveryTracking: {
-        actualDelivery: new Date("2024-07-02T10:15:00Z"),
-      },
-      actualDelivery: new Date("2024-07-02T10:15:00Z"),
-      orderItems: [
-        {
-          productId: "prod7",
-          productName: "Phone Case",
-          quantity: 2,
-          price: 25000,
-          image:
-            "https://images.unsplash.com/photo-1601593346740-925612772716?w=100&h=100&fit=crop",
-        },
-        {
-          productId: "prod8",
-          productName: "Screen Protector",
-          quantity: 1,
-          price: 35000,
-          image:
-            "https://images.unsplash.com/photo-1609921141835-710b7fa6e438?w=100&h=100&fit=crop",
-        },
-      ],
-    },
-  ]);
+    const navigate = useNavigate();
+
+    const handleBack = () => {
+      navigate(-1);
+    };
+
+
+    if (!isAuthenticated) {
+      return (
+        <main className="min-h-screen flex items-center justify-center p-4 dark:bg-background-white bg-gray-100">
+          <IsAuthenticated page="orders"/>
+        </main>
+      );
+    }
+
+      if (isLoading) {
+        return <Loading message="Loading your orders..." />;
+      }
+
+      if (error) {
+        return <Error message="Failed to load orders" error={error} />;
+      }
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-NG", {
@@ -268,7 +152,7 @@ const Orders = () => {
   });
 
   const handleViewOrder = (orderId) => {
-    console.log("View order:", orderId);
+    navigate(`/profile/orders/${orderId}`)
   };
 
   const handleReorder = (order) => {
@@ -296,11 +180,7 @@ const Orders = () => {
     0
   );
 
-  const navigate = useNavigate();
 
-  const handleBack = () => {
-    navigate(-1);
-  };
   return (
     <div className='bg-gray-50 dark:bg-surface min-h-screen'>
       {/* Header */}

@@ -10,6 +10,7 @@ import {
   Star,
   Gift,
 } from "lucide-react";
+import { categoryConfigs } from '../utils/constants';
 
 const CategoryHeader = ({
   category = "women-shoes",
@@ -26,90 +27,7 @@ const CategoryHeader = ({
       setIsVisible(true);
     }
   }, [showAnimation]);
-    
-    const categoryConfigs = {
-      "women-shoes": {
-        greeting: "Step Into Elegance ✨",
-        subtitle: "Every step tells a story",
-        vibe: "Find your perfect stride with our curated collection",
-        bgGradient: "from-pink-500 via-rose-400 to-pink-600",
-        textColor: "text-white",
-        icon: Crown,
-        particles: ["👠", "✨", "💎", "👑"],
-        animation: "fade-in-up",
-      },
-      "women-clothes": {
-        greeting: "Welcome to Your Wardrobe Dreams 🌸",
-        subtitle: "Fashion is art, and you are the canvas",
-        vibe: "Discover styles that speak your language",
-        bgGradient: "from-purple-500 via-pink-500 to-rose-500",
-        textColor: "text-white",
-        icon: Sparkles,
-        particles: ["👗", "🌸", "✨", "💫"],
-        animation: "slide-in-right",
-      },
-      "baby-products": {
-        greeting: "Hello Little Sunshine! 🌈",
-        subtitle: "Where tiny dreams come true",
-        vibe: "Everything your little one needs to sparkle and grow",
-        bgGradient: "from-blue-400 via-cyan-300 to-teal-400",
-        textColor: "text-white",
-        icon: Baby,
-        particles: ["👶", "🍼", "🧸", "⭐"],
-        animation: "bounce-in",
-      },
-      anime: {
-        // greeting: "いらっしゃいませ！(Irasshaimase!) 🌸",
-        greeting: "Yokoso watashi no McLily store 🌸",
-        subtitle: "Your otaku paradise awaits",
-        vibe: "Dive into the world of anime magic and collectibles",
-        bgGradient: "from-indigo-600 via-purple-600 to-pink-600",
-        textColor: "text-white",
-        icon: Zap,
-        particles: ["⚡", "🌸", "🎌", "✨"],
-        animation: "zoom-in",
-      },
-      "men-fashion": {
-        greeting: "Gentleman's Corner 🎩",
-        subtitle: "Crafted for the modern man",
-        vibe: "Elevate your style, define your presence",
-        bgGradient: "from-gray-800 via-gray-700 to-blue-900",
-        textColor: "text-white",
-        icon: Crown,
-        particles: ["👔", "🎩", "⚡", "🔥"],
-        animation: "fade-in-left",
-      },
-      electronics: {
-        greeting: "Welcome to the Future ⚡",
-        subtitle: "Where innovation meets imagination",
-        vibe: "Discover tech that transforms your world",
-        bgGradient: "from-blue-600 via-cyan-500 to-teal-500",
-        textColor: "text-white",
-        icon: Zap,
-        particles: ["⚡", "🔌", "💻", "🚀"],
-        animation: "slide-in-left",
-      },
-      "home-decor": {
-        greeting: "Home Sweet Home 🏡",
-        subtitle: "Where comfort meets beauty",
-        vibe: "Transform your space into a sanctuary",
-        bgGradient: "from-amber-500 via-orange-400 to-red-500",
-        textColor: "text-white",
-        icon: Heart,
-        particles: ["🏡", "🕯️", "🌿", "✨"],
-        animation: "fade-in-up",
-      },
-      jewelry: {
-        greeting: "Sparkle & Shine ✨",
-        subtitle: "Adorn yourself with elegance",
-        vibe: "Every piece tells a story of beauty",
-        bgGradient: "from-yellow-400 via-amber-500 to-orange-500",
-        textColor: "text-white",
-        icon: Star,
-        particles: ["💎", "✨", "👑", "🌟"],
-        animation: "twinkle",
-      },
-    };
+
 
       const defaultConfig = {
         greeting: "Welcome to Shopping Paradise! 🛍️",
@@ -183,8 +101,10 @@ const CategoryHeader = ({
       className={`relative bg-gradient-to-br ${config.bgGradient} rounded-lg overflow-hidden mb-8`}
     >
       {/* Background Pattern */}
-      <div className='absolute inset-0 bg-black bg-opacity-10'>
-        <div className='absolute inset-0 bg-gradient-to-r from-transparent via-white opacity-5 transform -skew-x-12 animate-pulse'></div>
+      <div className="absolute inset-0 bg-black bg-opacity-10">
+        <div
+          className={`absolute inset-0 bg-gradient-to-r ${config.bgGradient} opacity-5 transform -skew-x-12 animate-pulse`}
+        ></div>
       </div>
 
       {/* Floating Particles */}
@@ -200,31 +120,31 @@ const CategoryHeader = ({
           )}`}
         >
           {/* Icon */}
-          <div className='flex justify-center mb-6'>
+          {/* <div className='flex justify-center mb-6'>
             <div className='w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm'>
               <IconComponent className='h-8 w-8 text-white' />
             </div>
-          </div>
+          </div> */}
 
           {/* Main Greeting */}
-          <h1 className='text-4xl md:text-5xl font-bold mb-4 tracking-tight'>
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 tracking-tight">
             {config.greeting}
           </h1>
 
           {/* Subtitle */}
-          <p className='text-xl md:text-2xl mb-6 font-light opacity-90'>
+          <p className="text-lg md:text-2xl mb-4 font-light opacity-90">
             {config.subtitle}
           </p>
 
           {/* Vibe Description */}
-          <p className='text-lg mb-6 opacity-80 max-w-2xl mx-auto leading-relaxed'>
+          <p className="text-base mb-4 opacity-80 max-w-2xl mx-auto">
             {config.vibe}
           </p>
 
           {/* Product Count */}
           {productCount > 0 && (
-            <div className='inline-flex items-center gap-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-6 py-3 text-sm font-medium'>
-              <Gift className='h-4 w-4' />
+            <div className="inline-flex items-center gap-2  bg-opacity-20 backdrop-blur-sm rounded-full px-6 py-3 text-sm font-medium">
+              <Gift className="" size={16} />
               <span>
                 {productCount.toLocaleString()} amazing products waiting for you
               </span>
@@ -234,7 +154,7 @@ const CategoryHeader = ({
       </div>
 
       {/* Bottom Wave Effect */}
-      <div className='absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-r from-transparent via-white opacity-10'></div>
+      <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-r from-transparent via-white opacity-10"></div>
     </div>
   );
 };

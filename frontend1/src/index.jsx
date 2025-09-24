@@ -10,6 +10,8 @@ import {
   UserProvider,
   CartProvider,
   FilterProvider,
+  OrderProvider,
+  UserProfileProvider
 } from "./context/index.js";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -20,8 +22,8 @@ export const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       retry: 1,
       staleTime: 5 * 60 * 1000, // 5 minutes
-    }
-  }
+    },
+  },
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -29,20 +31,24 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
-      <AuthProvider>
-        <ModalToast>
-          <ProductsProvider>
-            <FilterProvider>
-              <CartProvider>
-                <UserProvider>
-                  <App />
-                  <ReactQueryDevtools initialIsOpen={false} />
-                </UserProvider>
-              </CartProvider>
-            </FilterProvider>
-          </ProductsProvider>
-        </ModalToast>
-      </AuthProvider>
+      <UserProvider>
+        <AuthProvider>
+          <ModalToast>
+            <ProductsProvider>
+              <FilterProvider>
+                <OrderProvider>
+                <UserProfileProvider>
+                  <CartProvider>
+                    <App />
+                    <ReactQueryDevtools initialIsOpen={false} />
+                  </CartProvider>
+                </UserProfileProvider>
+                </OrderProvider>
+              </FilterProvider>
+            </ProductsProvider>
+          </ModalToast>
+        </AuthProvider>
+      </UserProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

@@ -4,9 +4,10 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 export const useSyncCart = () => {
   const queryClient = useQueryClient();
 
-  return useMutation((cartItems) => CartAPI.syncCart(cartItems), {
+  return useMutation({
+    mutationFn: (cartItems) => CartAPI.syncCart(cartItems),
     onSuccess: () => {
-      queryClient.invalidateQueries(["cart"]);
+      queryClient.invalidateQueries({ queryKey: ["cart"], exact: true });
     },
   });
 };
@@ -14,9 +15,10 @@ export const useSyncCart = () => {
 export const useAddToCart = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(CartAPI.addToCart, {
+  return useMutation({
+    mutationFn: CartAPI.addToCart,
     onSuccess: () => {
-      queryClient.invalidateQueries(["cart"]);
+      queryClient.invalidateQueries({ queryKey: ["cart"], exact: true });
     },
   });
 };
@@ -32,17 +34,32 @@ export const useCart = () => {
 export const useRemoveFromCart = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(CartAPI.removeFromCart, {
-    onSuccess: queryClient.invalidateQueries(["cart"]),
+  return useMutation({
+    mutationFn: CartAPI.removeFromCart,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"], exact: true }); 
+    },
+  });
+};
+
+export const useClearCart = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: CartAPI.clearCart,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"], exact: true }); 
+    },
   });
 };
 
 export const useUpdateCart = () => {
     const queryClient = useQueryClient()
 
-    return useMutation(CartAPI.updateCart, {
-        onSuccess: () => {
-            queryClient.invalidateQueries(["cart"])
-        }
-    })
+    return useMutation({
+      mutationFn: CartAPI.updateCart,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["cart"], exact: true });
+      },
+    });
 }

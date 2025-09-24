@@ -18,7 +18,7 @@ const EmptyCategory = ({
   onGoHome = () => (window.location.href = "/"),
   onGoBack = () => window.history.back(),
   showNotifyMe = false,
-  showBrowseOther = true,
+  showBrowseOther = false,
   customMessage = null,
   isRestocking = true,
 }) => {
@@ -126,7 +126,8 @@ const EmptyCategory = ({
       message:
         "Looks like our products were so irresistible, they've all found new homes! Don't worry - our shopping genies are working their magic to restock everything with love and care.",
       icon: "📦",
-      bgGradient: "from-gray-100 to-blue-100",
+      bgGradient:
+        "from-gray-100 dark:from-primary-600/30 to-blue-100 dark:to-primary-800/30",
       accentColor: "teal-500",
       suggestions: [
         "Browse other categories",
@@ -172,7 +173,7 @@ const EmptyCategory = ({
       className={`min-h-96 bg-gradient-to-br ${config.bgGradient} rounded-lg p-8 text-center relative overflow-hidden`}
     >
       {/* Background Animation */}
-      <div className='absolute inset-0 opacity-5'>
+      <div className="absolute inset-0 opacity-5">
         <div
           className={`w-64 h-64 bg-${
             config.accentColor
@@ -190,44 +191,42 @@ const EmptyCategory = ({
       </div>
 
       {/* Main Content */}
-      <div className='relative z-10 max-w-2xl mx-auto'>
+      <div className="relative z-10 max-w-2xl mx-auto">
         {/* Animated Icon */}
-        <div className='text-8xl mb-6 relative'>
+        <div className="text-8xl mb-6 relative">
           <span className={isAnimating ? "animate-bounce" : ""}>
             {config.icon}
           </span>
-          {isRestocking && (
-            <div className='absolute -bottom-2 left-1/2 transform -translate-x-1/2'>
+          {/* {isRestocking && (
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
               <RefreshCw
                 className={`h-6 w-6 text-${config.accentColor} animate-spin`}
               />
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Title */}
-        <h2 className='text-3xl font-bold text-gray-800 mb-4'>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-200 mb-4">
           {customMessage || config.title}
         </h2>
 
         {/* Message */}
-        <p className='text-lg text-gray-700 mb-8 leading-relaxed'>
+        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
           {config.message}
         </p>
 
         {/* Restocking Status */}
         {isRestocking && (
-          <div
-            className={`bg-white bg-opacity-70 rounded-lg p-4 mb-8 border-l-4 border-${config.accentColor}`}
-          >
-            <div className='flex items-center justify-center gap-3 mb-2'>
-              <Clock className={`h-5 w-5 text-${config.accentColor}`} />
-              <span className='font-semibold text-gray-800'>
+          <div className={`bg-white bg-opacity-70 rounded-lg p-4 mb-8 `}>
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <Clock className={` text-${config.accentColor}`} size={18} />
+              <span className="font-semibold text-gray-800">
                 Currently Restocking
               </span>
             </div>
             <p
-              className={`text-${config.accentColor} font-medium animate-pulse`}
+              className={`text-${config.accentColor} font-medium animate-pulse text-sm`}
             >
               {currentMessage}
             </p>
@@ -235,9 +234,9 @@ const EmptyCategory = ({
         )}
 
         {/* Action Buttons */}
-        <div className='space-y-4 mb-8'>
+        <div className="space-y-4 mb-8">
           {/* Primary Actions */}
-          <div className='flex flex-col sm:flex-row gap-4 justify-center'>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {showNotifyMe && (
               <button
                 onClick={handleNotifyMe}
@@ -250,12 +249,12 @@ const EmptyCategory = ({
               >
                 {notificationSent ? (
                   <>
-                    <Heart className='h-5 w-5' />
+                    <Heart className="" size={18} />
                     We&apos;ll Notify You! 💕
                   </>
                 ) : (
                   <>
-                    <Bell className='h-5 w-5' />
+                    <Bell className="" size={18} />
                     Notify Me When Back
                   </>
                 )}
@@ -265,55 +264,37 @@ const EmptyCategory = ({
             {showBrowseOther && (
               <button
                 onClick={onBrowseOther}
-                className='px-6 py-3 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 rounded-lg font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center gap-2'
+                className="px-6 py-3 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 rounded-lg font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
               >
-                <Package className='h-5 w-5' />
+                <Package className="" size={18} />
                 Browse Other Categories
               </button>
             )}
           </div>
 
           {/* Secondary Actions */}
-          <div className='flex flex-col sm:flex-row gap-3 justify-center'>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={onGoBack}
-              className='px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors flex items-center justify-center gap-2'
+              className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 font-medium transition-colors flex items-center justify-center gap-2"
             >
-              <ArrowLeft className='h-4 w-4' />
+              <ArrowLeft className="" size={16} />
               Go Back
             </button>
             <button
               onClick={onGoHome}
-              className='px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors flex items-center justify-center gap-2'
+              className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 font-medium transition-colors flex items-center justify-center gap-2"
             >
-              <Home className='h-4 w-4' />
+              <Home className="" size={16} />
               Home
             </button>
           </div>
         </div>
 
-        {/* Suggestions */}
-        {config.suggestions && (
-          <div className='bg-white bg-opacity-60 rounded-lg p-6'>
-            <h3 className='font-semibold text-gray-800 mb-3'>
-              While You Wait, How About:
-            </h3>
-            <div className='flex flex-wrap gap-2 justify-center'>
-              {config.suggestions.map((suggestion, index) => (
-                <span
-                  key={index}
-                  className={`px-3 py-1 bg-${config.accentColor} bg-opacity-20 text-${config.accentColor} rounded-full text-sm font-medium cursor-pointer hover:bg-opacity-30 transition-all`}
-                  onClick={() => console.log(`Navigate to: ${suggestion}`)}
-                >
-                  {suggestion}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
+   
 
         {/* Fun Footer */}
-        <div className='mt-8 text-sm text-gray-600'>
+        <div className="mt-8 text-sm text-gray-600 dark:text-gray-400">
           <p>
             💡 <strong>Pro tip:</strong> Our restocked items usually come with
             surprise discounts!
@@ -322,11 +303,11 @@ const EmptyCategory = ({
 
         {/* Email Notification Success */}
         {notificationSent && (
-          <div className='mt-4 bg-green-100 border border-green-200 rounded-lg p-4 flex items-center justify-center gap-2'>
-            <Mail className='h-5 w-5 text-green-600' />
-            <span className='text-green-800 font-medium'>
-              Perfect! We&apos;ll email you the moment we restock. Keep an eye on
-              your inbox! 📧
+          <div className="mt-4 bg-green-100 border border-green-200 rounded-lg p-4 flex items-center justify-center gap-2">
+            <Mail className="h-5 w-5 text-green-600" />
+            <span className="text-green-800 font-medium">
+              Perfect! We&apos;ll email you the moment we restock. Keep an eye
+              on your inbox! 📧
             </span>
           </div>
         )}
