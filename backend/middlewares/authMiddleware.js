@@ -3,6 +3,45 @@ import  {Admin } from "../models/adminModel.js"
 
 const secret_key = process.env.JWT_SECRET
 
+export const verifyTokenUser = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+    const token = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "No token provided"
+      })
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+      req.user = {
+        userId: decoded.id,
+        email: decoded.email,
+         }
+        next()
+    } catch (error) {
+      let message = "Invalid token";
+      let statusCode = 403;
+
+      if (error instanceof jwt.TokenExpiredError) {
+        message = "Token expired";
+        statusCode = 401;
+      } else if (error instanceof jwt.JsonWebTokenError) {
+        message = "Malfomed token";
+      }
+
+      console.error("Token verification failed:", error.message);
+      res.status(statusCode).json({
+        success: false,
+        message,
+        ...(process.env.NODE_ENV === 'development' &&{debug: error.message})
+      })
+      
+         
+    }
+}
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
     const token = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null
@@ -14,9 +53,9 @@ export const verifyToken = (req, res, next) => {
       })
     }
     try {
-        const decoded = jwt.verify(token, secret_key) 
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); 
       req.user = {
-        id: decoded.id,
+        id: decoded.userId,
         email: decoded.email,
         role: decoded.role
          }
@@ -54,7 +93,7 @@ export const verifyAdmin = async (req, res, next) => {
       })
     }
 
-    const decoded = jwt.verify(token, secret_key);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const admin = await Admin.findOne({
       _id: decoded.id,

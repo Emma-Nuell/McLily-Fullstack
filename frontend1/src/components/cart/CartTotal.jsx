@@ -1,4 +1,4 @@
-import { useCartContext } from "../../context/cart-context";
+import { useCartContext } from "../../context";
 import { formatPrice } from "../../utils/helpers";
 import React from "react";
 
@@ -18,7 +18,7 @@ const CartTotal = () => {
         </div>
 
         <p className='text-gray-500 dark:text-gray-400 text-xs'>
-          Delivery fees not included yet
+          Delivery fees and charges not included yet
         </p>
       </div>
     </div>

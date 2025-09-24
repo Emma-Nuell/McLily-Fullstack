@@ -22,7 +22,7 @@ const ProductImages = ({ product }) => {
       />
 
       {/* Image Gallery */}
-      <div className="mt-4 grid py-2 grid-cols-5 gap-4 px-2 overflow-x-auto whitespace-nowrap scrollbar-hidden">
+      <div className="mt-4 grid py-2 grid-cols-5 gap-4 px-2 overflow-x-auto whitespace-wrap scrollbar-hidden">
         {images.map((image, index) => (
           <img
             key={index}

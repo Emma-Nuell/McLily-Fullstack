@@ -3,15 +3,18 @@ import PropTypes from 'prop-types'
 import { faqData} from "../../utils/constants.jsx"
 import { ChevronDown, ChevronUp, Mail, MessageCircle, Package, CreditCard, Shield, ShoppingCart, Clock, Phone, Headphones, Send, HelpCircle  } from 'lucide-react';
 import { useState } from 'react';
+import { useToast } from '../../context/Modal/useModal&Toast.js';
 
 const Help = () => {
+          const {showToast, TOAST_TYPES} = useToast()
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting] = useState(false);
   const [expandedFAQ, setExpandedFAQ] = useState(null);
 
   const handleInputChange = (e) => {
@@ -24,21 +27,30 @@ const Help = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    
+    const {name, subject, message} = formData
 
-    // Simulate form submission
-    setTimeout(() => {
-      console.log("Form submitted:", formData);
-      alert(
-        "Your message has been sent successfully! We'll get back to you within 24 hours."
-      );
+     if (!name || !subject || !message) {
+       showToast("Please fill in all fields", TOAST_TYPES.INFO);
+       return;
+     }
+
+      const targetNumber = "2349051760564";
+
+       const text = `Hello, my name is ${name} and i have an issue on this ${subject}. ${message}`;
+
+        const encodedText = encodeURIComponent(text);
+        const whatsappLink = `https://wa.me/${targetNumber}?text=${encodedText}`;
+
+        window.open(whatsappLink, "_blank");
+
+   
       setFormData({ name: "", email: "", subject: "", message: "" });
-      setIsSubmitting(false);
-    }, 2000);
+   
   };
 
   const handleWhatsAppTechnical = () => {
-    const phoneNumber = "+2349012345678"; // IT Support WhatsApp number
+    const phoneNumber = "+2349051760564"; // IT Support WhatsApp number
     const message = encodeURIComponent(
       "Hi! I need technical support with the website."
     );
@@ -47,7 +59,7 @@ const Help = () => {
   };
 
   const handleWhatsAppSales = () => {
-    const phoneNumber = "+2349087654321"; // Sales Support WhatsApp number
+    const phoneNumber = "+2348037256630"; // Sales Support WhatsApp number
     const message = encodeURIComponent(
       "Hi! I need help with sales, products, or my order."
     );
@@ -301,7 +313,7 @@ const Help = () => {
                 </button>
               </div>
 
-              <div className='mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg'>
+              <div className='mt-6 p-4 bg-green-50 dark:bg-green-800/20 rounded-lg'>
                 <div className='flex items-center'>
                   <Clock className=' text-green-600 mr-2' size={22} />
                   <span className='text-xs font-medium text-green-800'>
@@ -325,7 +337,7 @@ const Help = () => {
                       Call Us
                     </p>
                     <p className='text-gray-600 dark:text-gray-400'>
-                      +234 901 234 5678
+                      +234 803 725 6630
                     </p>
                   </div>
                 </div>
@@ -337,7 +349,7 @@ const Help = () => {
                       Email
                     </p>
                     <p className='text-gray-600 dark:text-gray-400'>
-                      support@yourstore.com
+                      mclilystores@gmail.com
                     </p>
                   </div>
                 </div>
@@ -349,7 +361,7 @@ const Help = () => {
                       Business Hours
                     </p>
                     <p className='text-gray-600 dark:text-gray-400'>
-                      Mon-Fri: 8AM-8PM, Sat: 9AM-6PM
+                      Mon-Fri: 8AM-9PM, Sat: 9AM-6PM
                     </p>
                   </div>
                 </div>
@@ -451,7 +463,7 @@ const Help = () => {
               Chat on WhatsApp
             </button>
             <a
-              href='mailto:support@yourstore.com'
+              href='mailto:mclilystores@gmail.com'
               className='px-6 py-3 bg-white text-blue-600 font-medium rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center'
             >
               <Mail className='mr-2' size={14} />

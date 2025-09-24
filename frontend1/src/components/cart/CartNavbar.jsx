@@ -3,8 +3,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 // import { list } from "../utils/constants.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { useCartContext } from "../../context/cart-context";
 import { Home, User, Package } from "lucide-react";
+import { useCartContext } from "../../context";
 
 const CartNavbar = () => {
   const [isListVisible, setIsListVisible] = useState(false);

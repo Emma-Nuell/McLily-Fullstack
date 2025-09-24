@@ -1,12 +1,13 @@
-import { useProductContext } from "../../context/product-context";
+// import { useProductContext } from "../../context/product-context";
 import Loading from "../Loading";
 import { useSwipeable } from "react-swipeable";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types'
 
 
-const FeaturedProducts = () => {
-  const { featuredProducts: featured } = useProductContext();
+const FeaturedProducts = ({products: featured}) => {
+  // const { featuredProducts: featured } = useProductContext();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isInteracting, setIsInteracting] = useState(false);
 
@@ -43,7 +44,7 @@ const FeaturedProducts = () => {
         {...handlers}
       >
         <Link
-          to={`/products/${featured[currentIndex].id}`}
+          to={`/products/singleProduct/${featured[currentIndex].productId}`}
           className='relative w-[90%] h-[90%] rounded-xl max-w-[500px] bg-white dark:bg-surface'
         >
           <img
@@ -73,5 +74,12 @@ const FeaturedProducts = () => {
     </section>
   );
 };
+
+
+
+FeaturedProducts.propTypes = {
+  products: PropTypes.array
+}
+
 
 export default FeaturedProducts;

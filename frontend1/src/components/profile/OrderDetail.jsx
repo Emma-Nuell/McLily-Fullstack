@@ -2,10 +2,29 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Calendar, CheckCircle, CreditCard, Mail, MapPin, Package, Phone, Truck } from 'lucide-react';
 import ProfileNavbar from './ProfileNavbar';
+import { useParams } from 'react-router-dom';
+import { useSmartOrder } from '../../hooks/orderHooks';
+import Error from '../Error';
+import Loading from '../Loading';
 
 const OrderDetail = () => {
+  const {orderId} = useParams()
+  const {data, isLoading, isError, error} = useSmartOrder(orderId)
 
-    const order = {
+   const order = data
+  //  const fromCache = data?.fromCache;
+
+     if (isLoading) {
+       return <Loading message="Loading order details..." />;
+     }
+
+     if (isError || !order) {
+       return <Error message="Order not found" error={error} />;
+     }
+
+     
+    // eslint-disable-next-line no-unused-vars
+    const orders = {
       orderId: "ORD-2024-001234",
       customerDetails: {
         name: "Adebayo Johnson",
@@ -76,15 +95,17 @@ const OrderDetail = () => {
         }).format(amount);
       };
 
-      const formatDate = (date) => {
-        return new Intl.DateTimeFormat("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }).format(new Date(date));
-    };
+
+            const formatDate = (date) => {
+              
+              return new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              }).format(new Date(date));
+            };
     
       const getStatusColor = (status) => {
         const colors = {
@@ -122,21 +143,21 @@ const OrderDetail = () => {
         );
       };
   return (
-    <div className='bg-gray-50 min-h-screen dark:bg-surface py-8'>
+    <div className="bg-gray-50 min-h-screen dark:bg-surface py-8">
       {/* <ProfileNavbar title={"Order Details"} /> */}
-      <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className='rounded-lg shadow-md border p-6 mb-6 py-10 bg-background-white border-primary-300 dark:border-primary-100'>
-          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between'>
+        <div className="rounded-lg shadow-md border p-6 mb-6 py-10 bg-background-white border-primary-300 dark:border-primary-100">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className='text-xl font-bold text-gray-900 dark:text-gray-200'>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-gray-200">
                 Order #{order.orderId}
               </h1>
-              <p className='text-gray-600 dark:text-gray-400 mt-1 text-sm'>
+              <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm">
                 Placed on {formatDate(order.orderedAt)}
               </p>
             </div>
-            <div className='mt-4 sm:mt-0 flex flex-col sm:flex-row gap-4'>
+            <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-4">
               <span
                 className={`px-5 py-1 rounded-full text-sm font-medium ${getStatusColor(
                   order.orderStatus
@@ -155,45 +176,45 @@ const OrderDetail = () => {
           </div>
         </div>
 
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
-          <div className='lg:col-span-2 space-y-6'>
+          <div className="lg:col-span-2 space-y-6">
             {/* Order Items */}
-            <div className='bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100'>
-              <div className='p-6 py-8 border-b mb-4 border-primary-300 dark:border-primary-100'>
-                <h2 className='text-lg font-semibold text-gray-900 dark:text-gray-200 flex items-center'>
+            <div className="bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100">
+              <div className="p-6 py-8 border-b mb-4 border-primary-300 dark:border-primary-100">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-200 flex items-center">
                   <Package
-                    className='mr-2 text-primary-600 dark:text-primary-300'
+                    className="mr-2 text-primary-600 dark:text-primary-300"
                     size={18}
                   />
                   Order Items
                 </h2>
               </div>
-              <div className='p-6'>
-                <div className='space-y-6'>
+              <div className="p-6">
+                <div className="space-y-6">
                   {order.orderItems.map((item, index) => (
                     <div
                       key={index}
-                      className='flex items-center space-x-4 p-4 border rounded-lg border-primary-300 dark:border-primary-100'
+                      className="flex items-center space-x-4 p-4 border rounded-lg border-primary-300 dark:border-primary-100"
                     >
                       <img
                         src={item.image}
                         alt={item.productName}
-                        className='w-26 h-26 object-cover rounded-lg'
+                        className="w-26 h-26 object-cover rounded-lg"
                       />
-                      <div className='flex-1'>
-                        <h3 className='font-medium text-sm text-gray-900 dark:text-gray-200 line-clamp-2'>
+                      <div className="flex-1">
+                        <h3 className="font-medium text-sm text-gray-900 dark:text-gray-200 line-clamp-2">
                           {item.productName}
                         </h3>
-                        <p className='text-gray-600 text-sm dark:text-gray-300'>
+                        <p className="text-gray-600 text-sm dark:text-gray-300">
                           Quantity: {item.quantity}
                         </p>
                       </div>
-                      <div className='text-right'>
-                        <p className='font-semibold text-sm text-gray-900 dark:text-gray-200'>
+                      <div className="text-right">
+                        <p className="font-semibold text-sm text-gray-900 dark:text-gray-200">
                           {formatCurrency(item.price * item.quantity)}
                         </p>
-                        <p className='text-xs text-gray-600 dark:text-gray-400'>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
                           {formatCurrency(item.price)} each
                         </p>
                       </div>
@@ -204,28 +225,28 @@ const OrderDetail = () => {
             </div>
 
             {/* Order Timeline */}
-            <div className='bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100'>
-              <div className='p-6 border-b border-primary-300 dark:border-primary-100'>
-                <h2 className='text-lg font-semibold text-gray-900 dark:text-gray-200 flex items-center'>
+            <div className="bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100">
+              <div className="p-6 border-b border-primary-300 dark:border-primary-100">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-200 flex items-center">
                   <Calendar
-                    className='mr-3 text-primary-600 dark:text-primary-300'
+                    className="mr-3 text-primary-600 dark:text-primary-300"
                     size={18}
                   />
                   Order Timeline
                 </h2>
               </div>
-              <div className='p-6'>
-                <div className='space-y-6'>
+              <div className="p-6">
+                <div className="space-y-6">
                   {order.statusHistory.map((status, index) => (
-                    <div key={index} className='flex items-start space-x-3'>
-                      <div className='flex-shrink-0'>
-                        <CheckCircle className='text-green-500' size={16} />
+                    <div key={index} className="flex items-start space-x-3">
+                      <div className="flex-shrink-0">
+                        <CheckCircle className="text-green-500" size={16} />
                       </div>
-                      <div className='flex-1'>
-                        <p className='font-medium text-gray-900 dark:text-gray-300'>
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900 dark:text-gray-300">
                           {status.status}
                         </p>
-                        <p className='text-sm text-gray-600 dark:text-gray-400'>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                           {formatDate(status.changeAt)}
                         </p>
                         {/* <p className='text-sm text-gray-500 dark:text-gray-200'>
@@ -240,39 +261,39 @@ const OrderDetail = () => {
 
             {/* Tracking Information */}
             {order.deliveryTracking.trackingNumber && (
-              <div className='bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100'>
-                <div className='p-6 border-b border-primary-300 dark:border-primary-100'>
-                  <h2 className='text-lg font-semibold text-gray-900 dark:text-gray-200 flex items-center'>
+              <div className="bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100">
+                <div className="p-6 border-b border-primary-300 dark:border-primary-100">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-200 flex items-center">
                     <Truck
-                      className='mr-3 text-primary-600 dark:text-primary-300'
+                      className="mr-3 text-primary-600 dark:text-primary-300"
                       size={18}
                     />
                     Shipping & Tracking
                   </h2>
                 </div>
-                <div className='p-6'>
-                  <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                <div className="p-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <p className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Tracking Number
                       </p>
-                      <p className='text-gray-900 dark:text-gray-200'>
+                      <p className="text-gray-900 dark:text-gray-200">
                         {order.deliveryTracking.trackingNumber}
                       </p>
                     </div>
                     <div>
-                      <p className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Carrier
                       </p>
-                      <p className='text-gray-900 dark:text-gray-200'>
+                      <p className="text-gray-900 dark:text-gray-200">
                         {order.deliveryTracking.carrier}
                       </p>
                     </div>
                     <div>
-                      <p className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Estimated Delivery
                       </p>
-                      <p className='text-gray-900 dark:text-gray-200'>
+                      <p className="text-gray-900 dark:text-gray-200">
                         {formatDate(order.deliveryTracking.estimatedDelivery)}
                       </p>
                     </div>
@@ -283,38 +304,38 @@ const OrderDetail = () => {
           </div>
 
           {/* Sidebar */}
-          <div className='space-y-6'>
+          <div className="space-y-6">
             {/* Order Summary */}
-            <div className='bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100'>
-              <div className='p-6 border-b border-primary-300 dark:border-primary-100'>
-                <h2 className='text-lg font-semibold text-gray-900 dark:text-gray-200'>
+            <div className="bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100">
+              <div className="p-6 border-b border-primary-300 dark:border-primary-100">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-200">
                   Order Summary
                 </h2>
               </div>
-              <div className='p-6'>
-                <div className='space-y-3'>
-                  <div className='flex justify-between'>
-                    <span className='text-gray-600 dark:text-gray-400'>
+              <div className="p-6">
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
                       Subtotal
                     </span>
-                    <span className='text-gray-900 dark:text-gray-200'>
+                    <span className="text-gray-900 dark:text-gray-200">
                       {formatCurrency(order.subtotal)}
                     </span>
                   </div>
-                  <div className='flex justify-between'>
-                    <span className='text-gray-600 dark:text-gray-400'>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
                       Shipping
                     </span>
-                    <span className='text-gray-900 dark:text-gray-200'>
+                    <span className="text-gray-900 dark:text-gray-200">
                       {formatCurrency(order.shippingFee)}
                     </span>
                   </div>
-                  <div className='border-t pt-3 border-primary-300 dark:border-primary-100'>
-                    <div className='flex justify-between py-2'>
-                      <span className='font-semibold text-gray-900 dark:text-gray-200'>
+                  <div className="border-t pt-3 border-primary-300 dark:border-primary-100">
+                    <div className="flex justify-between py-2">
+                      <span className="font-semibold text-gray-900 dark:text-gray-200">
                         Total
                       </span>
-                      <span className='font-semibold text-gray-900 dark:text-gray-200'>
+                      <span className="font-semibold text-gray-900 dark:text-gray-200">
                         {formatCurrency(order.totalAmount)}
                       </span>
                     </div>
@@ -324,40 +345,42 @@ const OrderDetail = () => {
             </div>
 
             {/* Payment Information */}
-            <div className='bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100'>
-              <div className='p-6 border-b border-primary-300 dark:border-primary-100'>
-                <h2 className='text-lg font-semibold text-gray-900 dark:text-gray-200 flex items-center'>
+            <div className="bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100">
+              <div className="p-6 border-b border-primary-300 dark:border-primary-100">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-200 flex items-center">
                   <CreditCard
-                    className=' mr-3 text-primary-600 dark:text-primary-300'
+                    className=" mr-3 text-primary-600 dark:text-primary-300"
                     size={18}
                   />
                   Payment Details
                 </h2>
               </div>
-              <div className='p-6'>
-                <div className='space-y-3'>
+              <div className="p-6">
+                <div className="space-y-3">
                   <div>
-                    <p className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Payment Method
                     </p>
-                    <p className='text-gray-900 dark:text-gray-200 capitalize'>
+                    <p className="text-gray-900 dark:text-gray-200 capitalize">
                       {order.paymentMethod}
                     </p>
                   </div>
                   <div>
-                    <p className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Transaction ID
                     </p>
-                    <p className='text-gray-900 dark:text-gray-200 text-sm break-all'>
-                      {order.paymentDetails.transactionId}
+                    <p className="text-gray-900 dark:text-gray-200 text-sm break-all">
+                      {order.paymentDetails.transactionId || "—"}
                     </p>
                   </div>
                   <div>
-                    <p className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Payment Date
                     </p>
-                    <p className='text-gray-900 dark:text-gray-200'>
-                      {formatDate(order.paymentDetails.paymentDate)}
+                    <p className="text-gray-900 dark:text-gray-200">
+                      {order.paymentDetails.paymentDate
+                        ? formatDate(order.paymentDetails.paymentDate)
+                        : "—"}
                     </p>
                   </div>
                 </div>
@@ -365,46 +388,46 @@ const OrderDetail = () => {
             </div>
 
             {/* Customer Information */}
-            <div className='bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100'>
-              <div className='p-6 border-b border-primary-300 dark:border-primary-100'>
-                <h2 className='text-lg font-semibold text-gray-900 dark:text-gray-200 flex items-center'>
+            <div className="bg-background-white rounded-lg shadow-md border  border-primary-300 dark:border-primary-100">
+              <div className="p-6 border-b border-primary-300 dark:border-primary-100">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-200 flex items-center">
                   <MapPin
-                    className='mr-2 text-primary-600 dark:text-primary-300'
+                    className="mr-2 text-primary-600 dark:text-primary-300"
                     size={18}
                   />
                   Customer Details
                 </h2>
               </div>
-              <div className='p-6'>
-                <div className='space-y-4'>
+              <div className="p-6">
+                <div className="space-y-4">
                   <div>
-                    <p className='font-medium text-gray-900 dark:text-gray-200'>
+                    <p className="font-medium text-gray-900 dark:text-gray-200">
                       {order.customerDetails.name}
                     </p>
                   </div>
-                  <div className='flex items-center space-x-2'>
+                  <div className="flex items-center space-x-2">
                     <Mail
-                      className=' text-gray-400 dark:text-gray-300'
+                      className=" text-gray-400 dark:text-gray-300"
                       size={16}
                     />
-                    <p className='text-gray-900 dark:text-gray-200 text-sm'>
+                    <p className="text-gray-900 dark:text-gray-200 text-sm">
                       {order.customerDetails.email}
                     </p>
                   </div>
-                  <div className='flex items-center space-x-2'>
+                  <div className="flex items-center space-x-2">
                     <Phone
-                      className='text-gray-400 dark:text-gray-300'
+                      className="text-gray-400 dark:text-gray-300"
                       size={16}
                     />
-                    <p className='text-gray-900 dark:text-gray-200 text-sm'>
+                    <p className="text-gray-900 dark:text-gray-200 text-sm">
                       {order.customerDetails.phone}
                     </p>
                   </div>
                   <div>
-                    <p className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Delivery Address
                     </p>
-                    <p className='text-gray-900 dark:text-gray-200 text-sm mt-2'>
+                    <p className="text-gray-900 dark:text-gray-200 text-sm mt-2">
                       {order.customerDetails.address.street}
                       <br />
                       {order.customerDetails.address.city},{" "}

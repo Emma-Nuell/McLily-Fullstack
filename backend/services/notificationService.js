@@ -7,7 +7,18 @@ export const notify = {
       title: "New Order Received",
       message: `Order #${
         order.orderId
-      } has benn placed for ₦${order.totalAmount.toLocaleString()}`,
+      } has been placed for ₦${order.totalAmount.toLocaleString()}`,
+      type: "order",
+      priority: "high",
+    });
+  },
+
+  orderCancelled: async (order) => {
+    await Notification.create({
+      title: "Order Cancelled",
+      message: `Order #${
+        order.orderId
+      } has been cancelled`,
       type: "order",
       priority: "high",
     });

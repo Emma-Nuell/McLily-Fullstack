@@ -1,8 +1,8 @@
-import { useCartContext } from "../context/cart-context";
 import { Link } from "react-router-dom";
 
-import { CartContent, CartNavbar } from "../components/cart";
+import { CartContent, CartNavbar, CartMayLike, CheckoutSlide } from "../components/cart";
 import React from "react";
+import { useCartContext } from "../context";
 
 const CartPage = () => {
   const { cart } = useCartContext();
@@ -28,9 +28,14 @@ const CartPage = () => {
   }
 
   return (
-    <main className='min-h-screen bg-gray-50 dark:bg-background-white scrollbar-hidden overflow-auto pb-36'>
+    <main className='min-h-screen bg-gray-100 dark:bg-background-white'>
       <CartNavbar />
-        <CartContent />
+      <div className="pb-32 scrollbar-hidden overflow-auto">
+      <CartContent />
+      <CartMayLike cartItems={cart} /> 
+
+      </div>
+      <CheckoutSlide/> 
     </main>
   );
 };

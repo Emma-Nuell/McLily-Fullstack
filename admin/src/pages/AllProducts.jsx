@@ -60,6 +60,8 @@ const AllProducts = () => {
     }
     
     if (error) {
+      console.error(error);
+      
       return <ErrorAlert />;
     }
   return (

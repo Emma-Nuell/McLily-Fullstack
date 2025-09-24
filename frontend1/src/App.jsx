@@ -19,7 +19,9 @@ import {
   SingleProduct,
   Preorder,
   AuthPage,
-  Legal
+  Legal,
+  SearchPage,
+  Review,
 } from "./pages";
 import {
   AccountManagement,
@@ -47,13 +49,14 @@ const AppContent = () => {
     "/profile/addresses",
     "/profile/addresses/new",
     "/profile/addresses/:addressId",
-    "/legal"
+    "/legal",
    
   ];
   const hiddenFooterRoutes = [
-    "/products/:id",
+    "/products/singleProduct/:productId",
     "/cart",
     "/profile",
+    "/auth",
     "/profile/orders",
     "/profile/orders/:orderId",
     "/profile/ratings",
@@ -62,7 +65,8 @@ const AppContent = () => {
     "/profile/addresses/new",
     "/profile/addresses/:addressId",
     "/profile/wishlist",
-    "/profile/help"
+    "/profile/help",
+    "/search",
   ];
   const shouldHideFooter = hiddenFooterRoutes.some((route) =>
     matchPath(route, location.pathname)
@@ -76,7 +80,13 @@ const AppContent = () => {
         <Route exact path='/' element={<Home />} />
         <Route exact path='/auth' element={<AuthPage />} />
         <Route path='/products' element={<Products />} />
-        <Route path='/products/:id' element={<SingleProduct />} />
+        <Route path='/products/category/:category' element={<Products />} />
+        <Route path='/products/category/:category/:subCategory' element={<Products />} />
+        <Route path='/products/subCategory/:subCategory' element={<Products />} />
+        <Route path='/products/all/:allSubCategory' element={<Products />} />
+        <Route path='/products/:supriseMe' element={<Products />} />
+        <Route path='/products/singleProduct/:productId' element={<SingleProduct />} />
+        <Route path='/search' element={<SearchPage />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/profile' element={<Profile />} />

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import ThemeContext from "./Themecontext.jsx";
+import React from "react";
+import PropTypes from "prop-types";
 
 const getInitialTheme = () => {
   if (typeof window !== "undefined" && window.localStorage) {
@@ -38,5 +40,11 @@ const ThemeProvider = ({ initialTheme, children }) => {
     </ThemeContext.Provider>
   );
 };
+
+ThemeProvider.propTypes = {
+  children: PropTypes.node,
+  initialTheme: PropTypes.string,
+};
+
 
 export default ThemeProvider;

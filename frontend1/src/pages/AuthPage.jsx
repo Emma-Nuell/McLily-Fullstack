@@ -1,8 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../assets/logo.svg";
+import { useUserContext } from "../context/index.js";
+import Logo from "../assets/logo.svg?react";
 
 const AuthPage = () => {
+  const {
+    signIn,
+    signUp,
+    isLoading,
+    error: authError,
+    isSigningIn,
+    isSigningUp,
+  } = useUserContext();
   const [activeForm, setActiveForm] = useState("login");
   const [formData, setFormData] = useState({
     firstName: "",
@@ -11,7 +20,7 @@ const AuthPage = () => {
     password: "",
   });
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -68,31 +77,27 @@ const AuthPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
     if (!validateForm()) {
-      setIsSubmitting(false);
       return;
     }
 
     try {
       if (activeForm === "login") {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log("Login data", {
+        await signIn({ email: formData.email, password: formData.password });
+        navigate(-1);
+      } else {
+        await signUp({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
           email: formData.email,
           password: formData.password,
         });
-        navigate("/");
-      } else {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log("Signup data", formData);
         navigate("/");
       }
     } catch (error) {
       setErrors({ form: "An error occured. Please try again" });
       console.log(error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -117,23 +122,29 @@ const AuthPage = () => {
     activeForm === "signup" ? getPasswordStrength(formData.password) : 0;
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-white dark:from-background to-primary-50 dark:to-background flex items-center justify-center p-5'>
-      <div className='w-full max-w-md bg-background-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300'>
+    <div className="min-h-screen bg-gradient-to-br from-white dark:from-background to-primary-50 dark:to-background flex items-center justify-center p-5">
+      <div className="w-full max-w-md bg-background-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300">
         {/* header */}
-        <div className='bg-gradient-to-r from-primary-500 dark:from-primary-300 to-primary-500 dark:to-primary-300 text-white p-8 text-center'>
-          <div className='w-34 h-34 bg-background-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg'>
-            <img src={Logo} alt='logo' className='w-[84%]' />
+        <div className="bg-gradient-to-r from-primary-500 dark:from-primary-300 to-primary-500 dark:to-primary-300 text-white p-8 text-center">
+          <div className="w-34 h-34 bg-background-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <Logo className="w-30 text-primary-500 dark:text-primary-300 fill-current drop-shadow-md" />
           </div>
-          <h1 className='text-4xl font-bold mb-2 font-comorant dark:text-gray-900'>
+          <h1 className="text-4xl font-bold mb-2 font-comorant dark:text-gray-900">
             McLily
           </h1>
         </div>
 
         {/* form container */}
-        <div className='p-6'>
+        <div className="p-6">
           {errors.form && (
-            <div className='mb-4 p-3 bg-red-100 text-red-700 roudned-lg text-sm'>
+            <div className="mb-4 p-3 bg-red-100 text-red-700 roudned-lg text-sm">
               {errors.form}
+            </div>
+          )}
+
+          {authError && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              {authError}
             </div>
           )}
 
@@ -143,22 +154,22 @@ const AuthPage = () => {
               activeForm === "login" ? "block animate-fadeIn" : "hidden"
             }`}
           >
-            <h2 className='text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center'>
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
               Welcome Back
             </h2>
             <form onSubmit={handleSubmit}>
-              <div className='mb-4 transition-transform duration-200'>
+              <div className="mb-4 transition-transform duration-200">
                 <label
-                  htmlFor='email'
-                  className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
                   Email Address
                 </label>
                 <input
-                  type='email'
-                  inputMode='email'
-                  id='email'
-                  name='email'
+                  type="email"
+                  inputMode="email"
+                  id="email"
+                  name="email"
                   value={formData.email}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 rounded-xl border-1 ${
@@ -169,20 +180,20 @@ const AuthPage = () => {
                   required
                 />
                 {errors.email && (
-                  <p className='mt-1 text-sm text-red-600'>{errors.email}</p>
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
                 )}
               </div>
-              <div className='mb-4 transition-transform duration-200'>
+              <div className="mb-4 transition-transform duration-200">
                 <label
-                  htmlFor='password'
-                  className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
                   Password
                 </label>
                 <input
-                  type='password'
-                  id='password'
-                  name='password'
+                  type="password"
+                  id="password"
+                  name="password"
                   value={formData.password}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 rounded-xl border-1 ${
@@ -193,20 +204,20 @@ const AuthPage = () => {
                   required
                 />
                 {errors.password && (
-                  <p className='mt-1 text-sm text-red-600'>{errors.password}</p>
+                  <p className="mt-1 text-sm text-red-600">{errors.password}</p>
                 )}
               </div>
               <button
-                type='submit'
-                disabled={isSubmitting}
-                className='w-full mt-2 py-3 px-4 bg-gradient-to-r from-primary-500 dark:from-primary-300 to-primary-500 dark:to-primary-300 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:translate-y-0.5 transition-all duration-300 mb-4 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer'
+                type="submit"
+                disabled={isLoading || isSigningIn}
+                className="w-full mt-2 py-3 px-4 bg-gradient-to-r from-primary-500 dark:from-primary-300 to-primary-500 dark:to-primary-300 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:translate-y-0.5 transition-all duration-300 mb-4 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
               >
-                {isSubmitting ? "Signing In..." : "Sign In"}
+                {isSigningIn ? "Signing In..." : "Sign In"}
               </button>
-              <div className='text-center mb-4'>
+              <div className="text-center mb-4">
                 <button
-                  type='button'
-                  className='text-primary-500 dark:text-primary-300 text-sm font-medium hover:text-primary-600 transition-colors'
+                  type="button"
+                  className="text-primary-500 dark:text-primary-300 text-sm font-medium hover:text-primary-600 transition-colors"
                   onClick={() =>
                     alert("Password reset functionality would go here")
                   }
@@ -216,17 +227,17 @@ const AuthPage = () => {
               </div>
             </form>
 
-            <div className='flex items-center my-6'>
-              <div className='flex-grow border-t border-gray-300'></div>
-              <span className='mx-4 text-gray-500 text-sm dark:text-gray-400'>
+            <div className="flex items-center my-6">
+              <div className="flex-grow border-t border-gray-300"></div>
+              <span className="mx-4 text-gray-500 text-sm dark:text-gray-400">
                 New to McLily?
               </span>
-              <div className='flex-grow border-t border-gray-300'></div>
+              <div className="flex-grow border-t border-gray-300"></div>
             </div>
-            <div className='text-center'>
+            <div className="text-center">
               <button
                 onClick={() => switchForm("signup")}
-                className='text-primary-500 dark:text-primary-300 font-semibold hover:text-primary-400 transition-colors'
+                className="text-primary-500 dark:text-primary-300 font-semibold hover:text-primary-400 transition-colors"
               >
                 Create an account
               </button>
@@ -239,22 +250,22 @@ const AuthPage = () => {
               activeForm === "signup" ? "block animate-fadeIn" : "hidden"
             }`}
           >
-            <h2 className='text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center'>
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
               Join McLily
             </h2>
             <form onSubmit={handleSubmit}>
-              <div className='flex gap-4 mb-4'>
-                <div className='flex-1 transition-transform duration-200'>
+              <div className="flex gap-4 mb-4">
+                <div className="flex-1 transition-transform duration-200">
                   <label
-                    htmlFor='firstName'
-                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                    htmlFor="firstName"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                   >
                     First Name
                   </label>
                   <input
-                    type='text'
-                    id='firstName'
-                    name='firstName'
+                    type="text"
+                    id="firstName"
+                    name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 rounded-xl border-1 ${
@@ -265,22 +276,22 @@ const AuthPage = () => {
                     required
                   />
                   {errors.firstName && (
-                    <p className='mt-1 text-sm text-red-600'>
+                    <p className="mt-1 text-sm text-red-600">
                       {errors.firstName}
                     </p>
                   )}
                 </div>
-                <div className='flex-1 transition-transform duration-200'>
+                <div className="flex-1 transition-transform duration-200">
                   <label
-                    htmlFor='lastName'
-                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                    htmlFor="lastName"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                   >
                     Last Name
                   </label>
                   <input
-                    type='text'
-                    id='lastName'
-                    name='lastName'
+                    type="text"
+                    id="lastName"
+                    name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 rounded-xl border-1 ${
@@ -291,23 +302,23 @@ const AuthPage = () => {
                     required
                   />
                   {errors.lastName && (
-                    <p className='mt-1 text-sm text-red-600'>
+                    <p className="mt-1 text-sm text-red-600">
                       {errors.lastName}
                     </p>
                   )}
                 </div>
               </div>
-              <div className='mb-4 transition-transform duration-200'>
+              <div className="mb-4 transition-transform duration-200">
                 <label
-                  htmlFor='signupEmail'
-                  className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                  htmlFor="signupEmail"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
                   Email Address
                 </label>
                 <input
-                  type='email'
-                  id='signupEmail'
-                  name='email'
+                  type="email"
+                  id="signupEmail"
+                  name="email"
                   value={formData.email}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 rounded-xl border-1 ${
@@ -318,20 +329,20 @@ const AuthPage = () => {
                   required
                 />
                 {errors.email && (
-                  <p className='mt-1 text-sm text-red-600'>{errors.email}</p>
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
                 )}
               </div>
-              <div className='mb-4 transition-transform duration-200'>
+              <div className="mb-4 transition-transform duration-200">
                 <label
-                  htmlFor='signupPassword'
-                  className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                  htmlFor="signupPassword"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
                   Password
                 </label>
                 <input
-                  type='password'
-                  id='signupPassword'
-                  name='password'
+                  type="password"
+                  id="signupPassword"
+                  name="password"
                   value={formData.password}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 rounded-xl border-1 ${
@@ -342,8 +353,8 @@ const AuthPage = () => {
                   required
                 />
                 {activeForm === "signup" && (
-                  <div className='mt-2'>
-                    <div className='flex gap-1 mb-1'>
+                  <div className="mt-2">
+                    <div className="flex gap-1 mb-1">
                       {[1, 2, 3, 4, 5].map((i) => (
                         <div
                           key={i}
@@ -378,28 +389,28 @@ const AuthPage = () => {
                   </div>
                 )}
                 {errors.password && (
-                  <p className='mt-1 text-sm text-red-600'>{errors.password}</p>
+                  <p className="mt-1 text-sm text-red-600">{errors.password}</p>
                 )}
               </div>
               <button
-                type='submit'
-                disabled={isSubmitting}
-                className='w-full py-3 mt-2 px-4 bg-gradient-to-r from-primary-500 to-primary-500 dark:from-primary-300 dark:to-primary-300 dark:text-gray-200 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 mb-4 disabled:opacity-70 disabled:cursor-not-allowed'
+                type="submit"
+                disabled={isLoading || isSigningUp}
+                className="w-full py-3 mt-2 px-4 bg-gradient-to-r from-primary-500 to-primary-500 dark:from-primary-300 dark:to-primary-300 dark:text-gray-200 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 mb-4 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
               >
-                {isSubmitting ? "Creating Account..." : "Create Account"}
+                {isSigningUp ? "Creating Account..." : "Create Account"}
               </button>
             </form>
-            <div className='flex items-center my-6'>
-              <div className='flex-grow border-t border-gray-300'></div>
-              <span className='mx-4 text-gray-500 dark:text-gray-400 text-sm'>
+            <div className="flex items-center my-6">
+              <div className="flex-grow border-t border-gray-300"></div>
+              <span className="mx-4 text-gray-500 dark:text-gray-400 text-sm">
                 Already have an account?
               </span>
-              <div className='flex-grow border-t border-gray-300'></div>
+              <div className="flex-grow border-t border-gray-300"></div>
             </div>
-            <div className='text-center'>
+            <div className="text-center">
               <button
                 onClick={() => switchForm("login")}
-                className='text-primary-500 dark:text-primary-300 font-semibold hover:text-primary-400 transition-colors'
+                className="text-primary-500 dark:text-primary-300 font-semibold hover:text-primary-400 transition-colors cursor-pointer"
               >
                 Sign in instead
               </button>

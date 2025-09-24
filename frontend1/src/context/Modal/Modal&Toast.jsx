@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Toast, Dialog } from "radix-ui";
 import { ModalContext, ToastContext } from "./useModal&Toast";
 import { X, AlertCircle, CheckCircle, Info, AlertTriangle } from "lucide-react";
+import PropTypes from "prop-types";
 
 
 const OPERATION_TYPES = {
@@ -298,5 +299,10 @@ const ModalToast = ({ children }) => {
     </ModalContext.Provider>
   );
 };
+
+ModalToast.propTypes = {
+  children: PropTypes.node,
+};
+
 
 export default ModalToast;

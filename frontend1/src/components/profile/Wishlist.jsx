@@ -2,12 +2,18 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Grid, Heart, List, Search, ShoppingCart, Star, Trash2 } from "lucide-react";
+import { useUserContext } from "../../context";
+import { Link } from "react-router-dom";
+import Error from "../Error";
+import IsAuthenticated from "../IsAuthenticated";
 
 const Wishlist = () => {
+  const { isAuthenticated, wishlistItems, wishlistIsLoading, wishlistError } = useUserContext()
   const [viewMode, setViewMode] = useState("grid");
   const [filterBy, setFilterBy] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [wishlistItems, setWishlistItems] = useState([
+  // eslint-disable-next-line no-unused-vars
+  const [wishlistItemss, setWishlistItems] = useState([
     {
       _id: 1,
       productId: "prod1",
@@ -105,6 +111,23 @@ const Wishlist = () => {
       description: "M2 chip, Liquid Retina XDR display, Apple Pencil support",
     },
   ]);
+
+    if (!isAuthenticated) {
+      return (
+       <main className="min-h-[calc(100vh-6rem)] flex items-center justify-center p-4 dark:bg-background-white bg-gray-100">
+                <IsAuthenticated page="wishlist"/>
+              </main>
+      );
+    }
+
+    if (wishlistIsLoading) {
+      return <div>Loading...</div>
+    }
+
+    if (wishlistError) {
+      return <Error error={wishlistError} />;
+    }
+
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-NG", {
@@ -361,7 +384,7 @@ const Wishlist = () => {
         ) : viewMode === "grid" ? (
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
             {filteredItems.map((item) => (
-              <WishlistCard key={item.id} item={item} isListView={false} />
+              <WishlistCard key={item._id} item={item} isListView={false} />
             ))}
           </div>
         ) : (

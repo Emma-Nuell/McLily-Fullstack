@@ -1,11 +1,11 @@
-import { useProductContext } from "../context/product-context";
 import Stars from "./products/Stars";
 import { formatPrice } from "../utils/helpers";
 import { Link } from "react-router-dom";
 import React from "react";
+import { useProductsContext } from "../context";
 
 const HomeProducts = () => {
-  const { products } = useProductContext();
+  const { products } = useProductsContext();
 
   return (
     <section className='px-2.5 py-2.5 bg-white dark:bg-gray-800'>

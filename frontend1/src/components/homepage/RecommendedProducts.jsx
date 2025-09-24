@@ -1,10 +1,8 @@
 import React from 'react'
-import { products } from '../../convert/products1'
-import { shuffleArray } from '../../utils/helpers'
 import ProductCard from './ProductCard'
+import PropTypes from 'prop-types'
 
-const RecommendedProducts = () => {
-  const Products = shuffleArray(products).slice(0,8)
+const RecommendedProducts = ({products: Products}) => {
   return (
     <section className='mb-8 bg-background-white dark:bg-surface py-6 px-4 max-w-7xl '>
             <div className='flex justify-between items-center mb-6 px-4'>
@@ -17,6 +15,10 @@ const RecommendedProducts = () => {
             </div>
     </section>
   );
+}
+
+RecommendedProducts.propTypes = {
+  products: PropTypes.array
 }
 
 export default RecommendedProducts

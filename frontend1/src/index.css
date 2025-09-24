@@ -149,6 +149,10 @@
             display: none;
         }
     }
+     .page {
+        height: calc(100vh - (13vh + 11rem));
+    }
+
 }
 
 @layer components {

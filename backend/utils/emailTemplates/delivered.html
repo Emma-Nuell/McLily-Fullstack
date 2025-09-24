@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your McLily Order Has Arrived!</title>
+    <style>
+          @import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, hsl(160, 100%, 50%) 0%, hsl(160, 80%, 45%) 100%);
+            border-radius: 0 0 20px 20px;
+            position: relative;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            font-family: "Cormorant", serif;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .delivery-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+            font-family: 'Crimson Text', serif;
+        }
+        .confetti {
+            position: absolute;
+            font-size: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(10deg); }
+        }
+        .content {
+            padding: 40px 30px;
+            color: #333;
+        }
+        .celebration-title {
+            font-size: 28px;
+            color: hsl(160, 100%, 35%);
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .fun-delivery-message {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #f39c12;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 40px 0;
+            text-align: center;
+            position: relative;
+        }
+        .fun-delivery-message::before {
+            content: "🎁";
+            font-size: 30px;
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+        }
+        .order-details {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #e9ecef;
+        }
+        .order-details h3 {
+            color: hsl(160, 100%, 35%);
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+        .delivered-items {
+            margin: 20px 0;
+        }
+        .item-row {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .item-icon {
+            width: 50px;
+            height: 50px;
+            background: hsl(160, 100%, 50%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            margin-right: 15px;
+        }
+        .item-info {
+            flex: 1;
+        }
+        .item-name {
+            font-weight: bold;
+            color: #333;
+        }
+        .item-specs {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .satisfaction-check {
+            background: linear-gradient(135deg, hsl(160, 100%, 96%), hsl(160, 50%, 92%));
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            border: 2px solid hsl(160, 100%, 85%);
+        }
+        .satisfaction-check h3 {
+            color: hsl(160, 100%, 35%);
+            margin: 0 0 15px 0;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        .action-button {
+            display: inline-block;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .primary-button {
+            background: linear-gradient(135deg, hsl(160, 100%, 50%), hsl(160, 80%, 45%));
+            color: white;
+        }
+        .secondary-button {
+            background: white;
+            color: hsl(160, 100%, 35%);
+            border: 2px solid hsl(160, 100%, 50%);
+        }
+        .social-share {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .social-share h4 {
+            color: hsl(160, 100%, 35%);
+            margin: 0 0 15px 0;
+        }
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .share-button {
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .share-instagram {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white;
+        }
+        .share-facebook {
+            background: #4267B2;
+            color: white;
+        }
+        .share-twitter {
+            background: #1DA1F2;
+            color: white;
+        }
+        .care-tips {
+            background: linear-gradient(45deg, #e8f5e8, #f0f8f0);
+            border-left: 4px solid hsl(160, 100%, 50%);
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+            border-radius: 20px 20px 0 0;
+            margin-top: 40px;
+        }
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 14px;
+            }
+            .logo {
+                font-size: 50px;
+            }
+            .celebration-title {
+                font-size: 22px;
+            }
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .action-button {
+                width: 80%;
+                text-align: center;
+            }
+            .item-row {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+            .item-icon {
+                margin: 0 0 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="confetti" style="top: 20px; left: 20px;">🎉</div>
+            <div class="confetti" style="top: 30px; right: 30px; animation-delay: 1s;">✨</div>
+            <div class="confetti" style="bottom: 20px; left: 40%; animation-delay: 2s;">🎊</div>
+            
+            <div class="logo">McLily</div>
+            <div class="delivery-badge">📦 DELIVERED!</div>
+        </div>
+        
+        <div class="content">
+            <div class="celebration-title">It's Here, [First Name]!🎉</div>
+            
+            <div class="fun-delivery-message">
+                <h3 style="margin: 0 0 15px 0; color: #d68910;">Package Alert! 📬</h3>
+                <p style="margin: 0; font-size: 16px;"><strong>Breaking news:</strong> Your fabulous McLily goodies have officially landed! We hope your mailbox is ready for this level of style. Warning: Unboxing may cause uncontrollable excitement and spontaneous fashion shows! 💃</p>
+            </div>
+            
+            <div class="order-details">
+                <h3>📋 What Just Arrived</h3>
+                <p style="text-align: center; color: #6c757d; margin-bottom: 20px;">Order #[ORDER_NUMBER] • Delivered on [DELIVERY_DATE]</p>
+                
+                <div class="delivered-items">
+                    <!-- Sample delivered items - replace with dynamic content -->
+                    <div class="item-row">
+                        <div class="item-icon">👠</div>
+                        <div class="item-info">
+                            <div class="item-name">[ITEM_NAME]</div>
+                            <div class="item-specs">Size: [SIZE] | Color: [COLOR] | Qty: [QUANTITY]</div>
+                        </div>
+                    </div>
+                    <!-- Repeat for each delivered item -->
+                </div>
+            </div>
+            
+            <div class="satisfaction-check">
+                <h3>How's Everything Looking? 👀</h3>
+                <p>We hope you're absolutely loving your new pieces! But if something's not quite right, don't worry – we've got your back.</p>
+                
+                <div class="action-buttons">
+                    <a href="[REVIEW_URL]" class="action-button primary-button">✍️ Write a Review</a>
+                    <a href="[RETURN_URL]" class="action-button secondary-button">🔄 Returns & Exchanges</a>
+                </div>
+            </div>
+            
+            <div class="social-share">
+                <h4>Show Off Your Style! 📸</h4>
+                <p>Got the perfect outfit pic? Tag us @McLily and use #McLilyStyle for a chance to be featured on our page!</p>
+                
+                <div class="share-buttons">
+                    <a href="[INSTAGRAM_SHARE_URL]" class="share-button share-instagram">📷 Instagram</a>
+                    <a href="[FACEBOOK_SHARE_URL]" class="share-button share-facebook">👍 Facebook</a>
+                    <a href="[TWITTER_SHARE_URL]" class="share-button share-twitter">🐦 Twitter</a>
+                </div>
+            </div>
+            
+            <div class="care-tips">
+                <h4 style="color: hsl(160, 100%, 35%); margin: 0 0 15px 0;">💡 Pro Care Tips</h4>
+                <p style="margin: 0;">Keep your new favorites looking fresh! Check the care labels, store shoes properly, and remember – a little TLC goes a long way in keeping your style game strong.</p>
+            </div>
+            
+            <p><strong>What's next?</strong></p>
+            <ul style="color: #495057;">
+                <li>🛍️ Browse our latest arrivals for your next style upgrade</li>
+                <li>💝 Share the love – refer friends and get rewards</li>
+                <li>📧 Keep an eye out for exclusive member deals</li>
+            </ul>
+            
+            <center>
+                <a href="[SHOP_MORE_URL]" class="action-button primary-button" style="margin: 20px 0;">Shop More Styles</a>
+            </center>
+            
+            <p>Thanks for choosing McLily – you've made some seriously stylish choices! If you need anything at all, just hit reply and our team will be happy to help.</p>
+            
+            <p>Keep slaying! ✨<br>
+            <strong>The McLily Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Order #[ORDER_NUMBER]</strong> | Delivered [DELIVERY_DATE]</p>
+            <p>© 2025 McLily. All rights reserved.</p>
+            <p><a href="[ACCOUNT_URL]" style="color: #6c757d;">My Account</a> | <a href="[SUPPORT_URL]" style="color: #6c757d;">Customer Support</a> | <a href="[FAQ_URL]" style="color: #6c757d;">FAQ</a></p>
+        </div>
+    </div>
+</body>
+</html>

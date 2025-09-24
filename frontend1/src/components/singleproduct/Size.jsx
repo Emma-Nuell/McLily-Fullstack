@@ -13,7 +13,7 @@ const Size = ({ sizes, selectedSize, onSelectSize}) => {
         </div>
 
         <div className='flex flex-wrap gap-6 mb-4'>
-          {sizes.map(({ value: size, stock,}, index) => {
+          {sizes.map(({ value: size, stock}, index) => {
             const available = stock > 0;
             return (
               <button

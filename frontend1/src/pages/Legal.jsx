@@ -52,8 +52,8 @@ const Legal = () => {
           onClick={() => scrollToSection(sectionId)}
           className={`px-4 py-2 rounded transition-colors ${
             activeSection === sectionId
-              ? "bg-primary-600 text-white"
-              : "bg-primary-400 text-white hover:bg-primary-600"
+              ? "bg-primary-600 dark:bg-primary-200 text-white"
+              : "bg-primary-500 dark:bg-primary-300 text-white hover:bg-primary-600 dark:hover:bg-primary-200 cursor-pointer"
           }`}
         >
           {children}
@@ -61,10 +61,12 @@ const Legal = () => {
       );
 
       const Section = ({ id, title, children }) => (
-        <section id={id} className='mb-16'>
-          <div className='bg-white rounded-lg shadow-lg p-8 border-l-4 border-primary-400'>
-            <h2 className='text-2xl font-bold mb-4 text-primary-700'>{title}</h2>
-            <p className='text-sm text-gray-600 mb-6'>
+        <section id={id} className="mb-16">
+          <div className="bg-background-white rounded-lg shadow-lg p-8 ">
+            <h2 className="text-2xl font-bold mb-4 text-primary-700 dark:text-primary-300">
+              {title}
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
               <strong>Last Updated:</strong> Tuesday, August 12, 2025
             </p>
             {children}
@@ -94,48 +96,48 @@ const Legal = () => {
         </ul>
       );
   return (
-    <div className='bg-white text-gray-800 font-sans min-h-screen'>
+    <div className="bg-gray-50 dark:bg-surface text-gray-900 dark:text-gray-200 min-h-screen">
       {/* Header */}
-      <header className='bg-gradient-to-r from-primary-400 to-primary-600 text-white py-6 shadow-lg'>
-        <div className='max-w-6xl mx-auto px-6'>
-          <h1 className='text-3xl font-bold'>
+      <header className="bg-primary-500 dark:bg-primary-300 text-white py-6 shadow-lg">
+        <div className="max-w-6xl mx-auto px-6">
+          <h1 className="text-2xl font-bold">
             McLily Stores - Legal Information
           </h1>
-          <p className='text-white/90 mt-2'>
+          <p className="text-white/90 mt-2">
             Terms, Policies & Legal Requirements
           </p>
         </div>
       </header>
 
       {/* Navigation */}
-      <nav className='bg-gray-50 border-b sticky top-0 z-10'>
-        <div className='max-w-6xl mx-auto px-6 py-4'>
-          <div className='flex flex-wrap gap-4'>
-            <NavButton sectionId='terms'>Terms & Conditions</NavButton>
-            <NavButton sectionId='privacy'>Privacy Policy</NavButton>
-            <NavButton sectionId='shipping'>Shipping & Refunds</NavButton>
-            <NavButton sectionId='returns'>Returns & Cancellations</NavButton>
-            <NavButton sectionId='contact'>Contact & Social</NavButton>
+      <nav className="bg-gray-50 dark:bg-surface border-b border-primary-300 dark:border-primary-100 sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto px-6 py-4">
+          <div className="flex flex-wrap gap-4">
+            <NavButton sectionId="terms">Terms & Conditions</NavButton>
+            <NavButton sectionId="privacy">Privacy Policy</NavButton>
+            <NavButton sectionId="shipping">Shipping & Refunds</NavButton>
+            <NavButton sectionId="returns">Returns & Cancellations</NavButton>
+            <NavButton sectionId="contact">Contact & Social</NavButton>
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className='max-w-6xl mx-auto px-6 py-8'>
+      <main className="max-w-6xl mx-auto px-4 py-8">
         {/* Terms and Conditions */}
-        <Section id='terms' title='Terms and Conditions'>
-          <div className='space-y-6'>
-            <SubSection title='1. Introduction'>
+        <Section id="terms" title="Terms and Conditions">
+          <div className="space-y-6">
+            <SubSection title="1. Introduction">
               <p>
-                Welcome to <strong>McLily Stores</strong> (&apos;we,&apos; &quot;us,&quot; or
-                &quot;our&quot;). By accessing or using our website at
-                mclily-fullstack.onrender.com, you agree to comply with and be
-                bound by these Terms and Conditions. If you do not agree with
-                these terms, please do not use our website.
+                Welcome to <strong>McLily Stores</strong> (&apos;we,&apos;
+                &quot;us,&quot; or &quot;our&quot;). By accessing or using our
+                website at mclily-fullstack.onrender.com, you agree to comply
+                with and be bound by these Terms and Conditions. If you do not
+                agree with these terms, please do not use our website.
               </p>
             </SubSection>
 
-            <SubSection title='2. Products & Services'>
+            <SubSection title="2. Products & Services">
               <BulletList
                 items={[
                   "McLily specializes in fashion items including clothing and shoes",
@@ -146,7 +148,7 @@ const Legal = () => {
               />
             </SubSection>
 
-            <SubSection title='3. Orders & Payments'>
+            <SubSection title="3. Orders & Payments">
               <BulletList
                 items={[
                   "All orders are subject to product availability and confirmation",
@@ -159,7 +161,7 @@ const Legal = () => {
               />
             </SubSection>
 
-            <SubSection title='4. User Account & Responsibilities'>
+            <SubSection title="4. User Account & Responsibilities">
               <BulletList
                 items={[
                   "Provide accurate and complete information during registration and checkout",
@@ -181,7 +183,7 @@ const Legal = () => {
               </p>
             </SubSection> */}
 
-            <SubSection title='6. Limitation of Liability'>
+            <SubSection title="6. Limitation of Liability">
               <BulletList
                 items={[
                   "McLily Stores is not liable for delays caused by third-party shipping providers",
@@ -191,7 +193,7 @@ const Legal = () => {
                 ]}
               />
             </SubSection>
-{/* 
+            {/* 
             <SubSection title='7. Governing Law'>
               <p>
                 These terms are governed by the laws of the Federal Republic of
@@ -199,22 +201,22 @@ const Legal = () => {
               </p>
             </SubSection> */}
 
-            <SubSection title='8. Changes to Terms'>
+            <SubSection title="8. Changes to Terms">
               <p>
                 We reserve the right to update these terms at any time. Changes
-                will be posted on this page with an updated &quot;Last Modified&quot;
-                date. Continued use of our website after changes constitutes
-                acceptance of the new terms.
+                will be posted on this page with an updated &quot;Last
+                Modified&quot; date. Continued use of our website after changes
+                constitutes acceptance of the new terms.
               </p>
             </SubSection>
           </div>
         </Section>
 
         {/* Privacy Policy */}
-        <Section id='privacy' title='Privacy Policy'>
-          <div className='space-y-6'>
-            <SubSection title='1. Information We Collect'>
-              <SubSubSection title='Personal Information:'>
+        <Section id="privacy" title="Privacy Policy">
+          <div className="space-y-6">
+            <SubSection title="1. Information We Collect">
+              <SubSubSection title="Personal Information:">
                 <BulletList
                   items={[
                     "Name, email address, phone number",
@@ -225,7 +227,7 @@ const Legal = () => {
                 />
               </SubSubSection>
 
-              <SubSubSection title='Payment Information:'>
+              <SubSubSection title="Payment Information:">
                 <BulletList
                   items={[
                     "Payment details are processed securely by Paystack",
@@ -235,7 +237,7 @@ const Legal = () => {
                 />
               </SubSubSection>
 
-              <SubSubSection title='Technical Information:'>
+              <SubSubSection title="Technical Information:">
                 <BulletList
                   items={[
                     "IP address, browser type, device information",
@@ -246,7 +248,7 @@ const Legal = () => {
               </SubSubSection>
             </SubSection>
 
-            <SubSection title='2. How We Use Your Information'>
+            <SubSection title="2. How We Use Your Information">
               <BulletList
                 items={[
                   "Process and fulfill your orders",
@@ -259,8 +261,8 @@ const Legal = () => {
               />
             </SubSection>
 
-            <SubSection title='3. Information Sharing'>
-              <p className='mb-3'>We may share your information with:</p>
+            <SubSection title="3. Information Sharing">
+              <p className="mb-3">We may share your information with:</p>
               <BulletList
                 items={[
                   "<strong>Shipping Partners:</strong> Name and delivery address for order fulfillment",
@@ -269,12 +271,12 @@ const Legal = () => {
                   "<strong>Service Providers:</strong> Third parties that help us operate our business",
                 ]}
               />
-              <p className='mt-3 font-semibold'>
+              <p className="mt-3 font-semibold">
                 We never sell your personal information to third parties.
               </p>
             </SubSection>
 
-            <SubSection title='4. Data Security'>
+            <SubSection title="4. Data Security">
               <BulletList
                 items={[
                   "We implement industry-standard security measures",
@@ -286,7 +288,7 @@ const Legal = () => {
               />
             </SubSection>
 
-            <SubSection title='5. Your Rights'>
+            <SubSection title="5. Your Rights">
               <BulletList
                 items={[
                   "Access your personal information",
@@ -296,13 +298,13 @@ const Legal = () => {
                   "Request data portability",
                 ]}
               />
-              <p className='mt-3'>
+              <p className="mt-3">
                 To exercise these rights, contact us using the information
                 provided below.
               </p>
             </SubSection>
 
-            <SubSection title='6. Cookies Policy'>
+            <SubSection title="6. Cookies Policy">
               <p>
                 We use cookies to enhance your browsing experience, analyze
                 website traffic, and personalize content. You can control cookie
@@ -314,10 +316,10 @@ const Legal = () => {
         </Section>
 
         {/* Shipping & Refund Policy */}
-        <Section id='shipping' title='Shipping & Refund Policy'>
-          <div className='space-y-6'>
-            <SubSection title='Shipping Information'>
-              <SubSubSection title='Delivery Partners:'>
+        <Section id="shipping" title="Shipping & Refund Policy">
+          <div className="space-y-6">
+            <SubSection title="Shipping Information">
+              <SubSubSection title="Delivery Partners:">
                 <BulletList
                   items={[
                     "Currently partnering with reliable third-party logistics providers",
@@ -327,7 +329,7 @@ const Legal = () => {
                 />
               </SubSubSection>
 
-              <SubSubSection title='Delivery Timeframes:'>
+              <SubSubSection title="Delivery Timeframes:">
                 <BulletList
                   items={[
                     "<strong>Lagos & Abuja:</strong> 1-3 business days",
@@ -338,7 +340,7 @@ const Legal = () => {
                 />
               </SubSubSection>
 
-              <SubSubSection title='Shipping Costs:'>
+              <SubSubSection title="Shipping Costs:">
                 <BulletList
                   items={[
                     "Calculated based on delivery location and package weight",
@@ -349,7 +351,7 @@ const Legal = () => {
               </SubSubSection>
             </SubSection>
 
-            <SubSection title='Order Processing'>
+            <SubSection title="Order Processing">
               <BulletList
                 items={[
                   "Orders are processed within 1-2 business days",
@@ -360,8 +362,8 @@ const Legal = () => {
               />
             </SubSection>
 
-            <SubSection title='Refund Policy'>
-              <SubSubSection title='Eligible for Refunds:'>
+            <SubSection title="Refund Policy">
+              <SubSubSection title="Eligible for Refunds:">
                 <BulletList
                   items={[
                     "Failed or canceled deliveries due to our error",
@@ -373,7 +375,7 @@ const Legal = () => {
                 />
               </SubSubSection>
 
-              <SubSubSection title='Refund Process:'>
+              <SubSubSection title="Refund Process:">
                 <BulletList
                   items={[
                     "Refunds are processed to the original payment method",
@@ -384,7 +386,7 @@ const Legal = () => {
                 />
               </SubSubSection>
 
-              <SubSubSection title='Non-Refundable Items:'>
+              <SubSubSection title="Non-Refundable Items:">
                 <BulletList
                   items={[
                     "Items damaged by customer misuse",
@@ -399,10 +401,10 @@ const Legal = () => {
         </Section>
 
         {/* Cancellation & Returns Policy */}
-        <Section id='returns' title='Cancellation & Returns Policy'>
-          <div className='space-y-6'>
-            <SubSection title='Order Cancellation'>
-              <SubSubSection title='When You Can Cancel:'>
+        <Section id="returns" title="Cancellation & Returns Policy">
+          <div className="space-y-6">
+            <SubSection title="Order Cancellation">
+              <SubSubSection title="When You Can Cancel:">
                 <BulletList
                   items={[
                     'Orders can only be canceled during the "Processing" phase (before shipping)',
@@ -412,7 +414,7 @@ const Legal = () => {
                 />
               </SubSubSection>
 
-              <SubSubSection title='Cancellation Process:'>
+              <SubSubSection title="Cancellation Process:">
                 <BulletList
                   items={[
                     "Provide your order number and reason for cancellation",
@@ -424,8 +426,8 @@ const Legal = () => {
               </SubSubSection>
             </SubSection>
 
-            <SubSection title='Returns Policy'>
-              <SubSubSection title='Return Conditions:'>
+            <SubSection title="Returns Policy">
+              <SubSubSection title="Return Conditions:">
                 <BulletList
                   items={[
                     "Items must be unused and in original condition",
@@ -437,7 +439,7 @@ const Legal = () => {
                 />
               </SubSubSection>
 
-              <SubSubSection title='Return Process:'>
+              <SubSubSection title="Return Process:">
                 <BulletList
                   items={[
                     "<strong>Step 1:</strong> Contact us via WhatsApp (+234 803 725 6630) or email",
@@ -449,7 +451,7 @@ const Legal = () => {
                 />
               </SubSubSection>
 
-              <SubSubSection title='Return Shipping:'>
+              <SubSubSection title="Return Shipping:">
                 <BulletList
                   items={[
                     "Customer responsible for return shipping costs (unless item is faulty)",
@@ -460,7 +462,7 @@ const Legal = () => {
                 />
               </SubSubSection>
 
-              <SubSubSection title='Items We Cannot Accept for Return:'>
+              <SubSubSection title="Items We Cannot Accept for Return:">
                 <BulletList
                   items={[
                     "Undergarments and intimate apparel",
@@ -473,7 +475,7 @@ const Legal = () => {
               </SubSubSection>
             </SubSection>
 
-            <SubSection title='Exchange Policy'>
+            <SubSection title="Exchange Policy">
               <BulletList
                 items={[
                   "Exchanges available for size and color variations (subject to availability)",
@@ -484,7 +486,7 @@ const Legal = () => {
               />
             </SubSection>
 
-            <SubSection title='Faulty or Damaged Items'>
+            <SubSection title="Faulty or Damaged Items">
               <BulletList
                 items={[
                   "Report defects or damages within 24 hours of delivery",
@@ -499,13 +501,13 @@ const Legal = () => {
         </Section>
 
         {/* Contact & Social Media */}
-        <Section id='contact' title='Contact Information & Social Media'>
-          <div className='space-y-6'>
-            <SubSection title='Contact Details'>
-              <div className='grid md:grid-cols-2 gap-6'>
+        <Section id="contact" title="Contact Information & Social Media">
+          <div className="space-y-6">
+            <SubSection title="Contact Details">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className='font-semibold mb-2'>Customer Support:</h4>
-                  <ul className='space-y-2'>
+                  <h4 className="font-semibold mb-2">Customer Support:</h4>
+                  <ul className="space-y-2">
                     <li>
                       <strong>WhatsApp:</strong> +234 803 725 6630
                     </li>
@@ -521,8 +523,8 @@ const Legal = () => {
                   </ul>
                 </div>
                 <div>
-                  <h4 className='font-semibold mb-2'>Business Hours:</h4>
-                  <ul className='space-y-2'>
+                  <h4 className="font-semibold mb-2">Business Hours:</h4>
+                  <ul className="space-y-2">
                     <li>
                       <strong>Monday - Friday:</strong> 9:00 AM - 6:00 PM
                     </li>
@@ -540,8 +542,8 @@ const Legal = () => {
               </div>
             </SubSection>
 
-            <SubSection title='Mailing Address'>
-              <div className='bg-gray-50 p-4 rounded-lg'>
+            <SubSection title="Mailing Address">
+              <div className="bg-gray-50 dark:bg-surface p-4 rounded-lg">
                 <p>
                   <strong>McLily Stores</strong>
                   <br />
@@ -551,42 +553,42 @@ const Legal = () => {
                   <br />
                   Nigeria
                 </p>
-                <p className='text-sm text-gray-600 mt-2'>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                   *Please contact us before sending any items to this address
                 </p>
               </div>
             </SubSection>
 
-            <SubSection title='Social Media Links'>
-              <div className='bg-gradient-to-r from-primary-100 to-primary-200 p-6 rounded-lg'>
-                <p className='mb-4'>
+            <SubSection title="Social Media Links">
+              <div className="bg-gradient-to-r from-primary-100 to-primary-200 p-6 rounded-lg">
+                <p className="mb-4">
                   <strong>Connect with McLily Stores:</strong>
                 </p>
-                <div className='grid md:grid-cols-2 gap-4'>
+                <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className='font-semibold mb-3'>Current Platforms:</h4>
-                    <ul className='space-y-2'>
+                    <h4 className="font-semibold mb-3">Current Platforms:</h4>
+                    <ul className="space-y-2">
                       <li>
                         ✅ <strong>WhatsApp Business:</strong> +234 803 725 6630
                       </li>
                       <li>
-                        🔄 <strong>Instagram:</strong> Coming Soon 
+                        🔄 <strong>Instagram:</strong> Coming Soon
                       </li>
                       <li>
                         🔄 <strong>Facebook:</strong> Coming Soon - McLily
                         Stores
                       </li>
                       <li>
-                        🔄 <strong>Twitter/X:</strong> Coming Soon 
+                        🔄 <strong>Twitter/X:</strong> Coming Soon
                       </li>
                       <li>
-                        🔄 <strong>Snapchat:</strong> Coming Soon 
+                        🔄 <strong>Snapchat:</strong> Coming Soon
                       </li>
                     </ul>
                   </div>
                   <div>
-                    <h4 className='font-semibold mb-3'>Future Platforms:</h4>
-                    <ul className='space-y-2 text-gray-600'>
+                    <h4 className="font-semibold mb-3">Future Platforms:</h4>
+                    <ul className="space-y-2 text-gray-600 dark:text-gray-400">
                       <li>📱 TikTok</li>
                       {/* <li>📌 Pinterest</li> */}
                       <li>💼 LinkedIn</li>
@@ -594,8 +596,8 @@ const Legal = () => {
                     </ul>
                   </div>
                 </div>
-                <div className='mt-4 p-3 bg-white rounded border-l-4 border-primary-400'>
-                  <p className='text-sm'>
+                <div className="mt-4 p-3 bg-background-white rounded">
+                  <p className="text-sm">
                     <strong>Note:</strong> Our social media presence is
                     currently under development. Follow our WhatsApp Business
                     account for the latest updates and announcements about new
@@ -605,8 +607,8 @@ const Legal = () => {
               </div>
             </SubSection>
 
-            <SubSection title='Complaint Resolution'>
-              <div className='space-y-3'>
+            <SubSection title="Complaint Resolution">
+              <div className="space-y-3">
                 <p>
                   <strong>Step 1:</strong> Contact our customer support team via
                   WhatsApp or email
@@ -623,7 +625,7 @@ const Legal = () => {
                   <strong>Step 4:</strong> Resolution provided within 3-5
                   business days
                 </p>
-                <p className='text-sm text-gray-600 mt-4'>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
                   We are committed to resolving all customer concerns promptly
                   and fairly.
                 </p>
