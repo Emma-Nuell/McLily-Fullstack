@@ -46,8 +46,9 @@ const ProductList = ({products, hasNextPage, isFetchingNextPage, fetchNextPage})
         isFetchingNextPage={isFetchingNextPage}
         fetchNextPage={fetchNextPage}
       ></Gridview>
+      
       {/* Load more trigger */}
-      <div ref={ref} className="h-10 flex items-center justify-center">
+      <div ref={ref} className="flex items-center justify-center">
         {isFetchingNextPage && <CategorySkeleton />}
         {!hasNextPage && products.length > 0 && (
           <p className="text-gray-600 dark:text-gray-400 my-4 text-center py-8">

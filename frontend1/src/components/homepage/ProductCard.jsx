@@ -117,8 +117,8 @@ const ProductCard = ({ product, showCart = true }) => {
       <div className='w-full h-[100px] flex justify-center items-center overflow-hidden'>
         <img
           src={product.images[0]}
-          alt=''
-          className='h-full w-full object-cover block rounded-t-md'
+          alt='Main product image'
+          className='h-full w-full rounded-t-md'
         />
       </div>
       <div className='flex flex-col items-start gap-2 w-full px-4 mt-2 pb-6'>

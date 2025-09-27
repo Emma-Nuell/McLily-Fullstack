@@ -14,6 +14,7 @@ import CategoryHeader from "./CategoryHeader"
 import EmptyCategory from "./EmptyCategory"
 import SearchBar from "./SearchBar";
 import IsAuthenticated from "./IsAuthenticated";
+import ImageWithFallback from "./ImageWithFallback";
 
 export {
   Navbar,
@@ -31,4 +32,5 @@ export {
   CategoryHeader,
    EmptyCategory,
    IsAuthenticated,
+   ImageWithFallback
 };

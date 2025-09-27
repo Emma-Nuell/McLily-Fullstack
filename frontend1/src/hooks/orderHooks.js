@@ -1,23 +1,27 @@
-import { useOrderContext } from "../context";
+import { useOrderContext, useUserContext } from "../context";
 import { useToast } from "../context/Modal/useModal&Toast";
 import OrderAPI from "../utils/endpoints/orderApi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useUserOrders = () => {
+    const {isAuthenticated} = useUserContext()
+  
   return useQuery({
     queryKey: ["user-orders"],
     queryFn: () => OrderAPI.getUserOrders(),
-    enabled: !!localStorage.getItem("profile"),
+    enabled: isAuthenticated,
     staleTime: 20 * 60 * 1000,
     keepPreviousData: true,
   });
 };
 
 export const useOrderDetails = (orderId, options = {}) => {
+  const { isAuthenticated } = useUserContext();
+
   return useQuery({
     queryKey: ["order", orderId],
     queryFn: () => OrderAPI.getOrderDetails(orderId),
-    enabled: !!orderId && !!localStorage.getItem("profile"),
+    enabled: !!orderId && isAuthenticated,
     staleTime: 50 * 60 * 1000,
     ...options
   });

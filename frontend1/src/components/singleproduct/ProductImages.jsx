@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import PropTypes from 'prop-types'
+import ImageWithFallback from "../ImageWithFallback";
 
 
 const ProductImages = ({ product }) => {
@@ -24,14 +25,15 @@ const ProductImages = ({ product }) => {
       {/* Image Gallery */}
       <div className="mt-4 grid py-2 grid-cols-5 gap-4 px-2 overflow-x-auto whitespace-wrap scrollbar-hidden">
         {images.map((image, index) => (
-          <img
+          <ImageWithFallback
             key={index}
             src={image}
+            index ={index}
             alt={`Thumbnail ${index + 1}`}
-            className={`w-full block rounded-md object-cover h-[64px] md:h-[75px] sm:h-[70px] cursor-pointer ${
+            className={`rounded-md h-[64px] md:h-[75px] sm:h-[70px] cursor-pointer ${
               image === main ? 'ring-1 ring-primary-400 dark:ring-primary-300' : ''
             }`}
-            onClick={() => setMain(images[index])}
+            onTouch={(index) => setMain(images[index])}
           />
         ))}
       </div>

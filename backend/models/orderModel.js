@@ -66,7 +66,7 @@ const orderSchema = new mongoose.Schema(
     },
     pickupStation: {
       type: String,
-      enum: ["none", "stella-maris", "mclily-salon", "mclily-house"],
+      enum: ["none", "stella-maris", "mclily-salon", "mclily-house", "abuad"],
       default: "none",
     },
     pickupAddress: {

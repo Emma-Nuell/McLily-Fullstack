@@ -1,7 +1,7 @@
 import { FaPhoneAlt } from "react-icons/fa";
 import { formatPrice } from "../../utils/helpers";
 import React from "react";
-import { useCartContext, useUserContext } from "../../context";
+import { useCartContext, useUserContext, useUserProfileContext } from "../../context";
 import { useToast } from "../../context/Modal/useModal&Toast";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +10,8 @@ const CheckoutSlide = () => {
           const {showToast, TOAST_TYPES} = useToast()
           const navigate = useNavigate()
   const { isAuthenticated } = useUserContext();
+  const {isLoading} = useUserProfileContext()
+
 
   
 
@@ -33,6 +35,7 @@ const CheckoutSlide = () => {
       {/* Checkout Button */}
       <button
       onClick={handleClick}
+      disabled={isLoading}
       className='flex justify-center p-4 items-center text-base bg-primary-600 dark:bg-primary-300 text-white dark:text-gray-200 font-medium rounded-md active:bg-primary-500 dark:active:bg-primary-400 transition-colors cursor-pointer'>
         Checkout ({formatPrice(total_amount)})
       </button>
