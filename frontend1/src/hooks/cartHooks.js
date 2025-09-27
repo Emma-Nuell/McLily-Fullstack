@@ -1,3 +1,4 @@
+import { useUserContext } from "../context/index.js";
 import CartAPI from "../utils/endpoints/cartApi.js";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 
@@ -24,10 +25,12 @@ export const useAddToCart = () => {
 };
 
 export const useCart = () => {
+  const { isAuthenticated } = useUserContext();
+
   return useQuery({
     queryKey: ["cart"],
-    queryFn: () => CartAPI.getCart(),
-    enabled: !!localStorage.getItem("profile"),
+    queryFn:  CartAPI.getCart,
+    enabled: isAuthenticated,
   });
 };
 

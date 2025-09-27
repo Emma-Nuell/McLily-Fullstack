@@ -3,7 +3,7 @@ import Logo from "../../assets/logo.svg?react";
 
 const CategorySkeleton = () => {
   return (
-    <section className="mb-12">
+    <section className="mb-12 w-full">
       <div className="h-6 w-1/3 bg-transparent rounded mb-4"></div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 px-5">
         {[...Array(4)].map((_, i) => (

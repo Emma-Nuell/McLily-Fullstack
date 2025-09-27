@@ -45,6 +45,13 @@ const pickupStations = [
     price: 1500,
     operatingHours: "Mon-Sun: 8AM-8PM",
   },
+  {
+    id: "abuad",
+    name: "Afe Babalola University",
+    address: "Afe Babalola University, Ado-Ekiti, Ekiti state",
+    price: 4000,
+    operatingHours: "2ND and 4TH week Saturdays: 2PM-5PM",
+  },
 ];
 
 const DeliveryInfo = ({

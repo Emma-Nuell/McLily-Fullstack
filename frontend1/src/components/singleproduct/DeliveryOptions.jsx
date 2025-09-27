@@ -67,7 +67,7 @@ const DeliveryOptions = () => {
                     </p>
                   </div>
                   <span className='text-base font-semibold text-green-600 dark:text-green-700'>
-                    ₦2,000
+                    ₦2,500
                   </span>
                 </div>
                 <div className='flex justify-between items-center p-3 bg-gray-50 dark:bg-background-white rounded-lg'>
@@ -80,7 +80,33 @@ const DeliveryOptions = () => {
                     </p>
                   </div>
                   <span className='text-base font-semibold text-green-600 dark:text-green-700'>
-                    ₦3,000
+                    ₦3,700
+                  </span>
+                </div>
+                <div className='flex justify-between items-center p-3 bg-gray-50 dark:bg-background-white rounded-lg'>
+                  <div>
+                    <p className='font-medium text-gray-900 dark:text-gray-200'>
+                      McLily House
+                    </p>
+                    <p className='text-xs text-gray-600 dark:text-gray-400'>
+                      Available Monday - Saturday, 10AM - 6PM
+                    </p>
+                  </div>
+                  <span className='text-base font-semibold text-green-600 dark:text-green-700'>
+                    ₦1,500
+                  </span>
+                </div>
+                <div className='flex justify-between items-center p-3 bg-gray-50 dark:bg-background-white rounded-lg'>
+                  <div>
+                    <p className='font-medium text-gray-900 dark:text-gray-200'>
+                      Afe Babalola University
+                    </p>
+                    <p className='text-xs text-gray-600 dark:text-gray-400'>
+                      Available Every 2 weeks on Saturdays, 2PM - 5PM
+                    </p>
+                  </div>
+                  <span className='text-base font-semibold text-green-600 dark:text-green-700'>
+                    ₦4,000
                   </span>
                 </div>
               </div>

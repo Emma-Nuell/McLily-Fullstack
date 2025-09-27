@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import UserProfileAPI from "../utils/endpoints/userProfileApi";
+import { useUserContext } from "../context";
 
 export const useUserProfile = () => {
+  const {isAuthenticated} = useUserContext()
   return useQuery({
     queryKey: ["user-profile"],
     queryFn: UserProfileAPI.getUserProfile,
-    enabled: !!localStorage.getItem("profile"),
+    enabled: isAuthenticated,
     staleTime: 50 * 60 * 1000,
     cacheTime: 50 * 60 * 1000,
   });
@@ -26,10 +28,12 @@ export const useUpdateProfile = () => {
 };
 
 export const useUserAddresses = () => {
+  const { isAuthenticated } = useUserContext();
+
   return useQuery({
     queryKey: ["user-addresses"],
     queryFn: UserProfileAPI.getUserAddresses,
-    enabled: !!localStorage.getItem("profile"),
+    enabled: isAuthenticated,
     staleTime: 50 * 60 * 1000,
     cacheTime: 50 * 60 * 1000,
   });

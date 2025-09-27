@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import UserAPI from "../utils/endpoints/userApi"
 import OrderAPI from "../utils/endpoints/orderApi"
 import UserProfileAPI from "../utils/endpoints/userProfileApi"
+// import { useUserContext } from "../context/index.js"
 
 export const useSignUp = () => {
     // const queryClient = useQueryClient()
@@ -33,38 +34,30 @@ export const useSignIn = () => {
           queryKey: ["cart"],
           exact: true,
         });
+        queryClient.invalidateQueries({
+          queryKey: ["user-profile"],
+          exact: true,
+        });
 
-        // Prefetch orders in the background
-        queryClient.prefetchQuery(
-          ["user-orders", 1],
-          () => OrderAPI.getUserOrders(),
-          { staleTime: 5 * 60 * 1000 }
-        );
       },
     });
 }
 
 export const useSignOut = () => {
-    const queryClient = useQueryClient()
+    // const queryClient = useQueryClient()
 
   
     return useMutation({
       mutationFn: () => {
         localStorage.removeItem("profile");
-        queryClient.invalidateQueries({
-          queryKey: ["cart"],
-          exact: true,
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["user"],
-          exact: true,
-        });
         return Promise.resolve();
       },
     });
 }
 
 export const useWishlist = () => {
+ 
+
   return useQuery({
     queryKey: ["wishlist"],
     queryFn: UserAPI.getWishlist,

@@ -232,7 +232,7 @@ const ProfilePage = () => {
   };
 
   const handleSignOut = async () => {
-    await signOut;
+    await signOut();
     navigate("/");
   };
 
@@ -317,7 +317,7 @@ const ProfilePage = () => {
                 </label>
                 <p className="text-gray-900 dark:text-gray-300 flex items-center">
                   <Mail className="mr-2 text-gray-400" size={14} />
-                  {user?.email}
+                  {user?.email || "logintoview@gmail.com"}
                 </p>
               </div>
 
@@ -340,7 +340,7 @@ const ProfilePage = () => {
                   <div className="space-y-2">
                     <p className="text-gray-900 dark:text-gray-300 flex items-center">
                       <Phone className="mr-2 text-gray-400" size={14} />
-                      {user?.phoneNo}
+                      {user?.phoneNo || "+234 800 000 0000"}
                     </p>
                   </div>
                 )}

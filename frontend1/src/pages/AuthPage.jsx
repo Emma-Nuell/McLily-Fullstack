@@ -172,7 +172,7 @@ const AuthPage = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 rounded-xl border-1 ${
+                  className={`w-full px-4 py-3 rounded-xl border-1 text-gray-700 dark:text-gray-300 ${
                     errors.email
                       ? "border-red-300 bg-red-50"
                       : "border-primary-50 bg-primary-50 dark:bg-surface"
@@ -196,7 +196,7 @@ const AuthPage = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 rounded-xl border-1 ${
+                  className={`w-full px-4 py-3 rounded-xl border-1 text-gray-700 dark:text-gray-300 ${
                     errors.password
                       ? "border-red-300 bg-red-50"
                       : "border-primary-50 bg-primary-50 dark:bg-surface"
@@ -212,7 +212,7 @@ const AuthPage = () => {
                 disabled={isLoading || isSigningIn}
                 className="w-full mt-2 py-3 px-4 bg-gradient-to-r from-primary-500 dark:from-primary-300 to-primary-500 dark:to-primary-300 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:translate-y-0.5 transition-all duration-300 mb-4 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
               >
-                {isSigningIn ? "Signing In..." : "Sign In"}
+                {isSigningIn || isLoading ? "Signing In..." : "Sign In"}
               </button>
               <div className="text-center mb-4">
                 <button
@@ -268,7 +268,7 @@ const AuthPage = () => {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-xl border-1 ${
+                    className={`w-full px-4 py-3 rounded-xl border-1 text-gray-700 dark:text-gray-300 ${
                       errors.firstName
                         ? "border-red-300 bg-red-50"
                         : "border-primary-50 bg-primary-50 dark:bg-surface"
@@ -294,7 +294,7 @@ const AuthPage = () => {
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-xl border-1 ${
+                    className={`w-full px-4 py-3 rounded-xl border-1 text-gray-700 dark:text-gray-300 ${
                       errors.lastName
                         ? "border-red-300 bg-red-50"
                         : "border-primary-50 bg-primary-50 dark:bg-surface"
@@ -397,7 +397,7 @@ const AuthPage = () => {
                 disabled={isLoading || isSigningUp}
                 className="w-full py-3 mt-2 px-4 bg-gradient-to-r from-primary-500 to-primary-500 dark:from-primary-300 dark:to-primary-300 dark:text-gray-200 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 mb-4 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
               >
-                {isSigningUp ? "Creating Account..." : "Create Account"}
+                {isSigningUp || isLoading ? "Creating Account..." : "Create Account"}
               </button>
             </form>
             <div className="flex items-center my-6">

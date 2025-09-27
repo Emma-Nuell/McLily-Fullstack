@@ -143,6 +143,7 @@ export const getRandomCategoriesWithProducts = async () => {
     const categoriesWithProducts = await Promise.all(
       randomSubCategories.map(async ({ subCategory, mainCategory }) => {
         const products = await Product.find({
+          category: mainCategory,
           subCategory,
           $or: [{ stock: { $gt: 0 } }, { "sizes.stock": { $gt: 0 } }],
         })

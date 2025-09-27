@@ -31,19 +31,24 @@ export const UserProvider = ({ children }) => {
     useEffect(() => {
       const checkAuthStatus = async () => {
         try {
-          const profile = localStorage.getItem("profile");
-          const TokenExpired = isTokenExpired(profile?.token);
-          if (TokenExpired) {
-            localStorage.removeItem("profile");
+          const storedProfile = localStorage.getItem("profile");
+          if (!storedProfile) {
+            dispatch({ type: CLEAR_USER });
+            return;
           }
-          if (profile) {
-            const userData = JSON.parse(profile);
-            dispatch({ type: SET_USER, payload: userData.user });
+          const profile = JSON.parse(storedProfile)
+          const TokenExpired = isTokenExpired(profile?.token);
+          // console.log(TokenExpired);
+          
+          if (!TokenExpired) {
+            dispatch({ type: SET_USER, payload: profile.user });
           } else {
+            localStorage.removeItem("profile");
             dispatch({ type: CLEAR_USER });
           }
         } catch (error) {
           console.error("Error checking auth status:", error);
+            localStorage.removeItem("profile");
           dispatch({ type: CLEAR_USER });
         }
       };
@@ -91,6 +96,7 @@ export const UserProvider = ({ children }) => {
     const signOut = async () => {
       try {
         await signOutMutation.mutateAsync();
+        localStorage.removeItem("profile");
         dispatch({ type: CLEAR_USER });
       } catch (error) {
         console.error("Error signing out:", error);
