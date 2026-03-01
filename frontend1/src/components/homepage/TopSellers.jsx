@@ -63,7 +63,7 @@ const TopSellers = ({ products: Products }) => {
             }
 
             const size = sizes?.find(
-              (size) => size.value.toLowerCase() === selectedSize.toLowerCase()
+              (size) => size.value.toLowerCase() === selectedSize.toLowerCase(),
             );
 
             addToCart(size, quantity, product);
@@ -97,7 +97,7 @@ const TopSellers = ({ products: Products }) => {
                   className="flex justify-center py-2 px-3 font-medium items-center text-sm bg-primary-500 dark:bg-primary-300 hover:bg-primary-600 dark:hover:bg-primary-400 text-text rounded-md cursor-not-allowed"
                   disabled
                 >
-                   Select Size
+                  Select Size
                 </button>
               );
             }
@@ -116,27 +116,33 @@ const TopSellers = ({ products: Products }) => {
             <div
               onClick={() => handleClick(product)}
               key={product.productId}
-              className="bg-background-white h-80 rounded-xl transition-all duration-500 overflow-hidden group grid grid-cols-[3fr_5fr] p-6 gap-5 text-text shadow-[6px_6px_10px_#bebebe,_-6px_-6px_10px_#f2f2f2] dark:shadow-[3px_3px_6px_#2b2a2a,_-6px_-6px_10px_#111111] cursor-pointer hover:scale-[1.02]"
+              className="bg-white dark:bg-surface h-80 rounded-2xl transition-all duration-300 overflow-hidden group grid grid-cols-[3fr_5fr] p-6 gap-6 text-text shadow-sm hover:shadow-xl border border-gray-100 dark:border-gray-800 cursor-pointer hover:-translate-y-1"
             >
-              <div className="rounded-md h-[98%] shadow-[4px_4px_6px_#bebebe,_-4px_-4px_10px_#f2f2f2] dark:shadow-[3px_3px_6px_#2b2a2a,_-6px_-6px_10px_#111111]">
+              <div className="rounded-xl h-full flex items-center justify-center p-2 bg-gray-50 dark:bg-gray-900 overflow-hidden relative group-hover:bg-primary-50 dark:group-hover:bg-primary-900/20 transition-colors">
                 <img
                   src={product.images[0]}
                   alt={product.name}
-                  className="object-cover w-full h-full rounded-md"
+                  className="object-contain w-full h-full transform transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
               <div className="flex flex-col gap-4 justify-center">
-                <h2 className="font-semibold line-clamp-2">{product.name}</h2>
-                <div className="flex gap-1 items-center text-sm">
+                <h2 className="font-bold text-lg leading-tight line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:text-primary-500 transition-colors">
+                  {product.name}
+                </h2>
+                <div className="flex gap-2 items-center text-sm text-gray-500">
                   <BsStarFill
-                    className="text-yellow-500 items-center flex"
+                    className="text-yellow-400 items-center flex"
                     size={14}
                   />
-                  <p>{product.rating.average}</p>
-                  <p>({product.rating.reviewsCount})</p>
+                  <p className="font-medium text-gray-700 dark:text-gray-300">
+                    {product.rating.average}
+                  </p>
+                  <p className="text-xs">
+                    ({product.rating.reviewsCount} reviews)
+                  </p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <p className="price text-base font-semibold text-primary-600 dark:text-primary-300">
+                <div className="flex items-center justify-between mt-auto pt-2 border-t border-gray-100 dark:border-gray-800">
+                  <p className="price text-lg font-bold text-primary-600 dark:text-primary-400">
                     {formatPrice(price)}
                   </p>
                   {renderCartButton()}

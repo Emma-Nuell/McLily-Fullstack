@@ -130,7 +130,7 @@ const AuthPage = () => {
             <Logo className="w-30 text-primary-500 dark:text-primary-300 fill-current drop-shadow-md" />
           </div>
           <h1 className="text-4xl font-bold mb-2 font-comorant dark:text-gray-900">
-            McLily
+            MGK
           </h1>
         </div>
 
@@ -230,7 +230,7 @@ const AuthPage = () => {
             <div className="flex items-center my-6">
               <div className="flex-grow border-t border-gray-300"></div>
               <span className="mx-4 text-gray-500 text-sm dark:text-gray-400">
-                New to McLily?
+                New to MGK?
               </span>
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
@@ -251,7 +251,7 @@ const AuthPage = () => {
             }`}
           >
             <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
-              Join McLily
+              Join MGK
             </h2>
             <form onSubmit={handleSubmit}>
               <div className="flex gap-4 mb-4">

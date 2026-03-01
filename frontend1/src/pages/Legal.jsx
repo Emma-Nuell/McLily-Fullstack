@@ -101,7 +101,7 @@ const Legal = () => {
       <header className="bg-primary-500 dark:bg-primary-300 text-white py-6 shadow-lg">
         <div className="max-w-6xl mx-auto px-6">
           <h1 className="text-2xl font-bold">
-            McLily Stores - Legal Information
+            MGK Stores - Legal Information
           </h1>
           <p className="text-white/90 mt-2">
             Terms, Policies & Legal Requirements
@@ -129,9 +129,9 @@ const Legal = () => {
           <div className="space-y-6">
             <SubSection title="1. Introduction">
               <p>
-                Welcome to <strong>McLily Stores</strong> (&apos;we,&apos;
+                Welcome to <strong>MGK Stores</strong> (&apos;we,&apos;
                 &quot;us,&quot; or &quot;our&quot;). By accessing or using our
-                website at mclily-fullstack.onrender.com, you agree to comply
+                website at mgk-fullstack.onrender.com, you agree to comply
                 with and be bound by these Terms and Conditions. If you do not
                 agree with these terms, please do not use our website.
               </p>
@@ -140,7 +140,7 @@ const Legal = () => {
             <SubSection title="2. Products & Services">
               <BulletList
                 items={[
-                  "McLily specializes in fashion items including clothing and shoes",
+                  "MGK specializes in fashion items including clothing and shoes",
                   "All product descriptions, images, and prices are provided for informational purposes",
                   "We reserve the right to modify or discontinue products without prior notice",
                   "Colors may appear differently on your device due to screen settings",
@@ -176,7 +176,7 @@ const Legal = () => {
             {/* <SubSection title='5. Intellectual Property'>
               <p>
                 All content on this website, including text, graphics, logos,
-                images, and software, is the property of McLily Stores and is
+                images, and software, is the property of MGK Stores and is
                 protected by copyright and other intellectual property laws. You
                 may not reproduce, distribute, or use any content without our
                 written permission.
@@ -186,7 +186,7 @@ const Legal = () => {
             <SubSection title="6. Limitation of Liability">
               <BulletList
                 items={[
-                  "McLily Stores is not liable for delays caused by third-party shipping providers",
+                  "MGK Stores is not liable for delays caused by third-party shipping providers",
                   "We are not responsible for indirect, incidental, or consequential damages",
                   "Our total liability shall not exceed the amount paid for the specific order",
                   "We do not guarantee uninterrupted or error-free website operation",
@@ -324,7 +324,7 @@ const Legal = () => {
                   items={[
                     "Currently partnering with reliable third-party logistics providers",
                     "Shipping fees are paid by customer upon delivery (Cash on Delivery available)",
-                    "Future expansion: McLily plans to introduce its own delivery service",
+                    "Future expansion: MGK plans to introduce its own delivery service",
                   ]}
                 />
               </SubSubSection>
@@ -456,7 +456,7 @@ const Legal = () => {
                   items={[
                     "Customer responsible for return shipping costs (unless item is faulty)",
                     "We recommend using trackable shipping methods",
-                    "McLily not responsible for items lost during return shipping",
+                    "MGK not responsible for items lost during return shipping",
                     "Original shipping costs are non-refundable (except for faulty items)",
                   ]}
                 />
@@ -515,7 +515,7 @@ const Legal = () => {
                       <strong>Phone:</strong> +234 803 725 6630
                     </li>
                     <li>
-                      <strong>Email:</strong> mclilystores@gmail.com
+                      <strong>Email:</strong> mgkstores@gmail.com
                     </li>
                     <li>
                       <strong>Response Time:</strong> Within 24 hours
@@ -545,7 +545,7 @@ const Legal = () => {
             <SubSection title="Mailing Address">
               <div className="bg-gray-50 dark:bg-surface p-4 rounded-lg">
                 <p>
-                  <strong>McLily Stores</strong>
+                  <strong>MGK Stores</strong>
                   <br />
                   Plot B32 Valencia Gardens Estate, Dakwo District, Galadinmawa
                   <br />
@@ -562,7 +562,7 @@ const Legal = () => {
             <SubSection title="Social Media Links">
               <div className="bg-gradient-to-r from-primary-100 to-primary-200 p-6 rounded-lg">
                 <p className="mb-4">
-                  <strong>Connect with McLily Stores:</strong>
+                  <strong>Connect with MGK Stores:</strong>
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -575,7 +575,7 @@ const Legal = () => {
                         🔄 <strong>Instagram:</strong> Coming Soon
                       </li>
                       <li>
-                        🔄 <strong>Facebook:</strong> Coming Soon - McLily
+                        🔄 <strong>Facebook:</strong> Coming Soon - MGK
                         Stores
                       </li>
                       <li>
@@ -637,17 +637,17 @@ const Legal = () => {
         {/* Footer */}
         {/* <footer className='bg-gray-50 rounded-lg p-6 text-center'>
           <div className='space-y-3'>
-            <p className='text-lg font-semibold text-primary-700'>McLily Stores</p>
+            <p className='text-lg font-semibold text-primary-700'>MGK Stores</p>
             <p className='text-gray-600'>
               Your trusted online destination for fashion and footwear
             </p>
             <div className='flex justify-center items-center space-x-6 text-sm text-gray-500'>
-              <span>Website: mclily-fullstack.onrender.com</span>
+              <span>Website: mgk-fullstack.onrender.com</span>
               <span>•</span>
               <span>WhatsApp: +234 803 725 6630</span>
             </div>
             <p className='text-xs text-gray-400'>
-              © 2025 McLily Stores. All rights reserved.
+              © 2025 MGK Stores. All rights reserved.
             </p>
           </div>
         </footer> */}

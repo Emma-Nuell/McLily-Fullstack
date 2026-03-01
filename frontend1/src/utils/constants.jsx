@@ -749,7 +749,7 @@ export const categoryConfigs = {
 
   // Special Categories (keeping your anime one)
   Anime: {
-    greeting: "Yokoso watashi no McLily store 🌸",
+    greeting: "Yokoso watashi no MGK store 🌸",
     subtitle: "Your otaku paradise awaits",
     vibe: "Dive into the world of anime magic and collectibles",
     bgGradient: "from-indigo-600 via-purple-600 to-pink-600",

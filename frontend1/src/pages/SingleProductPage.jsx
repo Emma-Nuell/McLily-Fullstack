@@ -70,8 +70,7 @@ const ProductContent = ({ productId, product }) => {
     wishlistIsLoading,
   } = useUserContext();
   const { addToCart, cart, toggleAmount } = useCartContext();
-    const { showToast, TOAST_TYPES } = useToast();
-  
+  const { showToast, TOAST_TYPES } = useToast();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState(null);
@@ -116,7 +115,7 @@ const ProductContent = ({ productId, product }) => {
   useEffect(() => {
     if (selectedSize && sizes?.length > 0) {
       const selectedSizeData = sizes?.find(
-        (size) => size.value === selectedSize
+        (size) => size.value === selectedSize,
       );
       setDisplayPrice(selectedSizeData?.price || basePrice);
     } else {
@@ -163,14 +162,14 @@ const ProductContent = ({ productId, product }) => {
     if (product.sizes?.length > 0 && !selectedSize) {
       showToast(
         "Please select a size before adding to cart.",
-        TOAST_TYPES.INFO
+        TOAST_TYPES.INFO,
       );
 
       return;
     }
 
     const size = sizes?.find(
-      (size) => size.value.toLowerCase() === selectedSize.toLowerCase()
+      (size) => size.value.toLowerCase() === selectedSize.toLowerCase(),
     );
 
     addToCart(size, quantity, product);
@@ -246,22 +245,24 @@ const ProductContent = ({ productId, product }) => {
   };
 
   return (
-    <main className="bg-background mb-16">
+    <main className="bg-transparent mb-28 text-text">
       <PageHero title={name} product />
       {/* dont remove py-0 */}
-      <div className="section py-0 pb-10">
-        <div className="">
+      <div className="section py-0 pb-10 max-w-[--max-width] mx-auto px-4 md:px-8 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Product Details */}
-          <div className="text-text w-full bg-surface px-5 pb-6">
+          <div className="w-full bg-white dark:bg-surface px-6 md:px-10 py-8 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 h-fit">
             <ProductImages product={product} images={images} />
-            <h2 className="capitalize whitespace-normal text-lg tracking-wide text-wrap">
+            <h2 className="capitalize whitespace-normal text-2xl md:text-3xl font-bold font-lora tracking-wide text-wrap text-gray-900 dark:text-gray-100 mt-6 mb-3">
               {name}
             </h2>
-            <p className="text-text">
+            <p className="text-sm font-medium text-gray-500 mb-4">
               Brand:{" "}
-              <span className="text-gray-700 dark:text-gray-300">{brand}</span>
+              <span className="text-primary-600 dark:text-primary-400">
+                {brand}
+              </span>
             </p>
-            <div className="text-lg font-medium  text-gray-800 my-2">
+            <div className="text-lg font-medium text-gray-800 my-2">
               {sizes?.length > 0 ? (
                 <>
                   <span className="">
@@ -351,19 +352,21 @@ const ProductContent = ({ productId, product }) => {
           </div>
 
           {/* Fixed Cart Buttons */}
-          <div className="fixed bottom-0 bg-surface w-full z-50 h-26 flex items-center justify-center border-t border-primary-400 dark:border-primary-300">
-            <div className="grid grid-cols-[1fr_1fr_6fr] items-center gap-4 px-10 py-4  w-full">
+          <div className="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-surface/80 backdrop-blur-md w-full z-50 h-[80px] flex items-center justify-center border-t border-gray-200 dark:border-gray-800 shadow-[0_-8px_30px_rgba(0,0,0,0.05)]">
+            <div className="max-w-[--max-width] grid grid-cols-[auto_auto_1fr] items-center gap-4 px-4 md:px-8 py-4 w-full h-full">
               <Link
                 to="/"
-                className="flex justify-center p-4.5  items-center text-text rounded-md text-base border border-primary-400"
+                className="flex items-center justify-center p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors h-full aspect-square"
               >
-                <FaHome />
+                <FaHome size={20} />
               </Link>
               <button
                 onClick={handleWishlistClick}
                 disabled={wishlistIsLoading}
-                className={`flex justify-center p-4.5 items-center rounded-md text-text text-base border border-primary-400 ${
-                  isInWishlist(productId) ? "text-red-500" : ""
+                className={`flex items-center justify-center p-3 rounded-xl bg-gray-100 dark:bg-gray-800 transition-colors h-full aspect-square ${
+                  isInWishlist(productId)
+                    ? "text-red-500 hover:bg-red-50"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                 }`}
                 aria-label={
                   isInWishlist(productId)
@@ -371,9 +374,12 @@ const ProductContent = ({ productId, product }) => {
                     : "Add to wishlist"
                 }
               >
-                <FaRegHeart />
+                <FaHeart
+                  size={20}
+                  className={isInWishlist(productId) ? "animate-pulse" : ""}
+                />
               </button>
-              {renderCartButton()}
+              <div className="h-full">{renderCartButton()}</div>
             </div>
           </div>
         </div>

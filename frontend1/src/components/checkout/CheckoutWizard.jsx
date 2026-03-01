@@ -6,7 +6,7 @@ import {
   OrderConfirmation,
   PaymentGateway,
   PaymentInfo,
-  OrderSummary
+  OrderSummary,
 } from "./index.js";
 import { useCartContext, useUserProfileContext } from "../../context/index.js";
 const CHECKOUT_STEPS = {
@@ -19,11 +19,11 @@ const CHECKOUT_STEPS = {
 
 const CheckoutWizard = () => {
   const { cart, clearCart, total_amount } = useCartContext();
-  const { user} = useUserProfileContext();
+  const { user } = useUserProfileContext();
   const [currentStep, setCurrentStep] = useState(CHECKOUT_STEPS.CART_REVIEW);
-   const [paymentMethod, setPaymentMethod] = useState("");
-   const [deliveryMethod, setDeliveryMethod] = useState('')
-   const [order, setOrder] = useState("")
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [deliveryMethod, setDeliveryMethod] = useState("");
+  const [order, setOrder] = useState("");
 
   const [formData, setFormData] = useState({
     customerDetails: {
@@ -45,7 +45,7 @@ const CheckoutWizard = () => {
     shippingFee: 0,
     deliveryMethod,
     pickupStation: "none",
-    pickupAddress: "none"
+    pickupAddress: "none",
   });
 
   const goToStep = (step) => {
@@ -56,10 +56,10 @@ const CheckoutWizard = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-gray-50 dark:bg-surface">
+    <div className="max-w-[--max-width] mx-auto p-4 md:px-8 mt-10 mb-20">
       <CheckoutProgress currentStep={currentStep} />
 
-      <div className="my-8 border border-primary-300 dark:border-primary-100 rounded-md bg-background-white">
+      <div className="my-10 border border-gray-100 dark:border-gray-800 rounded-3xl bg-white dark:bg-surface shadow-sm overflow-hidden p-6 md:p-10">
         {currentStep === CHECKOUT_STEPS.CART_REVIEW && (
           <CartReview
             items={formData.orderItems}
@@ -115,13 +115,13 @@ const CheckoutWizard = () => {
         )}
       </div>
 
-      {
-        !currentStep === CHECKOUT_STEPS.CONFIRMATION && (
-          <OrderSummary cartItems={formData.orderItems} deliveryMethod={deliveryMethod} selectedStation={formData.pickupStation} />
-
-        )
-      }
-
+      {!currentStep === CHECKOUT_STEPS.CONFIRMATION && (
+        <OrderSummary
+          cartItems={formData.orderItems}
+          deliveryMethod={deliveryMethod}
+          selectedStation={formData.pickupStation}
+        />
+      )}
     </div>
   );
 };

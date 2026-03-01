@@ -1,46 +1,45 @@
-import React from 'react'
-import { categories } from '../../utils/constants'
-import { useNavigate } from 'react-router-dom';
-
+import React from "react";
+import { categories } from "../../utils/constants";
+import { useNavigate } from "react-router-dom";
 
 const CategorySecond = () => {
-  const navigate = useNavigate()
-  
-    const handleClick = (url) => {
-      
-      navigate(url);
-    };
+  const navigate = useNavigate();
+
+  const handleClick = (url) => {
+    navigate(url);
+  };
   return (
-    <section className="px-2.5 py-3 mb-6 mt-6 bg-background-white dark:bg-surface">
+    <section className="px-4 py-16 bg-transparent">
       {/* Title Section */}
-      <div className="title my-2 mb-8 text-center">
-        <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">
-          Featured Categories
+      <div className="title my-4 mb-10 text-center flex flex-col items-center">
+        <h3 className="text-3xl font-bold text-gray-900 dark:text-white font-lora">
+          More Categories
         </h3>
-        <div className="underline h-0.5 w-44 mx-auto bg-primary-400 dark:bg-primary-300 mt-1"></div>
+        <div className="h-1 w-24 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full mt-3"></div>
       </div>
 
       {/* Categories Grid */}
-      <div className="categories grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.75 text-center">
+      <div className="max-w-[--max-width] mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 px-4">
         {categories.slice(6, 12).map((category, index) => (
           <div
             onClick={() => handleClick(category.url)}
             key={index}
-            className="category flex flex-col items-center cursor-pointer group"
+            className="flex flex-col items-center cursor-pointer group transition-all duration-300 hover:-translate-y-2"
           >
             {/* Image Container */}
-            <div className=" aspect-square w-40 h-40 sm:w-40 sm:h-40 flex justify-center items-center bg-primary-400 dark:bg-primary-300 rounded-xl p-2 group-hover:bg-primary-500 dark:group-hover:bg-primary-400 transition-colors">
+            <div className="aspect-square w-full sm:w-40 flex justify-center items-center bg-white dark:bg-surface border border-gray-100 dark:border-gray-800 rounded-2xl p-4 shadow-sm group-hover:shadow-xl group-hover:shadow-primary-500/10 transition-all duration-300 relative overflow-hidden">
+              <div className="absolute inset-0 bg-primary-50 dark:bg-primary-900/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <img
                 src={category.image}
                 alt={category.name}
                 loading="lazy"
                 decoding="async"
-                className="max-h-[98%] w-[98%] object-cover rounded-lg"
+                className="max-h-[90%] w-[90%] object-contain rounded-lg relative z-10 transition-transform duration-500 group-hover:scale-110"
               />
             </div>
 
             {/* Category Name */}
-            <h5 className="text-xs mt-1.5 text-gray-700 dark:text-gray-300 tracking-wide leading-normal font-medium">
+            <h5 className="mt-4 text-sm text-gray-800 dark:text-gray-200 font-semibold tracking-wide group-hover:text-primary-500 transition-colors">
               {category.name}
             </h5>
           </div>
@@ -48,6 +47,6 @@ const CategorySecond = () => {
       </div>
     </section>
   );
-}
+};
 
-export default CategorySecond
+export default CategorySecond;

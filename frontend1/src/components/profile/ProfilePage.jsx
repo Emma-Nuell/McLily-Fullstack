@@ -352,7 +352,7 @@ const ProfilePage = () => {
                 </label>
                 <p className="text-gray-900 dark:text-gray-300 flex items-center">
                   <Calendar className="mr-2 text-gray-400" size={14} />
-                  {formatDate(user?.createdAt) || "Join McLily Today"}
+                  {formatDate(user?.createdAt) || "Join MGK Today"}
                 </p>
               </div>
             </div>

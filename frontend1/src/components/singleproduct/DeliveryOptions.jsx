@@ -73,7 +73,7 @@ const DeliveryOptions = () => {
                 <div className='flex justify-between items-center p-3 bg-gray-50 dark:bg-background-white rounded-lg'>
                   <div>
                     <p className='font-medium text-gray-900 dark:text-gray-200'>
-                      McLily Hair Salon
+                      MGK Hair Salon
                     </p>
                     <p className='text-xs text-gray-600 dark:text-gray-400'>
                       Available Tuesday - Saturday, 10AM - 6PM
@@ -86,7 +86,7 @@ const DeliveryOptions = () => {
                 <div className='flex justify-between items-center p-3 bg-gray-50 dark:bg-background-white rounded-lg'>
                   <div>
                     <p className='font-medium text-gray-900 dark:text-gray-200'>
-                      McLily House
+                      MGK House
                     </p>
                     <p className='text-xs text-gray-600 dark:text-gray-400'>
                       Available Monday - Saturday, 10AM - 6PM
@@ -192,7 +192,7 @@ const DeliveryOptions = () => {
               <Clock className=' text-gray-400' size={18} />
               <div>
                 <h4 className='font-medium text-gray-700 dark:text-gray-300'>
-                  McLily Door Delivery
+                  MGK Door Delivery
                 </h4>
                 <p className='text-sm text-gray-500'>
                   Our own delivery service

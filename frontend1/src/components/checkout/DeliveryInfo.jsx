@@ -32,16 +32,16 @@ const pickupStations = [
     operatingHours: "Mon-Fri: 8AM-4PM",
   },
   {
-    id: "mclily-salon",
-    name: "McLily Hair Salon",
+    id: "mgk-salon",
+    name: "MGK Hair Salon",
     address: "34 Beauty Avenue, Ikeja, Lagos",
     price: 3700,
     operatingHours: "Mon-Sat: 9AM-7PM",
   },
   {
-    id: "mclily-house",
-    name: "McLily House",
-    address: "78 McLily Street, Victoria Island, Lagos",
+    id: "mgk-house",
+    name: "MGK House",
+    address: "78 MGK Street, Victoria Island, Lagos",
     price: 1500,
     operatingHours: "Mon-Sun: 8AM-8PM",
   },
@@ -302,7 +302,7 @@ const pickupDefault = {
                     Third Party Delivery Service
                   </h4>
                   <p className="text-sm text-blue-800 dark:text-blue-400">
-                    McLily uses a third-party delivery service to deliver
+                    MGK uses a third-party delivery service to deliver
                     products to your location. The delivery fee depends solely
                     on the delivery service and will be paid directly to them
                     upon product delivery.

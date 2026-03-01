@@ -349,7 +349,7 @@ const Help = () => {
                       Email
                     </p>
                     <p className='text-gray-600 dark:text-gray-400'>
-                      mclilystores@gmail.com
+                      mgkstores@gmail.com
                     </p>
                   </div>
                 </div>
@@ -463,7 +463,7 @@ const Help = () => {
               Chat on WhatsApp
             </button>
             <a
-              href='mailto:mclilystores@gmail.com'
+              href='mailto:mgkstores@gmail.com'
               className='px-6 py-3 bg-white text-blue-600 font-medium rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center'
             >
               <Mail className='mr-2' size={14} />

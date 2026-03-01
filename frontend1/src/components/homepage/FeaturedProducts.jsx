@@ -3,10 +3,9 @@ import Loading from "../Loading";
 import { useSwipeable } from "react-swipeable";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-
-const FeaturedProducts = ({products: featured}) => {
+const FeaturedProducts = ({ products: featured }) => {
   // const { featuredProducts: featured } = useProductContext();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isInteracting, setIsInteracting] = useState(false);
@@ -26,7 +25,7 @@ const FeaturedProducts = ({products: featured}) => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % featured.length),
     onSwipedRight: () =>
       setCurrentIndex((prevIndex) =>
-        prevIndex === 0 ? featured.length - 1 : prevIndex - 1
+        prevIndex === 0 ? featured.length - 1 : prevIndex - 1,
       ),
     onTouchStart: () => setIsInteracting(true),
     onTouchEnd: () => setIsInteracting(false),
@@ -37,29 +36,34 @@ const FeaturedProducts = ({products: featured}) => {
   }
 
   return (
-    <section className='bg-white dark:bg-surface w-[90%] mx-auto my-2.5 rounded pb-2.5'>
+    <section className="w-full max-w-[--max-width] mx-auto my-8 px-4">
       {/* Slideshow Container */}
       <div
-        className='relative flex justify-center items-center h-[220px] overflow-hidden touch-pan-y max-w-full'
+        className="relative flex justify-center items-center h-[350px] md:h-[450px] lg:h-[500px] overflow-hidden touch-pan-y group rounded-3xl shadow-xl"
         {...handlers}
       >
         <Link
           to={`/products/singleProduct/${featured[currentIndex].productId}`}
-          className='relative w-[90%] h-[90%] rounded-xl max-w-[500px] bg-white dark:bg-surface'
+          className="block relative w-full h-full bg-surface"
         >
           <img
             src={featured[currentIndex].images[0]}
             alt={featured[currentIndex].name}
-            className='w-full h-full object-contain rounded-xl transition-colors duration-300'
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-8">
-            <h3 className="text-gray-300 line-clamp-1">{featured[currentIndex].name}</h3>
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/95 via-gray-900/40 to-transparent p-8 md:p-12 flex flex-col justify-end">
+            <h3 className="text-white text-3xl md:text-5xl font-bold font-comorant drop-shadow-lg line-clamp-2 mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+              {featured[currentIndex].name}
+            </h3>
+            <span className="text-primary-300 font-medium text-sm uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+              View Product &rarr;
+            </span>
           </div>
         </Link>
       </div>
 
       {/* Indicators */}
-      <div className='flex justify-center mt-2 mb-2'>
+      <div className="flex justify-center mt-2 mb-2">
         {featured.map((_, index) => (
           <button
             key={index}
@@ -75,11 +79,8 @@ const FeaturedProducts = ({products: featured}) => {
   );
 };
 
-
-
 FeaturedProducts.propTypes = {
-  products: PropTypes.array
-}
-
+  products: PropTypes.array,
+};
 
 export default FeaturedProducts;

@@ -354,10 +354,10 @@ const OrderConfirmation = ({ order}) => {
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Need help with your order? Contact us at{" "}
             <a
-              href="mailto:mclilystores@gmail.com"
+              href="mailto:mgkstores@gmail.com"
               className="text-primary-600 dark:text-primary-300 hover:text-primary-700 font-medium"
             >
-              mclilystores@gmail.com
+              mgkstores@gmail.com
             </a>{" "}
             or call{" "}
             <a

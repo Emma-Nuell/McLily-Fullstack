@@ -34,8 +34,8 @@ const OrderSummary = ({
   // Pickup station prices
   const pickupStations = {
     "stella-maris": { name: "Stella Maris Schools", price: 2500 },
-    "mclily-salon": { name: "McLily Hair Salon", price: 3700 },
-    "mclily-house": { name: "McLily House", price: 1500 },
+    "mgk-salon": { name: "MGK Hair Salon", price: 3700 },
+    "mgk-house": { name: "MGK House", price: 1500 },
   };
 
   // Calculate subtotal

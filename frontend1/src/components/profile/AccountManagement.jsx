@@ -149,7 +149,7 @@ const AccountManagement = () => {
         <div className='flex justify-center mt-12 mb-8'>
           <div className='flex items-center space-x-4'>
             <span className='text-2xl font-bold text-gray-800 dark:text-gray-200 font-comorant'>
-              McLily
+              MGK
             </span>
             <div className='w-22 h-22 bg-white rounded-full flex items-center justify-center'>
               <img src={Logo} alt='logo' className='w-[90%]' />
