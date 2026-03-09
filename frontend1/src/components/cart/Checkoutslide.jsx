@@ -21,7 +21,7 @@ const CheckoutSlide = () => {
       showToast("You must be logged in", TOAST_TYPES.INFO);
       navigate("/auth");
     } else {
-      navigate("/checkout");
+      showToast("This part is under construction", TOAST_TYPES.INFO);
     }
   };
 
